@@ -1,0 +1,9 @@
+compath: components,/usr/local/lib/gear2d/component
+
+objpath: objects/
+imgpath: images/
+
+objects: background barco
+
+renderer.w: 1024
+renderer.h: 768
