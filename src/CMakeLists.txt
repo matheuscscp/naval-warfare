@@ -4,17 +4,9 @@ project(naval-warfare)
 # helloperson.cc
 add_library(helloperson MODULE helloperson.cc)
 
-add_library(barco MODULE barco.cc)
-
 
 # say that the target helloperson will be installed inside
 # a folder called "greeter"
 install(TARGETS helloperson
 		LIBRARY
 		DESTINATION greeter)
-		
-install(TARGETS barco
-		LIBRARY
-		DESTINATION unit)
-		
-		
