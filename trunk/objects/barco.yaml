@@ -1,3 +1,11 @@
-attach: renderer/renderer unit/barco
+attach: renderer/renderer unit/barco kinematics/kinematic2d
 
 renderer.surfaces: barco=barco.png
+
+w: 32
+h: 32
+
+attackrange: 40
+moverange: 200
+
+
