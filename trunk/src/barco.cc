@@ -26,8 +26,8 @@ class barco : public component::base {
 
 		virtual void handleclick(parameterbase::id pid, base* lastwrite, object::id owner) {
 			if (mouse1 == 1) {
-				destx = read<float>("mouse.x");
-				desty = read<float>("mouse.y");
+                                destx = read<int>("mouse.x");
+                                desty = read<int>("mouse.y");
 			}
 				
 			
