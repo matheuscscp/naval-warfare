@@ -18,6 +18,8 @@ class porto : public component::base {
 		virtual void setup(object::signature & sig) {
 			initialize();
 			init<int>("porto.player", sig["porto.player"], 0);
+			write("gamesetup", 0);
+			write("gameplay", 0);
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
 			 ACORDO */
