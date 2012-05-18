@@ -13,6 +13,8 @@ class barco : public component::base {
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
 		
+		component::base * porto;
+		
 	public:
 		barco() { }
 		virtual ~barco() { }
@@ -23,6 +25,14 @@ class barco : public component::base {
 		
 		virtual std::string depends() { 
 			return "kinematics/kinematic2d mouse/mouse mouseover/mouseover";
+		}
+		
+		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
+			if (pid == "porto") {
+				porto = read<component::base *>("porto");
+				hook(porto, "gamesetup");
+				hook(porto, "gameplay");
+			}
 		}
 		
 
@@ -40,21 +50,16 @@ class barco : public component::base {
 						
 				}
 			}
-				
-			
-			/* TODO:
-			 * 
-			 * checa raio
-			 * se tiver no raio, seta destino
-			 * se nao, faz o que?
-			 * 	-> toca um som
-			 */
 		}
 		
 		virtual void setup(object::signature & sig) {
 			init<int>("attackrange", sig["attackrange"], 40);
 			init<int>("moverange", sig["moverange"], 200);
 			hook("mouse.1", (component::call)&barco::handleclick);
+			
+			write<component::base *>("porto", NULL);
+			porto = NULL;
+			hook("porto");
 			
 			x = fetch<float>("x");
 			y = fetch<float>("y");
