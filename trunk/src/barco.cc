@@ -40,9 +40,6 @@ class barco : public component::base {
 						
 				}
 			}
-			
-	
-				
 				
 			
 			/* TODO:
