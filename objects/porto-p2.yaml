@@ -1,0 +1,8 @@
+attach: renderer/renderer porto/porto
+
+renderer.surfaces: porto=porto.png
+
+x: 960
+y: 704
+
+porto.player: 2

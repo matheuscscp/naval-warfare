@@ -1,3 +1,0 @@
-attach: renderer/renderer 
-
-renderer.surfaces: porto=porto.png
