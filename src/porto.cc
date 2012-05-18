@@ -24,7 +24,6 @@ class porto : public component::base {
 		}			
 		
 		virtual void update(timediff dt) {
-			cout << player << endl;
 		}
 		
 	private:
