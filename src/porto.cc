@@ -6,8 +6,12 @@ using namespace std;
 class porto : public component::base {
 	public:
 		// constructor and destructor
-		porto() { }
-		virtual ~porto() { }
+		porto() { 
+			portos.push_back(this);
+		}
+		virtual ~porto() { 
+			portos.remove(this);
+		}
 		
 		virtual gear2d::component::family family() { return "porto"; }
 		virtual gear2d::component::type type() { return "porto"; }
@@ -15,7 +19,8 @@ class porto : public component::base {
 			initialize();
 			init<int>("porto.player", sig["porto.player"], 0);
 			
-			/* TODO: VERIFICAR O PLAYER == 1 OU == 2 */
+			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
+			 ACORDO */
 		}			
 		
 		virtual void update(timediff dt) {
@@ -25,6 +30,7 @@ class porto : public component::base {
 	private:
 		static int player;
 		static bool initialized;
+		static std::list<porto *> portos;
 		
 	private:
 		static void initialize() {
@@ -36,6 +42,7 @@ class porto : public component::base {
 
 int porto::player = -1;
 bool porto::initialized = false;
+std::list<porto *> porto::portos;
 
 // the build function
 extern "C" { component::base * build() { return new porto(); } }
