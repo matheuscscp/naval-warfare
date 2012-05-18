@@ -9,29 +9,33 @@ class porto : public component::base {
 		porto() { }
 		virtual ~porto() { }
 		
-		// porto family
 		virtual gear2d::component::family family() { return "porto"; }
-		
-		// porto type
 		virtual gear2d::component::type type() { return "porto"; }
-		
-		// setup phase, to initialize paramters and other stuff
 		virtual void setup(object::signature & sig) {
-			init<string>("person", sig["person"], "Anonymous");
+			initialize();
+			init<int>("porto.player", sig["porto.player"], 0);
 			
-			// initialize/writes the parameter "greetedtimes" to hold 0
-			write("greetedtimes", 0);
+			/* TODO: VERIFICAR O PLAYER == 1 OU == 2 */
 		}			
 		
 		virtual void update(timediff dt) {
-			// add 1 to the number of times we're greeted someone
-			add("greetedtimes", 1);
-			
-			// Print how many times we've greeted someone
-			std::cout << "Hello, " << read<string>("person") << "! ";
-			std::cout << "I have greeted you " << read<int>("greetedtimes") << " times already!" << std::endl;
+			cout << player << endl;
+		}
+		
+	private:
+		static int player;
+		static bool initialized;
+		
+	private:
+		static void initialize() {
+			if (initialized) return;
+			initialized = true;
+			player = 1;
 		}
 };
+
+int porto::player = -1;
+bool porto::initialized = false;
 
 // the build function
 extern "C" { component::base * build() { return new porto(); } }
