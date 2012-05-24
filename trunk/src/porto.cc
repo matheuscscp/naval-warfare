@@ -21,7 +21,7 @@ class porto : public component::base {
 			write("gamesetup", 0);
 			write("gameplay", 0);
 			
-			spawn("barco")->component("barco")->write("porto", this);
+			//spawn("barco")->component("barco")->write("porto", this); //comentado para não travar o programa travando o programa
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
 			 ACORDO */
