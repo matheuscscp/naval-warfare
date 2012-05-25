@@ -5,5 +5,5 @@ renderer.surfaces: porto=porto.png
 x: 0
 y: 0
 
-porto.player: 456789
+porto.player: 1
 
