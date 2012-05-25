@@ -1,9 +1,11 @@
-attach: renderer/renderer unit/barco kinematics/kinematic2d
+attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d
 
 renderer.surfaces: barco=barco.png range=range.png
 
 w: 32
 h: 32
+
+collider.tag: barco
 
 range.zoom: 2.0
 # range.alpha: 0.5
