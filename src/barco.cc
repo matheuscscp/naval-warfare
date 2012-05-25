@@ -36,10 +36,17 @@ class barco : public component::base {
 		}
 		
 		virtual void handlecollision(parameterbase::id pid, base* lastwrite, object::id owner) {
+			int dX,dY,dist=0;
 			if (pid == "collider.collision")
 			{
-								
-				cout << "colisao!!!" << endl;				
+				component::base * c = read<component::base*>(pid);
+				if (c->read<string>("collider.tag") == "barco") {
+					dX   = x - c->read<int>("x");
+					dY   = y - c->read<int>("y");
+					dist = (dX*dX) + (dY*dY);
+					if(dist <= (c->read<int>("w") * c->read<int>("w")));
+						//TODO:: atacar
+				}
 			}		
 		}
 
@@ -60,7 +67,7 @@ class barco : public component::base {
 		}
 		
 		virtual void setup(object::signature & sig) {
-			init<int>("attackrange", sig["attackrange"], 40);
+			init<int>("attackrange", sig["attackrange"], 64);
 			init<int>("moverange", sig["moverange"], 200);
 			hook("mouse.1", (component::call)&barco::handleclick);
 
