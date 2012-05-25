@@ -13,13 +13,18 @@ class porto : public component::base {
 			portos.remove(this);
 		}
 		
+		gear2d::link<int> player;
+		
 		virtual gear2d::component::family family() { return "porto"; }
 		virtual gear2d::component::type type() { return "porto"; }
 		virtual void setup(object::signature & sig) {
 			initialize();
-			init<int>("porto.player", sig["porto.player"], 0);
+			player = fetch<int>("porto.player");
+			player = eval<int>(sig["porto.player"], 0);
 			write("gamesetup", 0);
 			write("gameplay", 0);
+			
+			cout << "port: " << player << endl;
 			
 			spawn("barco")->component("spatial")->write("porto", this); //comentado para não travar o programa travando o programa
 			
@@ -31,7 +36,6 @@ class porto : public component::base {
 		}
 		
 	private:
-		static int player;
 		static bool initialized;
 		static std::list<porto *> portos;
 		
@@ -39,13 +43,11 @@ class porto : public component::base {
 		static void initialize() {
 			if (initialized) return;
 			initialized = true;
-			player = 1;
 		}
 };
 
-int porto::player = -1;
-bool porto::initialized = false;
 std::list<porto *> porto::portos;
+bool porto::initialized = false;
 
 // the build function
 extern "C" { component::base * build() { return new porto(); } }
