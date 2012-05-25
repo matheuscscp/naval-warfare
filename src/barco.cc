@@ -40,8 +40,7 @@ class barco : public component::base {
 			{
 								
 				cout << "colisao!!!" << endl;				
-			}
-				cout << "sei la" << endl;				
+			}		
 		}
 
 		virtual void handleclick(parameterbase::id pid, base* lastwrite, object::id owner) {
@@ -67,14 +66,6 @@ class barco : public component::base {
 
 			int attRange = read<int>("attackrange");
 
-			//setando a caixa de colisao do raio de ataque
-			//write("collider.aabb.x",((attRange-w)/2)+x);
-			//write("collider.aabb.y",((attRange-h)/2)+y);
-			//write("collider.aabb.w",attRange);
-			//write("collider.aabb.h",attRange);
-
-			hook("collider.collision",(component::call)&barco::handlecollision);//hookando a colisao
-
 			write<component::base *>("porto", NULL);
 			porto = NULL;
 			hook("porto");
@@ -85,6 +76,14 @@ class barco : public component::base {
 			h = fetch<float>("h");
 			
 			mouse1 = fetch<int>("mouse.1");
+
+			//setando a caixa de colisao do raio de ataque
+			write("collider.aabb.x",((attRange-w)/2)+x);
+			write("collider.aabb.y",((attRange-h)/2)+y);
+			write("collider.aabb.w",attRange);
+			write("collider.aabb.h",attRange);
+
+			hook("collider.collision",(component::call)&barco::handlecollision);//hookando a colisao
 			
 			write("range.render", true);
 			
