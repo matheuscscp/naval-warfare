@@ -33,13 +33,16 @@ class barco : public component::base {
 				hook(porto, "gamesetup");
 				hook(porto, "gameplay");
 			}
-
-			if (pid == "collider.collision")
-			{
-				cout << "colisao!!!" << endl;				
-			}
 		}
 		
+		virtual void handlecollision(parameterbase::id pid, base* lastwrite, object::id owner) {
+			if (pid == "collider.collision")
+			{
+								
+				cout << "colisao!!!" << endl;				
+			}
+				cout << "sei la" << endl;				
+		}
 
 		virtual void handleclick(parameterbase::id pid, base* lastwrite, object::id owner) {
 			if (mouse1 == 1) {
@@ -61,15 +64,16 @@ class barco : public component::base {
 			init<int>("attackrange", sig["attackrange"], 40);
 			init<int>("moverange", sig["moverange"], 200);
 			hook("mouse.1", (component::call)&barco::handleclick);
+
 			int attRange = read<int>("attackrange");
 
 			//setando a caixa de colisao do raio de ataque
-			write("collider.aabb.x",((attRange-w)/2)+x);
-			write("collider.aabb.y",((attRange-h)/2)+y);
-			write("collider.aabb.w",attRange);
-			write("collider.aabb.h",attRange);
+			//write("collider.aabb.x",((attRange-w)/2)+x);
+			//write("collider.aabb.y",((attRange-h)/2)+y);
+			//write("collider.aabb.w",attRange);
+			//write("collider.aabb.h",attRange);
 
-			hook("collider.collision");//hookando a colisao
+			hook("collider.collision",(component::call)&barco::handlecollision);//hookando a colisao
 
 			write<component::base *>("porto", NULL);
 			porto = NULL;
