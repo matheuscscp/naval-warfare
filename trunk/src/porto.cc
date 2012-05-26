@@ -4,6 +4,8 @@ using namespace gear2d;
 using namespace std;
 
 class porto : public component::base {
+	private:
+		gear2d::link<int> cash;
 	public:
 		// constructor and destructor
 		porto() { 
@@ -26,6 +28,11 @@ class porto : public component::base {
 			
 			cout << "port: " << player << endl;
 			
+			// dinheiro do porto
+			init<int>("cash.value", sig["cash.value"], 0);
+			write("cash.text", string(""));
+			cash = fetch<int>("cash.value");
+			
 			spawn("barco")->component("spatial")->write("porto", this); //comentado para não travar o programa travando o programa
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
@@ -33,6 +40,10 @@ class porto : public component::base {
 		}			
 		
 		virtual void update(timediff dt) {
+			stringstream ss;
+			ss << "Cash: ";
+			ss << cash;
+			write("cash.text", ss.str());
 		}
 		
 	private:
