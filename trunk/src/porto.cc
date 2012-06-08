@@ -29,9 +29,10 @@ class porto : public component::base {
 			cout << "port: " << player << endl;
 			
 			// dinheiro do porto
-			init<int>("cash.value", sig["cash.value"], 0);
+			init<int>("cash.value", sig["cash.value"], 1000);
 			write("cash.text", string(""));
 			cash = fetch<int>("cash.value");
+			hook("cash.value", (component::call)&porto::updateCashText);
 			
 			spawn("barco")->component("spatial")->write("porto", this); //comentado para não travar o programa travando o programa
 			
@@ -40,6 +41,10 @@ class porto : public component::base {
 		}			
 		
 		virtual void update(timediff dt) {
+			cout << read<string>("cash.text") << endl;
+		}
+		
+		void updateCashText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
 			stringstream ss;
 			ss << "Cash: ";
 			ss << cash;
