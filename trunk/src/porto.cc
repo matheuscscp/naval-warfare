@@ -35,7 +35,12 @@ class porto : public component::base {
 			cash = fetch<int>("cash.value");
 			updateCashText("",0,0);
 			
-			spawn("barco")->component("spatial")->write("porto", this);
+			// primeiro barco
+			{
+				object::id tmp = spawn("barco");
+				barcos.push_back(tmp);
+				tmp->component("spatial")->write("porto", this);
+			}
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
 			 ACORDO */
