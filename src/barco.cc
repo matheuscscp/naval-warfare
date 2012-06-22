@@ -98,38 +98,22 @@ class barco : public component::base {
 		}
 		
 		virtual void setup(object::signature & sig) {
-			barcotype t = eval(sig["barco.type"], small);
-			switch(t)
-			{
-				case small://small
-					atr.hp 		=	100;
-					atr.range	=	64;
-					atr.moverange 	=	128;
-					atr.speed	=	300;
-					atr.dmg		=	10;
-					atr.loot	=	100;	
-				break;
-				case medium://medium
-					atr.hp		=	200;
-					atr.range	=	64;
-					atr.moverange	=	128;
-					atr.speed	=	200;
-					atr.dmg		=	10;
-					atr.loot	=	100;	
-				break;
-				case big://big
-					atr.hp		=	300;
-					atr.range	=	64;
-					atr.moverange	=	128;
-					atr.speed	=	100;
-					atr.dmg		=	10;
-					atr.loot	=	100;
-				break;
-			}
-
+			barcotype t = eval(sig["barcotype"], small);
+			init<int>("hp"        , sig["hp"]        , 100);
+			init<int>("range"     , sig["range"]     , 64);
+			init<int>("moverange" , sig["moverange"] , 128);
+			init<int>("speed"     , sig["speed"]     , 300);
+			init<int>("dmg"       , sig["dmg"]       , 10);
+			init<int>("loot"      , sig["loot"]      , 100);
+			
+			atr.hp 		= fetch<int>("hp");
+			atr.range	= fetch<int>("range");
+			atr.moverange 	= fetch<int>("moverange");
+			atr.speed	= fetch<int>("speed");
+			atr.dmg		= fetch<int>("dmg");
+			atr.loot	= fetch<int>("loot");	
+			
 			hook("mouse.1", (component::call)&barco::handleclick);
-
-			int attRange = read<int>("range");
 
 			write<component::base *>("porto", NULL);
 			porto = NULL;
@@ -143,10 +127,10 @@ class barco : public component::base {
 			mouse1 = fetch<int>("mouse.1");
 
 			//setando a caixa de colisao do raio de ataque
-			write("collider.aabb.x",((attRange-w)/2)+x);
-			write("collider.aabb.y",((attRange-h)/2)+y);
-			write("collider.aabb.w",attRange);
-			write("collider.aabb.h",attRange);
+			write("collider.aabb.x",((atr.range-w)/2)+x);
+			write("collider.aabb.y",((atr.range-h)/2)+y);
+			write("collider.aabb.w",atr.range);
+			write("collider.aabb.h",atr.range);
 
 			hook("collider.collision",(component::call)&barco::handlecollision);//hookando a colisao
 			
