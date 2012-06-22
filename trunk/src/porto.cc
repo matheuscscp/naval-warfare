@@ -3,6 +3,22 @@
 using namespace gear2d;
 using namespace std;
 
+enum barcotype {
+	big,
+	medium,
+	small,
+	none
+};
+
+namespace gear2d {
+		template<> barcotype eval<barcotype>(std::string t, barcotype def) {
+			if (t == "big") return big;
+			if (t == "medium") return medium;
+			if (t == "small") return small;
+			return def;
+	}
+}
+
 class porto : public component::base {
 	private:
 		gear2d::link<int> cash;
@@ -35,12 +51,8 @@ class porto : public component::base {
 			cash = fetch<int>("cash.value");
 			updateCashText("",0,0);
 			
-			// primeiro barco
-			{
-				component::base* tmp = spawn("barco")->component("spatial");
-				barcos.push_back(tmp);
-				tmp->write("porto", this);
-			}
+			criaBarco("barco");
+
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
 			 ACORDO */
@@ -49,6 +61,13 @@ class porto : public component::base {
 		virtual void update(timediff dt) {
 		}
 		
+		virtual void criaBarco(string tbarco)
+		{
+			component::base* barco = spawn(tbarco)->component("spatial");
+			barcos.push_back(barco);
+			barco->write("porto", this);
+		}
+
 		void updateCashText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
 			stringstream ss;
 			ss << "Cash: ";
