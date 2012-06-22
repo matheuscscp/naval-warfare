@@ -3,6 +3,22 @@
 using namespace gear2d;
 using namespace std;
 
+enum barcotype {
+	big,
+	medium,
+	small,
+	none
+};
+
+namespace gear2d {
+		template<> barcotype eval<barcotype>(std::string t, barcotype def) {
+			if (t == "big") return big;
+			if (t == "medium") return medium;
+			if (t == "small") return small;
+			return def;
+	}
+}
+
 class barco : public component::base {
 	private:
 		
@@ -13,22 +29,17 @@ class barco : public component::base {
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
 
-		//atributos
-		gear2d::link<string> type;		//tipo do barco
-		gear2d::link<int>    hp;		//vida
-		gear2d::link<int>    range;		//range de ataque
-		gear2d::link<int>    moverange;		//range de movimento
-		gear2d::link<int>    speed;		//velocidade de movimento
-		gear2d::link<int>    dmg;		//dano
-		gear2d::link<int>    loot;		//loot dropado
-
-		init<string>("type"            , sig["type"]            , "small");
-		init<int>   ("hp.value"        , sig["hp.value"]        , 0);
-		init<int>   ("range.value"     , sig["range.value"]     , 0);
-		init<int>   ("moverange.value" , sig["moverange.value"] , 0);
-		init<int>   ("speed.value"     , sig["speed.value"]     , 0);
-		init<int>   ("dmg.value"       , sig["dmg.value"]       , 0);
-		init<int>   ("loot.value"      , sig["loot.value"]      , 0);
+		struct atributos
+		{
+			gear2d::link<string> tipo;		//tipo do barco
+			gear2d::link<int>    hp;		//vida
+			gear2d::link<int>    range;		//range de ataque
+			gear2d::link<int>    moverange;		//range de movimento
+			gear2d::link<int>    speed;		//velocidade de movimento
+			gear2d::link<int>    dmg;		//dano
+			gear2d::link<int>    loot;		//loot dropado
+		}atr;
+		
 		
 		component::base * porto;
 		
@@ -57,7 +68,7 @@ class barco : public component::base {
 			if (pid == "collider.collision")
 			{
 				component::base * target = read<component::base*>(pid);
-				if (c->read<string>("collider.tag") == "barco") 
+				if (target->read<string>("collider.tag") == "barco") 
 				{
 					dX   = x - target->read<int>("x");
 					dY   = y - target->read<int>("y");
@@ -87,37 +98,38 @@ class barco : public component::base {
 		}
 		
 		virtual void setup(object::signature & sig) {
-			switch(read<int>"type.value")
+			barcotype t = eval(sig["barco.type"], small);
+			switch(t)
 			{
-				case 0://small
-					write("hp.value"        , 100);
-					write("range.value"     , 64);
-					write("moverange.value" , 128);
-					write("speed.value"     , 300);
-					write("dmg.value"       , 10);
-					write("loot.value"      , 100);	
+				case small://small
+					atr.hp 		=	100;
+					atr.range	=	64;
+					atr.moverange 	=	128;
+					atr.speed	=	300;
+					atr.dmg		=	10;
+					atr.loot	=	100;	
 				break;
-				case 1://medium
-					write("hp.value"        , 200);
-					write("range.value"     , 64);
-					write("moverange.value" , 128);
-					write("speed.value"     , 200);
-					write("dmg.value"       , 10);
-					write("loot.value"      , 100);	
+				case medium://medium
+					atr.hp		=	200;
+					atr.range	=	64;
+					atr.moverange	=	128;
+					atr.speed	=	200;
+					atr.dmg		=	10;
+					atr.loot	=	100;	
 				break;
-				case 2://big
-					write("hp.value"        , 300);
-					write("range.value"     , 64);
-					write("moverange.value" , 128);
-					write("speed.value"     , 100);
-					write("dmg.value"       , 10);
-					write("loot.value"      , 100);
+				case big://big
+					atr.hp		=	300;
+					atr.range	=	64;
+					atr.moverange	=	128;
+					atr.speed	=	100;
+					atr.dmg		=	10;
+					atr.loot	=	100;
 				break;
 			}
 
 			hook("mouse.1", (component::call)&barco::handleclick);
 
-			int attRange = read<int>("range.value");
+			int attRange = read<int>("range");
 
 			write<component::base *>("porto", NULL);
 			porto = NULL;
