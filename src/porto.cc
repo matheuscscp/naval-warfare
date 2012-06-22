@@ -6,6 +6,7 @@ using namespace std;
 class porto : public component::base {
 	private:
 		gear2d::link<int> cash;
+		std::list< object::id > barcos;
 	public:
 		// constructor and destructor
 		porto() { 
@@ -30,18 +31,17 @@ class porto : public component::base {
 			
 			// dinheiro do porto
 			init<int>("cash.value", sig["cash.value"], 1000);
-			write("cash.text", string(""));
-			cash = fetch<int>("cash.value");
 			hook("cash.value", (component::call)&porto::updateCashText);
+			cash = fetch<int>("cash.value");
+			updateCashText("",0,0);
 			
-			spawn("barco")->component("spatial")->write("porto", this); //comentado para não travar o programa travando o programa
+			spawn("barco")->component("spatial")->write("porto", this);
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
 			 ACORDO */
-		}			
+		}
 		
 		virtual void update(timediff dt) {
-			cout << read<string>("cash.text") << endl;
 		}
 		
 		void updateCashText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
