@@ -12,6 +12,23 @@ class barco : public component::base {
 		
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
+
+		//atributos
+		gear2d::link<string> type;		//tipo do barco
+		gear2d::link<int>    hp;		//vida
+		gear2d::link<int>    range;		//range de ataque
+		gear2d::link<int>    moverange;		//range de movimento
+		gear2d::link<int>    speed;		//velocidade de movimento
+		gear2d::link<int>    dmg;		//dano
+		gear2d::link<int>    loot;		//loot dropado
+
+		init<string>("type"            , sig["type"]            , "small");
+		init<int>   ("hp.value"        , sig["hp.value"]        , 0);
+		init<int>   ("range.value"     , sig["range.value"]     , 0);
+		init<int>   ("moverange.value" , sig["moverange.value"] , 0);
+		init<int>   ("speed.value"     , sig["speed.value"]     , 0);
+		init<int>   ("dmg.value"       , sig["dmg.value"]       , 0);
+		init<int>   ("loot.value"      , sig["loot.value"]      , 0);
 		
 		component::base * porto;
 		
@@ -39,13 +56,16 @@ class barco : public component::base {
 			int dX,dY,dist=0;
 			if (pid == "collider.collision")
 			{
-				component::base * c = read<component::base*>(pid);
-				if (c->read<string>("collider.tag") == "barco") {
-					dX   = x - c->read<int>("x");
-					dY   = y - c->read<int>("y");
+				component::base * target = read<component::base*>(pid);
+				if (c->read<string>("collider.tag") == "barco") 
+				{
+					dX   = x - target->read<int>("x");
+					dY   = y - target->read<int>("y");
 					dist = (dX*dX) + (dY*dY);
-					if(dist <= (c->read<int>("w") * c->read<int>("w")));
-						//TODO:: atacar
+					if(dist <= (target->read<int>("w") * target->read<int>("w")))
+					{
+						//TODO:: ATACAR
+					}
 				}
 			}		
 		}
@@ -67,11 +87,37 @@ class barco : public component::base {
 		}
 		
 		virtual void setup(object::signature & sig) {
-			init<int>("attackrange", sig["attackrange"], 64);
-			init<int>("moverange", sig["moverange"], 200);
+			switch(read<int>"type.value")
+			{
+				case 0://small
+					write("hp.value"        , 100);
+					write("range.value"     , 64);
+					write("moverange.value" , 128);
+					write("speed.value"     , 300);
+					write("dmg.value"       , 10);
+					write("loot.value"      , 100);	
+				break;
+				case 1://medium
+					write("hp.value"        , 200);
+					write("range.value"     , 64);
+					write("moverange.value" , 128);
+					write("speed.value"     , 200);
+					write("dmg.value"       , 10);
+					write("loot.value"      , 100);	
+				break;
+				case 2://big
+					write("hp.value"        , 300);
+					write("range.value"     , 64);
+					write("moverange.value" , 128);
+					write("speed.value"     , 100);
+					write("dmg.value"       , 10);
+					write("loot.value"      , 100);
+				break;
+			}
+
 			hook("mouse.1", (component::call)&barco::handleclick);
 
-			int attRange = read<int>("attackrange");
+			int attRange = read<int>("range.value");
 
 			write<component::base *>("porto", NULL);
 			porto = NULL;
