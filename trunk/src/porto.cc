@@ -6,7 +6,7 @@ using namespace std;
 class porto : public component::base {
 	private:
 		gear2d::link<int> cash;
-		std::list< object::id > barcos;
+		std::list< component::base* > barcos;
 	public:
 		// constructor and destructor
 		porto() { 
@@ -37,9 +37,9 @@ class porto : public component::base {
 			
 			// primeiro barco
 			{
-				object::id tmp = spawn("barco");
+				component::base* tmp = spawn("barco")->component("spatial");
 				barcos.push_back(tmp);
-				tmp->component("spatial")->write("porto", this);
+				tmp->write("porto", this);
 			}
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
