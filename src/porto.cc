@@ -62,8 +62,7 @@ class porto : public component::base {
 		virtual void update(timediff dt) {
 		}
 		
-		virtual void criaBarco(string tbarco)
-		{
+		virtual void criaBarco(const string& tbarco) {
 			component::base* barco = spawn(tbarco)->component("spatial");
 			barcos.push_back(barco);
 			barco->write("porto", this);
