@@ -2,6 +2,12 @@ attach: renderer/renderer porto/porto collider/collider2d
 
 renderer.surfaces: porto=porto.png
 
+renderer.texts: cash
+cash.font: ttf/fontin_sans.otf
+cash.text: Test
+cash.font.size: 18
+cash.position.x: 100
+
 x: 0
 y: 0
 w: 64
