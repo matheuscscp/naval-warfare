@@ -1,6 +1,13 @@
-attach: renderer/renderer porto/porto
+attach: renderer/renderer porto/porto collider/collider2d
 
 renderer.surfaces: porto=porto.png
+renderer.texts: cash
+
+cash.font: ttf/fontin_sans.otf
+cash.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
+cash.font.size: 18
+cash.position.x: -150
+cash.position.y: 48
 
 x: 960
 y: 704
