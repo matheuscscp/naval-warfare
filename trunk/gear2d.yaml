@@ -3,7 +3,7 @@ compath: components,/usr/local/lib/gear2d/component
 objpath: objects/
 imgpath: images/
 
-objects: background barco porto-p1 porto-p2
+objects: background porto-p1 porto-p2
 
 renderer.w: 1024
 renderer.h: 768

@@ -36,6 +36,7 @@ class porto : public component::base {
 		
 		virtual gear2d::component::family family() { return "porto"; }
 		virtual gear2d::component::type type() { return "porto"; }
+                 virtual std::string depends() { return "renderer/renderer"; }
 		virtual void setup(object::signature & sig) {
 			initialize();
 			player = fetch<int>("porto.player");
@@ -43,7 +44,7 @@ class porto : public component::base {
 			write("gamesetup", 0);
 			write("gameplay", 0);
 			
-			cout << "port: " << player << endl;
+// 			cout << "port: " << player << endl;
 			
 			// dinheiro do porto
 			init<int>("cash.value", sig["cash.value"], 1000);
