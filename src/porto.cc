@@ -36,7 +36,7 @@ class porto : public component::base {
 		
 		virtual gear2d::component::family family() { return "porto"; }
 		virtual gear2d::component::type type() { return "porto"; }
-                 virtual std::string depends() { return "renderer/renderer"; }
+		virtual std::string depends() { return "renderer/renderer"; }
 		virtual void setup(object::signature & sig) {
 			initialize();
 			player = fetch<int>("porto.player");
@@ -46,13 +46,18 @@ class porto : public component::base {
 			
 // 			cout << "port: " << player << endl;
 			
+			// hookando o teclado
+			hook("key.a");
+			hook("key.s");
+			hook("key.d");
+			
 			// dinheiro do porto
 			init<int>("cash.value", sig["cash.value"], 1000);
 			hook("cash.value", (component::call)&porto::updateCashText);
 			cash = fetch<int>("cash.value");
 			updateCashText("",0,0);
 			
-			criaBarco("barco");
+			criaBarco("barcopequeno");
 
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
@@ -67,7 +72,25 @@ class porto : public component::base {
 			barcos.push_back(barco);
 			barco->write("porto", this);
 		}
-
+		
+		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
+			if (pid == "key.a") {
+				if (raw<int>("key.a") == 1) {
+					criaBarco("barcopequeno");
+				}
+			}
+			else if (pid == "key.s") {
+				if (raw<int>("key.s") == 1) {
+					criaBarco("barcomedio");
+				}
+			}
+			else if (pid == "key.d") {
+				if (raw<int>("key.d") == 1) {
+					criaBarco("barcogrande");
+				}
+			}
+		}
+		
 		void updateCashText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
 			stringstream ss;
 			ss << "Cash: ";
