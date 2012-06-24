@@ -1,0 +1,16 @@
+attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d
+
+renderer.surfaces: barco=barco_pequeno.png range=range.png
+
+w: 100
+h: 49
+
+collider.tag: barco
+
+range.zoom: 2.0
+# range.alpha: 0.5
+
+attackrange: 40
+moverange: 200
+
+

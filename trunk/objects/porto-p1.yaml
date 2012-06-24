@@ -1,11 +1,13 @@
-attach: renderer/renderer porto/porto collider/collider2d
+attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard
+
+keyboard.interested: a s d
 
 renderer.surfaces: porto=porto.png
 renderer.texts: cash
 
 cash.font: ttf/fontin_sans.otf
 cash.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-cash.font.size: 18
+cash.font.size: 20
 cash.position.x: 64
 
 x: 0
