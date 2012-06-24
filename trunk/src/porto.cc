@@ -57,8 +57,7 @@ class porto : public component::base {
 			cash = fetch<int>("cash.value");
 			updateCashText("",0,0);
 			
-			criaBarco("barcopequeno");
-
+			criarBarco("barcopequeno");
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
 			 ACORDO */
@@ -67,7 +66,7 @@ class porto : public component::base {
 		virtual void update(timediff dt) {
 		}
 		
-		virtual void criaBarco(const string& tbarco) {
+		virtual void criarBarco(const string& tbarco) {
 			component::base* barco = spawn(tbarco)->component("spatial");
 			barcos.push_back(barco);
 			barco->write("porto", this);
@@ -76,17 +75,17 @@ class porto : public component::base {
 		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
 			if (pid == "key.a") {
 				if (raw<int>("key.a") == 1) {
-					criaBarco("barcopequeno");
+					criarBarco("barcopequeno");
 				}
 			}
 			else if (pid == "key.s") {
 				if (raw<int>("key.s") == 1) {
-					criaBarco("barcomedio");
+					criarBarco("barcomedio");
 				}
 			}
 			else if (pid == "key.d") {
 				if (raw<int>("key.d") == 1) {
-					criaBarco("barcogrande");
+					criarBarco("barcogrande");
 				}
 			}
 		}
