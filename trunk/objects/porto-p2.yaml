@@ -1,8 +1,10 @@
+
 attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard
 
 keyboard.interested: a s d
 
-renderer.surfaces: porto=porto.png
+
+renderer.surfaces: porto=porto.png 
 renderer.texts: cash
 
 cash.font: ttf/fontin_sans.otf
@@ -17,3 +19,6 @@ y: 704
 porto.player: 2
 
 cash.value: 1000
+
+
+keyboard.interested: j k l
