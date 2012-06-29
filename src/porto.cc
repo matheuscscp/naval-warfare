@@ -48,11 +48,6 @@ class porto : public component::base {
 			
 // 			cout << "port: " << player << endl;
 			
-			// hookando o teclado
-			hook("key.a");
-			hook("key.s");
-			hook("key.d");
-			
 			// dinheiro do porto
 			init<int>("cash.value", sig["cash.value"], 1000);
 			hook("cash.value", (component::call)&porto::updateCashText);
