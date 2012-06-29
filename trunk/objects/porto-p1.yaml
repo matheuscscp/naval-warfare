@@ -1,8 +1,5 @@
 attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard
 
-keyboard.interested: a s d
-
-
 renderer.surfaces: porto=porto.png
 renderer.texts: cash
 
