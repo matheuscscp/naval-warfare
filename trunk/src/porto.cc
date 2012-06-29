@@ -4,18 +4,18 @@ using namespace gear2d;
 using namespace std;
 
 enum barcotype {
-	big,
+	big = 0,
 	medium,
 	small,
-	none
+	last
 };
 
 namespace gear2d {
-		template<> barcotype eval<barcotype>(std::string t, barcotype def) {
-			if (t == "big") return big;
-			if (t == "medium") return medium;
-			if (t == "small") return small;
-			return def;
+	template<> barcotype eval<barcotype>(std::string t, barcotype def) {
+		if (t == "big") return big;
+		if (t == "medium") return medium;
+		if (t == "small") return small;
+		return def;
 	}
 }
 
@@ -51,7 +51,12 @@ class porto : public component::base {
 			// dinheiro do porto
 			init<int>("cash.value", sig["cash.value"], 1000);
 			hook("cash.value", (component::call)&porto::updateCashText);
-
+			
+			// custo dos barcos
+			custo_barco[big] = eval<int>( sig["cost.barcogrande"], 300 );
+			custo_barco[medium] = eval<int>( sig["cost.barcomedio"], 200 );
+			custo_barco[small] = eval<int>( sig["cost.barcopequeno"], 100 );
+			
 			hook("key.i",(component::call)&porto::handleBarco );
 			hook("key.o",(component::call)&porto::handleBarco );
 			hook("key.p",(component::call)&porto::handleBarco );
@@ -59,7 +64,7 @@ class porto : public component::base {
 			cash = fetch<int>("cash.value");
 			updateCashText("",0,0);
 			
-			criarBarco("barcopequeno");
+			criarBarco("barcopequeno", small, false);
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
 			 ACORDO */
@@ -68,26 +73,30 @@ class porto : public component::base {
 		virtual void update(timediff dt) {
 		}
 		
-		virtual void criarBarco(const string& tbarco) {
-			component::base* barco = spawn(tbarco)->component("spatial");
-			barcos.push_back(barco);
-			barco->write("porto", this);
+		virtual void criarBarco(const string& tbarco, barcotype barco_t, bool debitar = true) {
+			if (((debitar) && (cash >= custo_barco[barco_t])) || (!debitar)) {
+				component::base* barco = spawn(tbarco)->component("spatial");
+				barcos.push_back(barco);
+				barco->write("porto", this);
+				if(debitar)
+					cash = (cash - custo_barco[barco_t]);
+			}
 		}
 		
 		virtual void handleBarco(parameterbase::id pid, component::base * last, object::id owns) {
 			if (pid == "key.i" ||  pid == "key.j") {
 				if (raw<int>("key.i") == 1 || raw<int>("key.j") == 1) {
-					criarBarco("barcopequeno");
+					criarBarco("barcopequeno", small);
 				}
 			}
 			else if (pid == "key.o" || pid == "key.k") {
 				if (raw<int>("key.o") == 1 || raw<int>("key.k") == 1) {
-					criarBarco("barcomedio");
+					criarBarco("barcomedio", medium);
 				}
 			}
 			else if (pid == "key.p" || pid == "key.l") {
 				if (raw<int>("key.p") == 1 || raw<int>("key.l") == 1) {
-					criarBarco("barcogrande");
+					criarBarco("barcogrande", big);
 				}
 			}
 		}
@@ -101,8 +110,9 @@ class porto : public component::base {
 		
 
 	private:
-		static bool initialized;
 		static std::list<porto *> portos;
+		static bool initialized;
+		static int custo_barco[last];
 		
 	private:
 		static void initialize() {
@@ -113,6 +123,7 @@ class porto : public component::base {
 
 std::list<porto *> porto::portos;
 bool porto::initialized = false;
+int porto::custo_barco[last];
 
 // the build function
 extern "C" { component::base * build() { return new porto(); } }
