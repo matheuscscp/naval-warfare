@@ -13,10 +13,8 @@ y: 0
 w: 64
 h: 64
 
-
 porto.player: 1
 
-
-keyboard.interested: i o p
 cash.value: 1000
 
+keyboard.interested: i o p
