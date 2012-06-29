@@ -36,7 +36,9 @@ class porto : public component::base {
 		
 		virtual gear2d::component::family family() { return "porto"; }
 		virtual gear2d::component::type type() { return "porto"; }
+
 		virtual std::string depends() { return "renderer/renderer"; }
+
 		virtual void setup(object::signature & sig) {
 			initialize();
 			player = fetch<int>("porto.player");
@@ -54,6 +56,11 @@ class porto : public component::base {
 			// dinheiro do porto
 			init<int>("cash.value", sig["cash.value"], 1000);
 			hook("cash.value", (component::call)&porto::updateCashText);
+
+			hook("key.i",(component::call)&porto::handleBarco );
+			hook("key.o",(component::call)&porto::handleBarco );
+			hook("key.p",(component::call)&porto::handleBarco );
+
 			cash = fetch<int>("cash.value");
 			updateCashText("",0,0);
 			
@@ -72,19 +79,19 @@ class porto : public component::base {
 			barco->write("porto", this);
 		}
 		
-		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
-			if (pid == "key.a") {
-				if (raw<int>("key.a") == 1) {
+		virtual void handleBarco(parameterbase::id pid, component::base * last, object::id owns) {
+			if (pid == "key.i" ||  pid == "key.j") {
+				if (raw<int>("key.i") == 1 || raw<int>("key.j") == 1) {
 					criarBarco("barcopequeno");
 				}
 			}
-			else if (pid == "key.s") {
-				if (raw<int>("key.s") == 1) {
+			else if (pid == "key.o" || pid == "key.k") {
+				if (raw<int>("key.o") == 1 || raw<int>("key.k") == 1) {
 					criarBarco("barcomedio");
 				}
 			}
-			else if (pid == "key.d") {
-				if (raw<int>("key.d") == 1) {
+			else if (pid == "key.p" || pid == "key.l") {
+				if (raw<int>("key.p") == 1 || raw<int>("key.l") == 1) {
 					criarBarco("barcogrande");
 				}
 			}
@@ -97,6 +104,7 @@ class porto : public component::base {
 			write("cash.text", ss.str());
 		}
 		
+
 	private:
 		static bool initialized;
 		static std::list<porto *> portos;
