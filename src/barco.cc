@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "gear2d.h"
 using namespace gear2d;
 using namespace std;
@@ -89,8 +90,10 @@ class barco : public component::base {
 					cout << "clicked over me" << endl;
 					if (read<bool>("range.render") == false) {
 						write("range.render", true);
+						write("target.render", true);
 					} else {
 						write("range.render", false);
+						write("target.render", false);
 					}
 						
 				}
@@ -144,12 +147,30 @@ class barco : public component::base {
 		}			
 		
 		virtual void update(timediff dt) {
-			
 			cx = x + w/2;
 			cy = y + h/2;
 			
 			write("x.speed", destx - cx);
 			write("y.speed", desty - cy);
+			
+			int mousex = read<int>("mouse.x");
+			int mousey = read<int>("mouse.y");
+			int attRange = fetch<int>("range");
+			
+			float dx = mousex - cx;
+			float dy = mousey - cy;
+			float targetx = dx;
+			float targety = dy;
+			
+			float distance = sqrt(dx*dx + dy*dy);
+			
+			if(distance > attRange) {
+				targetx = targetx * (attRange/distance);
+				targety = targety * (attRange/distance);
+			}
+			
+			write("target.position.x", targetx + w/2 - 8);
+			write("target.position.y", targety + h/2 - 8);
 		}
 };
 
