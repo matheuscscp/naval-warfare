@@ -1,0 +1,11 @@
+attach: renderer/renderer unit/loot keyboard/keyboard spatial/space2d
+
+
+renderer.surfaces: loot=chest.png
+
+w: 50
+h: 50
+
+collider.tag: loot
+
+
