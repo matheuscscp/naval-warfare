@@ -1,6 +1,6 @@
 attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard
 
-renderer.surfaces: porto=porto.png borda=borda.png
+renderer.surfaces: porto=porto1.png
 renderer.texts: cash hp
 
 porto.player: 1
@@ -9,9 +9,8 @@ keyboard.interested: i o p
 
 x: 0
 y: 0
-
-porto.position.x: 2
-porto.position.y: 2
+w: 228
+h: 68
 
 hp.value: 100
 hp.font: ttf/fontin_sans.otf
