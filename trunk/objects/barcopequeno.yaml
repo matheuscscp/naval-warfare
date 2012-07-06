@@ -14,7 +14,11 @@ range.position.y: 9
 # position.y = barco.h/2 - range.h/2
 # range.alpha: 0.5
 
-attackrange: 40
-moverange: 200
+hp: 100
+range: 300
+moverange: 300
+speed: 300
+dmg: 100
+loot: 100
 
 keyboard.interested: b
