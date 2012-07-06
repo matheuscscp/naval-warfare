@@ -22,6 +22,7 @@ namespace gear2d {
 class porto : public component::base {
 	private:
 		gear2d::link<int> cash;
+		gear2d::link<int> hp;
 		std::list< component::base* > barcos;
 	public:
 		// constructor and destructor
@@ -51,18 +52,24 @@ class porto : public component::base {
 			// dinheiro do porto
 			init<int>("cash.value", sig["cash.value"], 1000);
 			hook("cash.value", (component::call)&porto::updateCashText);
+			cash = fetch<int>("cash.value");
+			updateCashText("",0,0);
 			
 			// custo dos barcos
 			custo_barco[big] = eval<int>( sig["cost.barcogrande"], 300 );
 			custo_barco[medium] = eval<int>( sig["cost.barcomedio"], 200 );
 			custo_barco[small] = eval<int>( sig["cost.barcopequeno"], 100 );
 			
+			// hooks pra spawnar FIXME: input temporario
 			hook("key.i",(component::call)&porto::handleBarco );
 			hook("key.o",(component::call)&porto::handleBarco );
 			hook("key.p",(component::call)&porto::handleBarco );
 
-			cash = fetch<int>("cash.value");
-			updateCashText("",0,0);
+			// vida do porto
+			init<int>("hp.value", sig["hp.value"], 100);
+			hook("hp.value", (component::call)&porto::updateHpText);
+			hp = fetch<int>("hp.value");
+			updateHpText("",0,0);
 			
 			criarBarco("barcopequeno", small, false);
 			
@@ -106,6 +113,13 @@ class porto : public component::base {
 			ss << "Cash: ";
 			ss << cash;
 			write("cash.text", ss.str());
+		}
+		
+		void updateHpText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
+			stringstream ss;
+			ss << "HP: ";
+			ss << hp;
+			write("hp.text", ss.str());
 		}
 		
 
