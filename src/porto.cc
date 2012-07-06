@@ -54,6 +54,7 @@ class porto : public component::base {
 			hook("cash.value", (component::call)&porto::updateCashText);
 			cash = fetch<int>("cash.value");
 			updateCashText("",0,0);
+			hook("myturn", (component::call)&porto::getTurnCash);
 			
 			// custo dos barcos
 			custo_barco[big] = eval<int>( sig["cost.barcogrande"], 300 );
@@ -113,6 +114,10 @@ class porto : public component::base {
 			ss << "Cash: ";
 			ss << cash;
 			write("cash.text", ss.str());
+		}
+		
+		void getTurnCash(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
+			cash = cash + (1);//FIXME
 		}
 		
 		void updateHpText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
