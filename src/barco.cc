@@ -64,17 +64,15 @@ class barco : public component::base {
 				hook(porto, "gameplay");
 			}
 		}
-		
-		virtual void handlekill(parameterbase::id pid, component::base * last, object::id owns) {
 
+		//temporario, remover depois
+		virtual void handlekill(parameterbase::id pid, component::base * last, object::id owns) {
 			if (pid == "key.b" || pid == "key.n" || pid == "key.m") {
 				if (raw<int>("key.b") == 1 || raw<int>("key.n") == 1 || raw<int>("key.m") == 1){
 					cout << "BARCO VIROU LOOT" << endl;
 					write("hp",0);
 				}
-
 			}
-
 		}
 
 
@@ -82,18 +80,36 @@ class barco : public component::base {
 			int dX,dY,dist=0;
 			if (pid == "collider.collision")
 			{
+				cout<<"colisao"<<endl;
 				component::base * target = read<component::base*>(pid);
 				if (target->read<string>("collider.tag") == "barco") 
 				{
 					dX   = x - target->read<int>("x");
 					dY   = y - target->read<int>("y");
 					dist = (dX*dX) + (dY*dY);
+					cout<<"atacou"<<endl;
 					if(dist <= (target->read<int>("w") * target->read<int>("w")))
 					{
 						//TODO:: ATACAR
+						cout<<"atacou"<<endl;
+						//removeHP(target);
 					}
 				}
+				if (target->read<string>("collider.tag") == "loot")
+				{
+					dX   = x - target->read<int>("x");
+					dY   = y - target->read<int>("y");
+					dist = (dX*dX) + (dY*dY);
+					if(dist <= (target->read<int>("w") * target->read<int>("w")))
+					{
+						//TODO:: PEGAR LOOT
+					}
+				} 
 			}		
+		}
+
+		virtual void removeHP(component::base * target) {
+			target->write("hp",target->read<int>("hp")-atr.dmg);
 		}
 
 		virtual void handleclick(parameterbase::id pid, base* lastwrite, object::id owner) {
@@ -113,6 +129,34 @@ class barco : public component::base {
 				}
 			}
 		}
+		virtual void handlelife(parameterbase::id pid, component::base * last, object::id owns) {
+			if (pid == "hp"){
+				if(read<int>("hp") <= 0) {
+					int cash;
+					int barco = read<int>("barcotype") ;
+					int x = read<int>("x"), y = read<int>("y");
+					destroy();
+
+					component::base* loot;
+					switch (barco) {
+						case big:
+							cash = read<int>("cost.barcogrande");
+							break;
+						case medium:
+							cash = read<int>("cost.barcomedio");
+							break;
+						case small:
+							cash = read<int>("cost.barcopequeno");
+							break;
+					}
+					loot = spawn("loot")->component("spatial");
+					loot->write("cash",cash);
+					loot->write("x",x);
+					loot->write("y",y);
+				 }
+			}
+		}
+
 		
 		virtual void setup(object::signature & sig) {
 			barcotype t = eval(sig["barcotype"], small);
@@ -158,7 +202,7 @@ class barco : public component::base {
 			
 
 			write("range.render", true);
-			
+				
 			cx = x + w/2;
 			cy = y + h/2;
 			
@@ -166,41 +210,6 @@ class barco : public component::base {
 			desty = cy;
 		}
 
-		virtual void handlelife(parameterbase::id pid, component::base * last, object::id owns) {
-			 if (pid == "hp"){
-
-				 if(read<int>("hp") <= 0) {
-
-					 int cash;
-					 int barco = read<int>("barcotype") ;
-					 int x = read<int>("x"), y = read<int>("y");
-					 destroy();
-
-					 component::base* loot;
-					 switch (barco) {
-						case big:
-							cash = read<int>("cost.barcogrande");
-							break;
-						case medium:
-							cash = read<int>("cost.barcomedio");
-							break;
-						case small:
-							cash = read<int>("cost.barcopequeno");
-							break;
-					}
-
-					 loot = spawn("loot")->component("spatial");
-
-					 loot->write("cash",cash);
-					 loot->write("x",x);
-					 loot->write("y",y);
-
-				 }
-
-
-			}
-
-		}
 
 		
 		virtual void update(timediff dt) {

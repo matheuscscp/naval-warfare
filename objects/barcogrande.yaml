@@ -10,11 +10,17 @@ collider.tag: barco
 range.zoom: 2.0
 range.position.x: 84
 range.position.y: 34
+
 # position.x = barco.w/2 - range.w/2
 # position.y = barco.h/2 - range.h/2
 # range.alpha: 0.5
 
-attackrange: 40
-moverange: 200
+hp: 300
+range: 100
+moverange: 100
+speed: 100
+dmg: 300
+loot: 300
+
 
 keyboard.interested: m
