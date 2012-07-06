@@ -1,20 +1,31 @@
-
 attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard
 
-renderer.surfaces: porto=porto.png
-renderer.texts: cash
-
-cash.font: ttf/fontin_sans.otf
-cash.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-cash.font.size: 20
-cash.position.x: -150
-cash.position.y: 45
-
-x: 960
-y: 704
+renderer.surfaces: porto=porto.png borda=borda.png
+renderer.texts: cash hp
 
 porto.player: 2
 
-cash.value: 1000
-
 keyboard.interested: i o p
+
+x: 1024
+y: 768
+
+porto.position.x: -66
+porto.position.y: -66
+
+borda.position.x: -228
+borda.position.y: -68
+
+hp.value: 100
+hp.font: ttf/fontin_sans.otf
+hp.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
+hp.font.size: 20
+hp.position.x: -225
+hp.position.y: -53
+
+cash.value: 1000
+cash.font: ttf/fontin_sans.otf
+cash.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
+cash.font.size: 20
+cash.position.x: -225
+cash.position.y: -33
