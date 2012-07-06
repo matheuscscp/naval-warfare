@@ -21,3 +21,10 @@ add_library(porto MODULE porto.cc)
 install(TARGETS porto
 		LIBRARY
 		DESTINATION porto)
+
+
+add_library(loot MODULE loot.cc)		
+		
+install(TARGETS loot
+		LIBRARY
+		DESTINATION unit)

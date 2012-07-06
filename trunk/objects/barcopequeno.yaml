@@ -1,4 +1,4 @@
-attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d
+attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d keyboard/keyboard
 
 renderer.surfaces: barco=barco_pequeno.png range=range.png target=target.png
 
@@ -16,3 +16,5 @@ range.position.y: 9
 
 attackrange: 40
 moverange: 200
+
+keyboard.interested: b

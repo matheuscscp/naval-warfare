@@ -30,6 +30,7 @@ class barco : public component::base {
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
 
+
 		struct atributos
 		{
 			gear2d::link<string> tipo;		//tipo do barco
@@ -64,6 +65,19 @@ class barco : public component::base {
 			}
 		}
 		
+		virtual void handlekill(parameterbase::id pid, component::base * last, object::id owns) {
+
+			if (pid == "key.b" || pid == "key.n" || pid == "key.m") {
+				if (raw<int>("key.b") == 1 || raw<int>("key.n") == 1 || raw<int>("key.m") == 1){
+					cout << "BARCO VIROU LOOT" << endl;
+					write("hp",0);
+				}
+
+			}
+
+		}
+
+
 		virtual void handlecollision(parameterbase::id pid, base* lastwrite, object::id owner) {
 			int dX,dY,dist=0;
 			if (pid == "collider.collision")
@@ -121,7 +135,7 @@ class barco : public component::base {
 			write<component::base *>("porto", NULL);
 			porto = NULL;
 			hook("porto");
-			
+
 			x = fetch<float>("x");
 			y = fetch<float>("y");
 			w = fetch<float>("w");
@@ -136,7 +150,13 @@ class barco : public component::base {
 			write("collider.aabb.h",atr.range);
 
 			hook("collider.collision",(component::call)&barco::handlecollision);//hookando a colisao
+
+			hook("hp",(component::call)&barco::handlelife);//hookando a life
+			hook("key.m", (component::call)&barco::handlekill);
+			hook("key.n", (component::call)&barco::handlekill);
+			hook("key.b", (component::call)&barco::handlekill);
 			
+
 			write("range.render", true);
 			
 			cx = x + w/2;
@@ -144,7 +164,44 @@ class barco : public component::base {
 			
 			destx = cx;
 			desty = cy;
-		}			
+		}
+
+		virtual void handlelife(parameterbase::id pid, component::base * last, object::id owns) {
+			 if (pid == "hp"){
+
+				 if(read<int>("hp") <= 0) {
+
+					 int cash;
+					 int barco = read<int>("barcotype") ;
+					 int x = read<int>("x"), y = read<int>("y");
+					 destroy();
+
+					 component::base* loot;
+					 switch (barco) {
+						case big:
+							cash = read<int>("cost.barcogrande");
+							break;
+						case medium:
+							cash = read<int>("cost.barcomedio");
+							break;
+						case small:
+							cash = read<int>("cost.barcopequeno");
+							break;
+					}
+
+					 loot = spawn("loot")->component("spatial");
+
+					 loot->write("cash",cash);
+					 loot->write("x",x);
+					 loot->write("y",y);
+
+				 }
+
+
+			}
+
+		}
+
 		
 		virtual void update(timediff dt) {
 			cx = x + w/2;
