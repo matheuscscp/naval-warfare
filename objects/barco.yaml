@@ -10,6 +10,3 @@ collider.tag: barco
 range.zoom: 2.0
 # range.alpha: 0.5
 
-attackrange: 40
-moverange: 200
-

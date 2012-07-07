@@ -70,46 +70,53 @@ class barco : public component::base {
 			if (pid == "key.b" || pid == "key.n" || pid == "key.m") {
 				if (raw<int>("key.b") == 1 || raw<int>("key.n") == 1 || raw<int>("key.m") == 1){
 					cout << "BARCO VIROU LOOT" << endl;
-					write("hp",0);
+					write("hp.value",0);
 				}
 			}
 		}
 
 
 		virtual void handlecollision(parameterbase::id pid, base* lastwrite, object::id owner) {
-			int dX,dY,dist=0;
-			if (pid == "collider.collision")
-			{
-				cout<<"colisao"<<endl;
+			int dX,dY,dist,distTarget=0;
+			if (pid == "collider.collision"){
+
 				component::base * target = read<component::base*>(pid);
-				if (target->read<string>("collider.tag") == "barco") 
-				{
-					dX   = x - target->read<int>("x");
-					dY   = y - target->read<int>("y");
-					dist = (dX*dX) + (dY*dY);
-					cout<<"atacou"<<endl;
-					if(dist <= (target->read<int>("w") * target->read<int>("w")))
-					{
-						//TODO:: ATACAR
-						cout<<"atacou"<<endl;
-						//removeHP(target);
+
+				dX   = x - target->read<int>("x");
+				dY   = y - target->read<int>("y");
+				dist = (dX*dX) + (dY*dY);
+				distTarget = (target->read<int>("w") * target->read<int>("w"));
+
+				if ((target->read<string>("collider.tag") == "porto")
+				||(target->read<string>("collider.tag") == "barco")){
+					if(dist <= distTarget){
+						removeHP(target,0);
+						//TODO:: colocar um limite de tempo entre os ataques
 					}
 				}
-				if (target->read<string>("collider.tag") == "loot")
-				{
-					dX   = x - target->read<int>("x");
-					dY   = y - target->read<int>("y");
-					dist = (dX*dX) + (dY*dY);
-					if(dist <= (target->read<int>("w") * target->read<int>("w")))
-					{
-						//TODO:: PEGAR LOOT
+
+				dX = x - read<int>("collider.collision.x");  
+				dY = y - read<int>("collider.collision.y");
+				dist = (dX*dX) + (dY*dY);
+				distTarget = (target->read<int>("collider.collision.w")
+					 * target->read<int>("collider.collision.w"));
+
+				if (target->read<string>("collider.tag") == "loot"){
+					if(dist <= distTarget){
+						//TODO::dar dinheiro para o porto
+						target->destroy();
 					}
-				} 
+				}
+				if (target->read<string>("collider.tag") == "barco"){
+					if(dist <= distTarget){
+						removeHP(target,0);
+					}
+				}
 			}		
 		}
 
-		virtual void removeHP(component::base * target) {
-			target->write("hp",target->read<int>("hp")-atr.dmg);
+		virtual void removeHP(component::base * target,int dmg) {
+			target->write("hp.value",target->read<int>("hp.value")-dmg);
 		}
 
 		virtual void handleclick(parameterbase::id pid, base* lastwrite, object::id owner) {
@@ -124,16 +131,15 @@ class barco : public component::base {
 					} else {
 						write("range.render", false);
 						write("target.render", false);
-					}
-						
+					}		
 				}
 			}
 		}
 		virtual void handlelife(parameterbase::id pid, component::base * last, object::id owns) {
-			if (pid == "hp"){
-				if(read<int>("hp") <= 0) {
-					int cash;
-					int barco = read<int>("barcotype") ;
+			if (pid == "hp.value"){
+				if(read<int>("hp.value") <= 0) {
+					int cash = 0;
+					int barco = read<int>("barcotype");
 					int x = read<int>("x"), y = read<int>("y");
 					destroy();
 
@@ -160,14 +166,14 @@ class barco : public component::base {
 		
 		virtual void setup(object::signature & sig) {
 			barcotype t = eval(sig["barcotype"], small);
-			init<int>("hp"        , sig["hp"]        , 100);
+			init<int>("hp.value"  , sig["hp.value"]  , 100);
 			init<int>("range"     , sig["range"]     , 64);
 			init<int>("moverange" , sig["moverange"] , 128);
 			init<int>("speed"     , sig["speed"]     , 300);
 			init<int>("dmg"       , sig["dmg"]       , 10);
 			init<int>("loot"      , sig["loot"]      , 100);
 			
-			atr.hp 		= fetch<int>("hp");
+			atr.hp 		= fetch<int>("hp.value");
 			atr.range	= fetch<int>("range");
 			atr.moverange 	= fetch<int>("moverange");
 			atr.speed	= fetch<int>("speed");
@@ -188,17 +194,13 @@ class barco : public component::base {
 			mouse1 = fetch<int>("mouse.1");
 
 			//setando a caixa de colisao do raio de ataque
-			write("collider.aabb.x",((atr.range-w)/2)+x);
-			write("collider.aabb.y",((atr.range-h)/2)+y);
-			write("collider.aabb.w",atr.range);
-			write("collider.aabb.h",atr.range);
 
 			hook("collider.collision",(component::call)&barco::handlecollision);//hookando a colisao
 
-			hook("hp",(component::call)&barco::handlelife);//hookando a life
-			hook("key.m", (component::call)&barco::handlekill);
-			hook("key.n", (component::call)&barco::handlekill);
-			hook("key.b", (component::call)&barco::handlekill);
+			hook("hp.value", (component::call)&barco::handlelife);//hookando a life
+			hook("key.m"   , (component::call)&barco::handlekill);
+			hook("key.n"   , (component::call)&barco::handlekill);
+			hook("key.b"   , (component::call)&barco::handlekill);
 			
 
 			write("range.render", true);
@@ -218,7 +220,7 @@ class barco : public component::base {
 			
 			write("x.speed", destx - cx);
 			write("y.speed", desty - cy);
-			
+
 			int mousex = read<int>("mouse.x");
 			int mousey = read<int>("mouse.y");
 			int attRange = fetch<int>("range");
@@ -237,6 +239,8 @@ class barco : public component::base {
 			
 			write("target.position.x", targetx + w/2 - 8);
 			write("target.position.y", targety + h/2 - 8);
+
+
 		}
 };
 

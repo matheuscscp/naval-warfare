@@ -11,6 +11,7 @@ range.zoom: 2.0
 range.position.x: 84
 range.position.y: 34
 
+
 # position.x = barco.w/2 - range.w/2
 # position.y = barco.h/2 - range.h/2
 # range.alpha: 0.5
@@ -21,6 +22,11 @@ moverange: 100
 speed: 100
 dmg: 300
 loot: 300
+
+collider.aabb.x: barco.x - range/2 - barco.w/2 
+collider.aabb.y: barco.y - range/2 - barco.w/2 
+collider.aabb.w: range
+collider.aabb.h: range 
 
 
 keyboard.interested: m
