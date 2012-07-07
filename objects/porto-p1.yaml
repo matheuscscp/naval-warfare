@@ -3,6 +3,8 @@ attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard
 renderer.surfaces: porto=porto1.png
 renderer.texts: cash hp
 
+collider.tag: porto
+
 porto.player: 1
 
 keyboard.interested: i o p

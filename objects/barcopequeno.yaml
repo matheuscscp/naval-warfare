@@ -14,12 +14,12 @@ range.position.y: 9
 # position.y = barco.h/2 - range.h/2
 # range.alpha: 0.5
 
-hp: 100
+hp.value: 100
 range: 300
 moverange: 300
 speed: 300
 dmg: 100
-loot: 100
+loot.value: 100
 
 collider.aabb.x: barco.x - range/2 - barco.w/2 
 collider.aabb.y: barco.y - range/2 - barco.w/2 
