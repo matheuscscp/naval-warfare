@@ -90,7 +90,7 @@ class barco : public component::base {
 				if ((target->read<string>("collider.tag") == "porto")
 				||(target->read<string>("collider.tag") == "barco")){
 					if(dist <= distTarget){
-						removeHP(target,0);
+						removeHP(target,1);
 						//TODO:: colocar um limite de tempo entre os ataques
 					}
 				}
@@ -160,14 +160,14 @@ class barco : public component::base {
 			init<int>("moverange" , sig["moverange"] , 128);
 			init<int>("speed"     , sig["speed"]     , 300);
 			init<int>("dmg"       , sig["dmg"]       , 10);
-			init<int>("loot"      , sig["loot"]      , 100);
+			init<int>("loot.value"      , sig["loot.value"]      , 100);
 			
 			atr.hp 		= fetch<int>("hp.value");
 			atr.range	= fetch<int>("range");
 			atr.moverange 	= fetch<int>("moverange");
 			atr.speed	= fetch<int>("speed");
 			atr.dmg		= fetch<int>("dmg");
-			atr.loot	= fetch<int>("loot");	
+			atr.loot	= fetch<int>("loot.value");	
 			
 			hook("mouse.1", (component::call)&barco::handleclick);
 
