@@ -103,7 +103,8 @@ class barco : public component::base {
 
 				if (target->read<string>("collider.tag") == "loot"){
 					if(dist <= distTarget){
-						//TODO::dar dinheiro para o porto
+						//TODO::dar dinheiro para o porto: alguma coisa errada aqui
+						porto->write("cash.value",porto->read<int>("cash.value")+target->read<int>("cash"));
 						target->destroy();
 					}
 				}
@@ -138,25 +139,13 @@ class barco : public component::base {
 		virtual void handlelife(parameterbase::id pid, component::base * last, object::id owns) {
 			if (pid == "hp.value"){
 				if(read<int>("hp.value") <= 0) {
-					int cash = 0;
 					int barco = read<int>("barcotype");
 					int x = read<int>("x"), y = read<int>("y");
 					destroy();
 
 					component::base* loot;
-					switch (barco) {
-						case big:
-							cash = read<int>("cost.barcogrande");
-							break;
-						case medium:
-							cash = read<int>("cost.barcomedio");
-							break;
-						case small:
-							cash = read<int>("cost.barcopequeno");
-							break;
-					}
 					loot = spawn("loot")->component("spatial");
-					loot->write("cash",cash);
+					loot->write("cash",atr.loot);
 					loot->write("x",x);
 					loot->write("y",y);
 				 }
