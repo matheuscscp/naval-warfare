@@ -42,7 +42,7 @@ class barco : public component::base {
 			gear2d::link<int>    loot;		//loot dropado
 		}atr;
 		
-		
+		component::base * alvoPrincipal;
 		component::base * porto;
 		
 	public:
@@ -104,13 +104,16 @@ class barco : public component::base {
 				if (target->read<string>("collider.tag") == "loot"){
 					if(dist <= distTarget){
 						//TODO::dar dinheiro para o porto: alguma coisa errada aqui
-						porto->write("cash.value",porto->read<int>("cash.value")+target->read<int>("cash"));
+						porto->write("cash.value",porto->read<int>("cash.value")+target->read<int>("value"));
 						target->destroy();
 					}
 				}
 				if (target->read<string>("collider.tag") == "barco"){
 					if(dist <= distTarget){
-						removeHP(target,0);
+						//descomentar para causar dano ao encostar em um barco
+						//removeHP(target,atr.hp);
+						//atr.hp = atr.hp-target->read<int>("hp.value")
+						//write("hp.value",atr.hp-target->read<int>("hp.value"));
 					}
 				}
 			}		
@@ -145,7 +148,7 @@ class barco : public component::base {
 
 					component::base* loot;
 					loot = spawn("loot")->component("spatial");
-					loot->write("cash",atr.loot);
+					loot->write("value",read<int>("loot.value"));
 					loot->write("x",x);
 					loot->write("y",y);
 				 }
@@ -160,38 +163,31 @@ class barco : public component::base {
 			init<int>("moverange" , sig["moverange"] , 128);
 			init<int>("speed"     , sig["speed"]     , 300);
 			init<int>("dmg"       , sig["dmg"]       , 10);
-			init<int>("loot.value"      , sig["loot.value"]      , 100);
+			init<int>("loot.value", sig["loot.value"], 100);
 			
 			atr.hp 		= fetch<int>("hp.value");
 			atr.range	= fetch<int>("range");
 			atr.moverange 	= fetch<int>("moverange");
 			atr.speed	= fetch<int>("speed");
 			atr.dmg		= fetch<int>("dmg");
-			atr.loot	= fetch<int>("loot.value");	
-			
-			hook("mouse.1", (component::call)&barco::handleclick);
+			atr.loot	= fetch<int>("loot.value");
+			x 		= fetch<float>("x");
+			y 		= fetch<float>("y");
+			w 		= fetch<float>("w");
+			h 		= fetch<float>("h");
+			mouse1 		= fetch<int>("mouse.1");			
 
 			write<component::base *>("porto", NULL);
 			porto = NULL;
+
 			hook("porto");
-
-			x = fetch<float>("x");
-			y = fetch<float>("y");
-			w = fetch<float>("w");
-			h = fetch<float>("h");
-			
-			mouse1 = fetch<int>("mouse.1");
-
-			//setando a caixa de colisao do raio de ataque
-
+			hook("mouse.1", (component::call)&barco::handleclick);
 			hook("collider.collision",(component::call)&barco::handlecollision);//hookando a colisao
-
 			hook("hp.value", (component::call)&barco::handlelife);//hookando a life
 			hook("key.m"   , (component::call)&barco::handlekill);
 			hook("key.n"   , (component::call)&barco::handlekill);
 			hook("key.b"   , (component::call)&barco::handlekill);
 			
-
 			write("range.render", true);
 				
 			cx = x + w/2;
@@ -201,8 +197,6 @@ class barco : public component::base {
 			desty = cy;
 		}
 
-
-		
 		virtual void update(timediff dt) {
 			cx = x + w/2;
 			cy = y + h/2;
@@ -228,8 +222,6 @@ class barco : public component::base {
 			
 			write("target.position.x", targetx + w/2 - 8);
 			write("target.position.y", targety + h/2 - 8);
-
-
 		}
 };
 
