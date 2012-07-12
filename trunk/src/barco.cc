@@ -56,106 +56,7 @@ class barco : public component::base {
 		virtual std::string depends() { 
 			return "kinematics/kinematic2d mouse/mouse mouseover/mouseover collider/collider2d";
 		}
-		
-		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
-			if (pid == "porto") {
-				porto = read<component::base *>("porto");
-				hook(porto, "gamesetup");
-				hook(porto, "gameplay");
-			}
-		}
 
-		//temporario, remover depois
-		virtual void handlekill(parameterbase::id pid, component::base * last, object::id owns) {
-			if (pid == "key.b" || pid == "key.n" || pid == "key.m") {
-				if (raw<int>("key.b") == 1 || raw<int>("key.n") == 1 || raw<int>("key.m") == 1){
-					cout << "BARCO VIROU LOOT" << endl;
-					write("hp.value",0);
-				}
-			}
-		}
-
-
-		virtual void handlecollision(parameterbase::id pid, base* lastwrite, object::id owner) {
-			int dX,dY,dist,distTarget=0;
-			if (pid == "collider.collision"){
-
-				component::base * target = read<component::base*>(pid);
-
-				dX   = x - target->read<int>("x");
-				dY   = y - target->read<int>("y");
-				dist = (dX*dX) + (dY*dY);
-				distTarget = (target->read<int>("w") * target->read<int>("w"));
-
-				if ((target->read<string>("collider.tag") == "porto")
-				||(target->read<string>("collider.tag") == "barco")){
-					if(dist <= distTarget){
-						removeHP(target,1);
-						//TODO:: colocar um limite de tempo entre os ataques
-					}
-				}
-
-				dX = x - read<int>("collider.collision.x");  
-				dY = y - read<int>("collider.collision.y");
-				dist = (dX*dX) + (dY*dY);
-				distTarget = (target->read<int>("collider.collision.w")
-					 * target->read<int>("collider.collision.w"));
-
-				if (target->read<string>("collider.tag") == "loot"){
-					if(dist <= distTarget){
-						//TODO::dar dinheiro para o porto: alguma coisa errada aqui
-						porto->write("cash.value",porto->read<int>("cash.value")+target->read<int>("value"));
-						target->destroy();
-					}
-				}
-				if (target->read<string>("collider.tag") == "barco"){
-					if(dist <= distTarget){
-						//descomentar para causar dano ao encostar em um barco
-						//removeHP(target,atr.hp);
-						//atr.hp = atr.hp-target->read<int>("hp.value")
-						//write("hp.value",atr.hp-target->read<int>("hp.value"));
-					}
-				}
-			}		
-		}
-
-		virtual void removeHP(component::base * target,int dmg) {
-			target->write("hp.value",target->read<int>("hp.value")-dmg);
-		}
-
-		virtual void handleclick(parameterbase::id pid, base* lastwrite, object::id owner) {
-			if (mouse1 == 1) {
-				destx = read<int>("mouse.x");
-				desty = read<int>("mouse.y");
-				if (read<bool>("mouseover")) {
-					cout << "clicked over me" << endl;
-					if (read<bool>("range.render") == false) {
-						write("range.render", true);
-						write("target.render", true);
-					} else {
-						write("range.render", false);
-						write("target.render", false);
-					}		
-				}
-			}
-		}
-		virtual void handlelife(parameterbase::id pid, component::base * last, object::id owns) {
-			if (pid == "hp.value"){
-				if(read<int>("hp.value") <= 0) {
-					int barco = read<int>("barcotype");
-					int x = read<int>("x"), y = read<int>("y");
-					destroy();
-
-					component::base* loot;
-					loot = spawn("loot")->component("spatial");
-					loot->write("value",read<int>("loot.value"));
-					loot->write("x",x);
-					loot->write("y",y);
-				 }
-			}
-		}
-
-		
 		virtual void setup(object::signature & sig) {
 			barcotype t = eval(sig["barcotype"], small);
 			init<int>("hp.value"  , sig["hp.value"]  , 100);
@@ -181,13 +82,16 @@ class barco : public component::base {
 			porto = NULL;
 
 			hook("porto");
-			hook("mouse.1", (component::call)&barco::handleclick);
-			hook("collider.collision",(component::call)&barco::handlecollision);//hookando a colisao
-			hook("hp.value", (component::call)&barco::handlelife);//hookando a life
-			hook("key.m"   , (component::call)&barco::handlekill);
-			hook("key.n"   , (component::call)&barco::handlekill);
-			hook("key.b"   , (component::call)&barco::handlekill);
-			
+			hook("mouse.1", (component::call)&barco::handleClick);
+			hook("collider.collision",(component::call)&barco::handleCollision);//hookando a colisao
+			hook("hp.value", (component::call)&barco::handleLife);//hookando a life
+			hook("hp.value", (component::call)&barco::updateHpText);
+			hook("key.m"   , (component::call)&barco::handleKill);
+			hook("key.n"   , (component::call)&barco::handleKill);
+			hook("key.b"   , (component::call)&barco::handleKill);
+
+
+
 			write("range.render", true);
 				
 			cx = x + w/2;
@@ -222,6 +126,129 @@ class barco : public component::base {
 			
 			write("target.position.x", targetx + w/2 - 8);
 			write("target.position.y", targety + h/2 - 8);
+		}
+		
+		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
+			if (pid == "porto") {
+				porto = read<component::base *>("porto");
+				hook(porto, "gamesetup");
+				hook(porto, "gameplay");
+			}
+		}
+
+		//temporario, remover depois
+		virtual void handleKill(parameterbase::id pid, component::base * last, object::id owns) {
+			if (pid == "key.b" || pid == "key.n" || pid == "key.m") {
+				if (raw<int>("key.b") == 1 || raw<int>("key.n") == 1 || raw<int>("key.m") == 1){
+					cout << "BARCO VIROU LOOT" << endl;
+					write("hp.value",0);
+				}
+			}
+		}
+		
+		virtual void handleCollision(parameterbase::id pid, base* lastwrite, object::id owner) {
+			int dX,dY,dist,distTarget=0;
+			bool colisaoAtaque = false;
+			bool colisaoPerto = false;
+			if (pid == "collider.collision"){
+				component::base * target = read<component::base*>(pid);
+
+				colisaoAtaque = sphereCollision(cx,cy,atr.range,target->read<int>("cx"),target->read<int>("cy"),target->read<int>("h"));
+				colisaoPerto = sphereCollision(cx,cy,w,target->read<int>("cx"),target->read<int>("cy"),target->read<int>("h"));
+				if(colisaoAtaque)
+				{	
+					if(target->read<string>("collider.tag") == "barco")
+						
+
+					if ((target->read<string>("collider.tag") == "portoa")
+					||(target->read<string>("collider.tag") == "barco")){
+						/*if(alvoPrincipal==NULL)
+							alvoPrincipal = target;
+						else{
+							if(target == alvoPrincipal){
+								if(removeHP(target,1))
+									alvoPrincipal=NULL;
+								//TODO:: colocar um limite de tempo entre os ataques
+							}
+						}*/
+						removeHP(target,atr.dmg);
+					}
+				}
+				
+				if(colisaoPerto)
+				{
+					if (target->read<string>("collider.tag") == "loot"){
+						porto->write("cash.value",porto->read<int>("cash.value")+target->read<int>("value"));
+						target->destroy();
+					}
+					if (target->read<string>("collider.tag") == "barco"){
+						/*descomentar para causar dano ao encostar em um barco
+						removeHP(target,atr.hp);
+						atr.hp = atr.hp-target->read<int>("hp.value")
+						write("hp.value",atr.hp-target->read<int>("hp.value"));
+						*/
+					}
+				}
+			}		
+		}
+		
+		//retorna true se o alvo morrer(vida <=0)
+		bool removeHP(component::base * target,int dmg) {
+			int newHp = 0;
+			if(target->read<int>("hp.value")>0){
+				newHp = target->read<int>("hp.value")-dmg;
+				target->write("hp.value",newHp);
+				return false;
+			}
+			return true;
+		}
+
+		bool sphereCollision(int ax,int ay, int ar, int bx, int by, int br) {
+			int dX   = ax - bx;
+			int dY   = ay - by;
+			int dR   = br + ar;
+			if((dX*dX)+(dY*dY) <= dR*dR)
+				return true;
+			return false;
+		}
+
+		virtual void handleClick(parameterbase::id pid, base* lastwrite, object::id owner) {
+			if (mouse1 == 1) {
+				destx = read<int>("mouse.x");
+				desty = read<int>("mouse.y");
+				if (read<bool>("mouseover")) {
+					cout << "clicked over me" << endl;
+					if (read<bool>("range.render") == false) {
+						write("range.render", true);
+						write("target.render", true);
+					} else {
+						write("range.render", false);
+						write("target.render", false);
+					}		
+				}
+			}
+		}
+		virtual void handleLife(parameterbase::id pid, component::base * last, object::id owns) {
+			if (pid == "hp.value"){
+				if(read<int>("hp.value") <= 0) {
+					int barco = read<int>("barcotype");
+					int x = read<int>("x"), y = read<int>("y");
+					destroy();
+
+					component::base* loot;
+					loot = spawn("loot")->component("spatial");
+					loot->write("value",read<int>("loot.value"));
+					loot->write("x",x);
+					loot->write("y",y);
+				 }
+			}
+		}
+		
+		void updateHpText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
+			//stringstream ss;
+			//ss << "HP: ";
+			//ss << hp;
+			//write("hp.text", ss.str());
 		}
 };
 
