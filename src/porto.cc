@@ -69,6 +69,7 @@ class porto : public component::base {
 			// vida do porto
 			init<int>("hp.value", sig["hp.value"], 100);
 			hook("hp.value", (component::call)&porto::updateHpText);
+			hook("hp.value", (component::call)&porto::handleLife);
 			hp = fetch<int>("hp.value");
 			updateHpText("",0,0);
 			
@@ -88,6 +89,14 @@ class porto : public component::base {
 				barco->write("porto", this);
 				if(debitar)
 					cash = (cash - custo_barco[barco_t]);
+			}
+		}
+
+		virtual void handleLife(parameterbase::id pid, component::base * last, object::id owns) {
+			if (pid == "hp.value"){
+				if(read<int>("hp.value") <= 0) {
+					cout<<"PORTO MORTO"<<endl;	
+				}
 			}
 		}
 		
