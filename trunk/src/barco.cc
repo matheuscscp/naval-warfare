@@ -24,8 +24,9 @@ class barco : public component::base {
 	private:
 		
 		float cx, cy;
-		
 		float destx, desty;
+		float targetx, targety;
+		bool selected;
 		
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
@@ -90,15 +91,16 @@ class barco : public component::base {
 			hook("key.n"   , (component::call)&barco::handleKill);
 			hook("key.b"   , (component::call)&barco::handleKill);
 
-
-
-			write("range.render", true);
+			write("range.render", false);
+			write("target.render", false);
 				
 			cx = x + w/2;
 			cy = y + h/2;
 			
 			destx = cx;
 			desty = cy;
+			
+			selected = false;
 		}
 
 		virtual void update(timediff dt) {
@@ -110,18 +112,17 @@ class barco : public component::base {
 
 			int mousex = read<int>("mouse.x");
 			int mousey = read<int>("mouse.y");
-			int attRange = fetch<int>("range");
 			
 			float dx = mousex - cx;
 			float dy = mousey - cy;
-			float targetx = dx;
-			float targety = dy;
+			targetx = dx;
+			targety = dy;
 			
 			float distance = sqrt(dx*dx + dy*dy);
 			
-			if(distance > attRange) {
-				targetx = targetx * (attRange/distance);
-				targety = targety * (attRange/distance);
+			if(distance > atr.range) {
+				targetx = targetx * (atr.range/distance);
+				targety = targety * (atr.range/distance);
 			}
 			
 			write("target.position.x", targetx + w/2 - 8);
@@ -214,16 +215,19 @@ class barco : public component::base {
 
 		virtual void handleClick(parameterbase::id pid, base* lastwrite, object::id owner) {
 			if (mouse1 == 1) {
-				destx = read<int>("mouse.x");
-				desty = read<int>("mouse.y");
-				if (read<bool>("mouseover")) {
-					cout << "clicked over me" << endl;
-					if (read<bool>("range.render") == false) {
+				if (selected) {
+					destx = targetx + cx;
+					desty = targety + cy;
+					selected = false;
+					write("range.render", false);
+					write("target.render", false);
+				}
+				else {
+					if (read<bool>("mouseover")) {
+						cout << "clicked over me" << endl;
+						selected = true;
 						write("range.render", true);
 						write("target.render", true);
-					} else {
-						write("range.render", false);
-						write("target.render", false);
 					}		
 				}
 			}
