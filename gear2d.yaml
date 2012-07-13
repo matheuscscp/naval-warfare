@@ -11,3 +11,5 @@ renderer.h: 768
 cost.barcopequeno: 100
 cost.barcomedio: 200
 cost.barcogrande: 300
+
+cash.maxperturn: 500

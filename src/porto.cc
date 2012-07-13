@@ -56,6 +56,9 @@ class porto : public component::base {
 			updateCashText("",0,0);
 			hook("myturn", (component::call)&porto::getTurnCash);
 			
+			// maximo de dinheiro a ganhar por turno
+			max_cash_turn = eval<int>( sig["cash.maxperturn"], 500 );
+			
 			// custo dos barcos
 			custo_barco[big] = eval<int>( sig["cost.barcogrande"], 300 );
 			custo_barco[medium] = eval<int>( sig["cost.barcomedio"], 200 );
@@ -125,8 +128,8 @@ class porto : public component::base {
 			write("cash.text", ss.str());
 		}
 		
-		void getTurnCash(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
-			cash = cash + (1);//FIXME
+		void getTurnCash() {
+			cash = cash + min(max_cash_turn, 5/*FIXME*/);
 		}
 		
 		void updateHpText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
@@ -141,6 +144,7 @@ class porto : public component::base {
 		static std::list<porto *> portos;
 		static bool initialized;
 		static int custo_barco[last];
+		static int max_cash_turn;
 		
 	private:
 		static void initialize() {
@@ -152,6 +156,7 @@ class porto : public component::base {
 std::list<porto *> porto::portos;
 bool porto::initialized = false;
 int porto::custo_barco[last];
+int porto::max_cash_turn;
 
 // the build function
 extern "C" { component::base * build() { return new porto(); } }
