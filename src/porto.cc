@@ -150,7 +150,7 @@ class porto : public component::base {
 				desconto += ( peso * qtde_barcos[i] / cash_max_barcos[i] );
 			}
 			
-			cash = cash + max(min_cash_turn, max_cash_turn * ( 1 - desconto ));
+			cash = cash + max<int>(min_cash_turn, max_cash_turn * ( 1 - desconto ));
 		}
 		
 		void updateHpText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
