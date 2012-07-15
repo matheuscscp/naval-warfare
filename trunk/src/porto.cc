@@ -24,6 +24,7 @@ class porto : public component::base {
 		gear2d::link<int> cash;
 		gear2d::link<int> hp;
 		std::list< component::base* > barcos;
+		int qtde_barcos[last];
 	public:
 		// constructor and destructor
 		porto() { 
@@ -56,13 +57,19 @@ class porto : public component::base {
 			updateCashText("",0,0);
 			hook("myturn", (component::call)&porto::getTurnCash);
 			
-			// maximo de dinheiro a ganhar por turno
+			// minimo e maximo de dinheiro a ganhar por turno
+			min_cash_turn = eval<int>( sig["cash.minperturn"], 50 );
 			max_cash_turn = eval<int>( sig["cash.maxperturn"], 500 );
 			
 			// custo dos barcos
 			custo_barco[big] = eval<int>( sig["cost.barcogrande"], 300 );
 			custo_barco[medium] = eval<int>( sig["cost.barcomedio"], 200 );
 			custo_barco[small] = eval<int>( sig["cost.barcopequeno"], 100 );
+			
+			// quantidade maxima de barcos de cada tipo para o calculo do cash ganho por turno
+			cash_max_barcos[big] = eval<int>( sig["cash.maxgrande"], 3 );
+			cash_max_barcos[medium] = eval<int>( sig["cash.maxmedio"], 4 );
+			cash_max_barcos[small] = eval<int>( sig["cash.maxpequeno"], 5 );
 			
 			// hooks pra spawnar FIXME: input temporario
 			hook("key.i",(component::call)&porto::handleBarco );
@@ -77,6 +84,10 @@ class porto : public component::base {
 			updateHpText("",0,0);
 			
 			criarBarco("barcopequeno", small, false);
+			
+			// zerando a quantidade de barcos deste porto
+			for( int i = 0; i < last; ++i )
+				qtde_barcos[i] = 0;
 			
 			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
 			 ACORDO */
@@ -129,7 +140,14 @@ class porto : public component::base {
 		}
 		
 		void getTurnCash() {
-			cash = cash + min(max_cash_turn, 5/*FIXME*/);
+			float desconto = 0;
+			
+			for( int i = 0; i < last; ++i ) {
+				float peso = ( float( last * (last + 1) ) / 2 ) * (i + 1);
+				desconto += ( peso * qtde_barcos[i] / cash_max_barcos[i] );
+			}
+			
+			cash = cash + max(min_cash_turn, max_cash_turn * ( 1 - desconto ));
 		}
 		
 		void updateHpText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
@@ -144,7 +162,9 @@ class porto : public component::base {
 		static std::list<porto *> portos;
 		static bool initialized;
 		static int custo_barco[last];
+		static int min_cash_turn;
 		static int max_cash_turn;
+		static int cash_max_barcos[last];
 		
 	private:
 		static void initialize() {
@@ -156,7 +176,9 @@ class porto : public component::base {
 std::list<porto *> porto::portos;
 bool porto::initialized = false;
 int porto::custo_barco[last];
+int porto::min_cash_turn;
 int porto::max_cash_turn;
+int porto::cash_max_barcos[last];
 
 // the build function
 extern "C" { component::base * build() { return new porto(); } }
