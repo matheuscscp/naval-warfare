@@ -101,8 +101,11 @@ class porto : public component::base {
 				component::base* barco = spawn(tbarco)->component("spatial");
 				barcos.push_back(barco);
 				barco->write("porto", this);
+				
 				if(debitar)
 					cash = (cash - custo_barco[barco_t]);
+				
+				qtde_barcos[barco_t]++;
 			}
 		}
 
