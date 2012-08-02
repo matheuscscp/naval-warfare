@@ -14,4 +14,8 @@ message(STATUS ${CMAKE_INSTALL_PREFIX})
 include_directories(${Gear2D_INCLUDE_DIR} ${SDL_INCLUDE_DIR})
 link_directories(${Gear2D_LINK_DIR})
 
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  add_definitions(-DLOGTRACE)
+endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+
 add_subdirectory(src)
