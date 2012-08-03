@@ -40,7 +40,7 @@ class barco : public component::base {
 			gear2d::link<int>    range;		//range de ataque
 			gear2d::link<int>    moverange;		//range de movimento
 			gear2d::link<int>    speed;		//velocidade de movimento
-			gear2d::link<int>    dmg;		//dano
+			gear2d::link<int>    dmg;		//dano por segundo
 			gear2d::link<int>    loot;		//loot dropado
 		}atr;
 		
