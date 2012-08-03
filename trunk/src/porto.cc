@@ -25,6 +25,7 @@ class porto : public component::base {
 		gear2d::link<int> hp;
 		std::list< component::base* > barcos;
 		int qtde_barcos[last];
+		component::base* painel;
 	public:
 		// constructor and destructor
 		porto() { 
@@ -82,6 +83,11 @@ class porto : public component::base {
 			hook("hp.value", (component::call)&porto::handleLife);
 			hp = fetch<int>("hp.value");
 			updateHpText("",0,0);
+			
+			// painel
+			painel = spawn("painel")->component("spatial");
+			painel->write<float>("x", eval<float>(sig["painel.x"], 0));
+			painel->write<float>("y", eval<float>(sig["painel.y"], 0));
 			
 			criarBarco("barcopequeno", small, false);
 			
