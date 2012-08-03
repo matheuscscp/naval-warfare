@@ -28,3 +28,10 @@ add_library(loot MODULE loot.cc)
 install(TARGETS loot
 		LIBRARY
 		DESTINATION unit)
+		
+
+add_library(painel MODULE painel.cc)		
+		
+install(TARGETS painel
+		LIBRARY
+		DESTINATION menu)

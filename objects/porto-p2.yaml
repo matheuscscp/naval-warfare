@@ -7,8 +7,6 @@ collider.tag: porto
 
 porto.player: 2
 
-keyboard.interested: i o p
-
 x: 796
 y: 700
 w: 228
