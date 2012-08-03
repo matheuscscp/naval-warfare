@@ -99,7 +99,7 @@ class porto : public component::base {
 		virtual void criarBarco(const string& tbarco, barcotype barco_t, bool debitar = true) {
 			// soh cria se eh pra debitar e tem dinheiro OU se nao eh pra debitar
 			if (((debitar) && (cash >= custo_barco[barco_t])) || (!debitar)) {
-				component::base* barco = spawn(tbarco)->component("spatial");
+				component::base* barco = spawn(tbarco)->component("unit");
 				barcos.push_back(barco);
 				barco->write("porto", this);
 				qtde_barcos[barco_t]++;
