@@ -27,6 +27,7 @@ class barco : public component::base {
 		float destx, desty;
 		float targetx, targety;
 		bool selected;
+                bool myTurn; //flag para saber se é o turno do barco
 		
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
@@ -101,14 +102,19 @@ class barco : public component::base {
 			desty = cy;
 			
 			selected = false;
+                        myTurn = true; //incializando como true para não prejudicar os demais testes
 		}
 
 		virtual void update(timediff dt) {
 			cx = x + w/2;
 			cy = y + h/2;
 			
-			write("x.speed", destx - cx);
-			write("y.speed", desty - cy);
+                        //verifica se é o turno do barco antes de executar a movimentação
+                        if( myTurn && ( destx - cx || desty - cy ) )
+                        {
+                            write("x.speed", destx - cx);
+                            write("y.speed", desty - cy);
+                        }
 
 			int mousex = read<int>("mouse.x");
 			int mousey = read<int>("mouse.y");
