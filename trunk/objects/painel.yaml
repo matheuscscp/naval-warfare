@@ -1,4 +1,4 @@
-attach: renderer/renderer
+attach: renderer/renderer menu/painel mouse/mouse mouseover/mouseover
 
 renderer.surfaces: painel=painel.png
 

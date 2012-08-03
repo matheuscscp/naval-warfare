@@ -72,11 +72,6 @@ class porto : public component::base {
 			cash_max_barcos[medium] = eval<int>( sig["cash.maxmedio"], 4 );
 			cash_max_barcos[small] = eval<int>( sig["cash.maxpequeno"], 5 );
 			
-			// hooks pra spawnar FIXME: input temporario
-			hook("key.i",(component::call)&porto::handleBarco );
-			hook("key.o",(component::call)&porto::handleBarco );
-			hook("key.p",(component::call)&porto::handleBarco );
-
 			// vida do porto
 			init<int>("hp.value", sig["hp.value"], 100);
 			hook("hp.value", (component::call)&porto::updateHpText);
@@ -84,19 +79,20 @@ class porto : public component::base {
 			hp = fetch<int>("hp.value");
 			updateHpText("",0,0);
 			
-			// painel
+			// painel de fabricacao de barcos
+			write<string>("spawn.tamanho", "");
+			write<int>("spawn.tipo", last);
+			hook("spawn.tamanho", (component::call)&porto::handlePainel);
 			painel = spawn("painel")->component("spatial");
+			painel->write("porto", this);
 			painel->write<float>("x", eval<float>(sig["painel.x"], 0));
 			painel->write<float>("y", eval<float>(sig["painel.y"], 0));
-			
-			criarBarco("barcopequeno", small, false);
 			
 			// zerando a quantidade de barcos deste porto
 			for( int i = 0; i < last; ++i )
 				qtde_barcos[i] = 0;
 			
-			/* TODO: VERIFICAR  O NUMERO DO PLAYER E POSICIONAR DE
-			 ACORDO */
+			criarBarco("barcopequeno", small, false);
 		}
 		
 		virtual void update(timediff dt) {
@@ -119,24 +115,6 @@ class porto : public component::base {
 			if (pid == "hp.value"){
 				if(read<int>("hp.value") <= 0) {
 					cout<<"PORTO MORTO"<<endl;	
-				}
-			}
-		}
-		
-		virtual void handleBarco(parameterbase::id pid, component::base * last, object::id owns) {
-			if (pid == "key.i" ||  pid == "key.j") {
-				if (raw<int>("key.i") == 1 || raw<int>("key.j") == 1) {
-					criarBarco("barcopequeno", small);
-				}
-			}
-			else if (pid == "key.o" || pid == "key.k") {
-				if (raw<int>("key.o") == 1 || raw<int>("key.k") == 1) {
-					criarBarco("barcomedio", medium);
-				}
-			}
-			else if (pid == "key.p" || pid == "key.l") {
-				if (raw<int>("key.p") == 1 || raw<int>("key.l") == 1) {
-					criarBarco("barcogrande", big);
 				}
 			}
 		}
@@ -164,6 +142,10 @@ class porto : public component::base {
 			ss << "HP: ";
 			ss << hp;
 			write("hp.text", ss.str());
+		}
+		
+		void handlePainel(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
+			criarBarco(read<string>("spawn.tamanho"), read<barcotype>("spawn.tipo"));
 		}
 		
 
