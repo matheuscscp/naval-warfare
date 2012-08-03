@@ -102,37 +102,50 @@ class barco : public component::base {
 			desty = cy;
 			
 			selected = false;
-                        myTurn = true; //incializando como true para não prejudicar os demais testes
+            myTurn = true; //incializando como true para não prejudicar os demais testes
 		}
 
 		virtual void update(timediff dt) {
 			cx = x + w/2;
 			cy = y + h/2;
 			
-                        //verifica se é o turno do barco antes de executar a movimentação
-                        if( myTurn && ( destx - cx || desty - cy ) )
-                        {
-                            write("x.speed", destx - cx);
-                            write("y.speed", desty - cy);
-                        }
-
-			int mousex = read<int>("mouse.x");
-			int mousey = read<int>("mouse.y");
+	        //verifica se é o turno do barco antes de executar a movimentação
+	        if( myTurn && ( destx - cx || desty - cy ) )
+	        {
+	            write("x.speed", destx - cx);
+	            write("y.speed", desty - cy);
+	        }
+	        
+	        if (selected)
+	        {
+				int mousex = read<int>("mouse.x");
+				int mousey = read<int>("mouse.y");
 			
-			float dx = mousex - cx;
-			float dy = mousey - cy;
-			targetx = dx;
-			targety = dy;
+				float dx = mousex - cx;
+				float dy = mousey - cy;
+				targetx = dx;
+				targety = dy;
 			
-			float distance = sqrt(dx*dx + dy*dy);
+				float distance = sqrt(dx*dx + dy*dy);
 			
-			if(distance > atr.range) {
-				targetx = targetx * (atr.range/distance);
-				targety = targety * (atr.range/distance);
+				if(distance > atr.range) {
+					targetx = targetx * (atr.range/distance);
+					targety = targety * (atr.range/distance);
+				}
+				
+				write("target.position.x", targetx + w/2 - 8);
+				write("target.position.y", targety + h/2 - 8);
 			}
-			
-			write("target.position.x", targetx + w/2 - 8);
-			write("target.position.y", targety + h/2 - 8);
+			else
+			{
+				write("target.position.x", destx - cx + w/2 - 8);
+				write("target.position.y", desty - cy + h/2 - 8);
+				
+				cout << "destx: " << destx << endl;
+				cout << "cx: " << cx << endl;
+				cout << "destx - cx: " << destx - cx << endl;
+				cout << endl;
+			}
 		}
 		
 		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
@@ -226,7 +239,7 @@ class barco : public component::base {
 					desty = targety + cy;
 					selected = false;
 					write("range.render", false);
-					write("target.render", false);
+					//write("target.render", false);
 				}
 				else {
 					if (read<bool>("mouseover")) {
