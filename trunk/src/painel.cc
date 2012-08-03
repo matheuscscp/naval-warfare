@@ -27,6 +27,8 @@ class painel : public component::base {
 		virtual std::string depends() { return "renderer/renderer mouse/mouse mouseover/mouseover"; }
 
 		virtual void setup(object::signature & sig) {
+			write<component::base*>("porto", NULL);
+			
 			// hooka input do mouse para fabricacao de barcos
 			hook("mouse.1", (component::call)&painel::checkSpawnRequest);
 		}
