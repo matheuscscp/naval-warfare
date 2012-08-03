@@ -2,5 +2,5 @@ attach: renderer/renderer
 
 renderer.surfaces: painel=painel.png
 
-x: 0
-y: 0
+w: 84
+h: 216

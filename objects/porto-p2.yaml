@@ -27,3 +27,6 @@ cash.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 cash.font.size: 20
 cash.position.x: 3
 cash.position.y: 35
+
+painel.x: 940
+painel.y: 484
