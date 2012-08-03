@@ -91,8 +91,6 @@ class porto : public component::base {
 			// zerando a quantidade de barcos deste porto
 			for( int i = 0; i < last; ++i )
 				qtde_barcos[i] = 0;
-			
-			criarBarco("barcopequeno", small, false);
 		}
 		
 		virtual void update(timediff dt) {
