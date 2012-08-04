@@ -22,13 +22,14 @@ namespace gear2d {
 
 class barco : public component::base {
 	private:
-		
+
 		float cx, cy;
 		float destx, desty;
 		float targetx, targety;
 		bool selected;
-                bool myTurn; //flag para saber se é o turno do barco
-		
+        bool gameplay; //flag para o barco saber se está na etapa de movimentação
+        bool gamesetup; //flag para o barco saber se está na etapa de setup
+
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
 
@@ -43,19 +44,19 @@ class barco : public component::base {
 			gear2d::link<int>    dmg;		//dano por segundo
 			gear2d::link<int>    loot;		//loot dropado
 		}atr;
-		
+
 		component::base * alvoPrincipal;
 		component::base * porto;
-		
+
 	public:
 		barco() { }
 		virtual ~barco() { }
-		
+
 		virtual gear2d::component::family family() { return "unit"; }
-		
+
 		virtual gear2d::component::type type() { return "barco"; }
-		
-		virtual std::string depends() { 
+
+		virtual std::string depends() {
 			return "kinematics/kinematic2d mouse/mouse mouseover/mouseover collider/collider2d";
 		}
 
@@ -67,7 +68,7 @@ class barco : public component::base {
 			init<int>("speed"     , sig["speed"]     , 300);
 			init<int>("dmg"       , sig["dmg"]       , 10);
 			init<int>("loot.value", sig["loot.value"], 100);
-			
+
 			atr.hp 		= fetch<int>("hp.value");
 			atr.range	= fetch<int>("range");
 			atr.moverange 	= fetch<int>("moverange");
@@ -78,7 +79,7 @@ class barco : public component::base {
 			y 		= fetch<float>("y");
 			w 		= fetch<float>("w");
 			h 		= fetch<float>("h");
-			mouse1 		= fetch<int>("mouse.1");			
+			mouse1 		= fetch<int>("mouse.1");
 
 			write<component::base *>("porto", NULL);
 			porto = NULL;
@@ -94,45 +95,46 @@ class barco : public component::base {
 
 			write("range.render", false);
 			write("target.render", false);
-				
+
 			cx = x + w/2;
 			cy = y + h/2;
-			
+
 			destx = cx;
 			desty = cy;
-			
+
 			selected = false;
-            myTurn = true; //incializando como true para não prejudicar os demais testes
+            gameplay = true; //incializando como true para não prejudicar os demais testes
+            gamesetup = true;
 		}
 
 		virtual void update(timediff dt) {
 			cx = x + w/2;
 			cy = y + h/2;
-			
+
 	        //verifica se é o turno do barco antes de executar a movimentação
-	        if( myTurn && ( destx - cx || desty - cy ) )
+	        if( gameplay && ( destx - cx || desty - cy ) )
 	        {
 	            write("x.speed", destx - cx);
 	            write("y.speed", desty - cy);
 	        }
-	        
+
 	        if (selected)
 	        {
 				int mousex = read<int>("mouse.x");
 				int mousey = read<int>("mouse.y");
-			
+
 				float dx = mousex - cx;
 				float dy = mousey - cy;
 				targetx = dx;
 				targety = dy;
-			
+
 				float distance = sqrt(dx*dx + dy*dy);
-			
+
 				if(distance > atr.range) {
 					targetx = targetx * (atr.range/distance);
 					targety = targety * (atr.range/distance);
 				}
-				
+
 				write("target.position.x", targetx + w/2 - 8);
 				write("target.position.y", targety + h/2 - 8);
 			}
@@ -140,14 +142,14 @@ class barco : public component::base {
 			{
 				write("target.position.x", destx - cx + w/2 - 8);
 				write("target.position.y", desty - cy + h/2 - 8);
-				
+
 				cout << "destx: " << destx << endl;
 				cout << "cx: " << cx << endl;
 				cout << "destx - cx: " << destx - cx << endl;
 				cout << endl;
 			}
 		}
-		
+
 		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
 			if (pid == "porto") {
 				porto = read<component::base *>("porto");
@@ -165,7 +167,7 @@ class barco : public component::base {
 				}
 			}
 		}
-		
+
 		virtual void handleCollision(parameterbase::id pid, base* lastwrite, object::id owner) {
 			int dX,dY,dist,distTarget=0;
 			bool colisaoAtaque = false;
@@ -176,9 +178,9 @@ class barco : public component::base {
 				colisaoAtaque = sphereCollision(cx,cy,atr.range,target->read<int>("cx"),target->read<int>("cy"),target->read<int>("h"));
 				colisaoPerto = sphereCollision(cx,cy,w,target->read<int>("cx"),target->read<int>("cy"),target->read<int>("h"));
 				if(colisaoAtaque)
-				{	
+				{
 					if(target->read<string>("collider.tag") == "barco")
-						
+
 
 					if ((target->read<string>("collider.tag") == "portoa")
 					||(target->read<string>("collider.tag") == "barco")){
@@ -194,7 +196,7 @@ class barco : public component::base {
 						removeHP(target,atr.dmg);
 					}
 				}
-				
+
 				if(colisaoPerto)
 				{
 					if (target->read<string>("collider.tag") == "loot"){
@@ -209,9 +211,9 @@ class barco : public component::base {
 						*/
 					}
 				}
-			}		
+			}
 		}
-		
+
 		//retorna true se o alvo morrer(vida <=0)
 		bool removeHP(component::base * target,int dmg) {
 			int newHp = 0;
@@ -247,7 +249,7 @@ class barco : public component::base {
 						selected = true;
 						write("range.render", true);
 						write("target.render", true);
-					}		
+					}
 				}
 			}
 		}
@@ -266,7 +268,7 @@ class barco : public component::base {
 				 }
 			}
 		}
-		
+
 		void updateHpText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
 			//stringstream ss;
 			//ss << "HP: ";
