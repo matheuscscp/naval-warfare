@@ -1,29 +1,21 @@
 attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d keyboard/keyboard
 
-renderer.surfaces: barco=barco_pequeno.png range=range.png target=target.png
+renderer.surfaces: barco=barco1.png range=range.png target=target.png
 
-w: 100
-h: 49
+w: 32
+h: 32
 
 collider.tag: barco
 
-range.zoom: 2.0
-range.position.x: 34
-range.position.y: 9
-# position.x = barco.w/2 - range.w/2
-# position.y = barco.h/2 - range.h/2
-# range.alpha: 0.5
+range.zoom: 2.3
+range.position.x: -112
+range.position.y: -112
 
 hp.value: 100
-range: 300
-moverange: 300
-speed: 300
+range: 300.0
+moverange: 300.0
+speed: 300.0
 dmg: 100
 loot.value: 100
-
-collider.aabb.x: barco.x - range/2 - barco.w/2 
-collider.aabb.y: barco.y - range/2 - barco.w/2 
-collider.aabb.w: range
-collider.aabb.h: range 
 
 keyboard.interested: b

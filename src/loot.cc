@@ -29,7 +29,7 @@ class loot : public component::base {
 		virtual void setup(object::signature & sig) {
 			initialize();
 			init<int>("cash"        , sig["cash"]        , 0);
-			cout << "Barco virou loot" << endl;
+//			cout << "Barco virou loot" << endl;
 
 
 		}
