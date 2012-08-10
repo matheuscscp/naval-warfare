@@ -7,6 +7,8 @@ collider.tag: porto
 
 porto.player: 1
 
+porto.position.z: 1
+
 x: 0
 y: 0
 w: 228
@@ -18,6 +20,7 @@ hp.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 hp.font.size: 20
 hp.position.x: 67
 hp.position.y: 15
+hp.position.z: 1
 
 cash.value: 1000
 cash.font: ttf/fontin_sans.otf

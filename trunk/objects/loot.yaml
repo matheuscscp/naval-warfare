@@ -6,6 +6,8 @@ renderer.surfaces: loot=chest.png
 w: 50
 h: 50
 
+loot.position.z: 8
+
 collider.tag: loot
 
 value: 0

@@ -7,6 +7,10 @@ h: 32
 
 collider.tag: barco
 
+barco.position.z: 10
+range.position.z: 9
+target.position.z : 11
+
 range.zoom: 2.3
 range.position.x: -112
 range.position.y: -112
