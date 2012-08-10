@@ -4,3 +4,5 @@ renderer.surfaces: painel=painel.png
 
 w: 84
 h: 216
+
+painel.position.z: 100
