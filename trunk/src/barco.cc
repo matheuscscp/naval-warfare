@@ -102,7 +102,7 @@ class barco : public component::base {
 			write("range.render", false);
 			write("target.render", false);
 //			write("range.zoom", 1.0);
-			write("mouseover.render", false);
+			write("barcohover.render", false);
 
 			cx = x + w/2;
 			cy = y + h/2;
