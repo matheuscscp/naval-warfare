@@ -1,6 +1,6 @@
 attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d keyboard/keyboard
 
-renderer.surfaces: barco=barco3.png range=range.png target=target.png
+renderer.surfaces: barco=barco3.png range=range.png target=target.png hpbar=hpbar.png
 
 w: 64
 h: 64
@@ -15,7 +15,12 @@ range.zoom: 0.8
 range.position.x: -96
 range.position.y: -96
 
-hp.value: 300
+target.bind: 0
+
+hpbar.position.x: 0
+hpbar.position.y: -16
+
+hp.value: 100
 range: 100.0
 moverange: 100.0
 speed: 100.0
