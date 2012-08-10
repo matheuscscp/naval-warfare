@@ -1,6 +1,6 @@
 attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d keyboard/keyboard
 
-renderer.surfaces: barco=barco2.png range=range.png target=target.png hpbar=hpbar.png
+renderer.surfaces: barco=barco2.png range=range.png target=target.png hpbar=hpbar.png barcohover=barco2mouseover.png
 
 w: 48
 h: 48
@@ -10,6 +10,7 @@ collider.tag: barco
 barco.position.z: 10
 range.position.z: 9
 target.position.z : 11
+barcohover.position.z: 11
 
 range.zoom: 1.6
 range.position.x: -104
@@ -19,6 +20,9 @@ target.bind: 0
 
 hpbar.position.x: -8
 hpbar.position.y: -16
+
+barcohover.position.x: -4
+barcohover.position.y: -4
 
 hp.value: 100
 range: 200.0

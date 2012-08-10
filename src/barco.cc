@@ -96,11 +96,13 @@ class barco : public component::base {
 			hook("collider.collision",(component::call)&barco::handleCollision);//hookando a colisao
 			hook("hp.value", (component::call)&barco::handleLife);//hookando a life
 			hook("hp.value", (component::call)&barco::updateHpText);
+			hook("mouseover", (component::call)&barco::handleMouseover);
 
 
 			write("range.render", false);
 			write("target.render", false);
 //			write("range.zoom", 1.0);
+			write("mouseover.render", false);
 
 			cx = x + w/2;
 			cy = y + h/2;
@@ -216,6 +218,11 @@ class barco : public component::base {
 				}
 			}
 		}
+		
+		virtual void handleMouseover(parameterbase::id pid, base* lastwrite, object::id owner) {
+			write("barcohover.render", read<bool>("mouseover"));
+		}
+		
 		virtual void handleLife(parameterbase::id pid, component::base * last, object::id owns) {
 			if (pid == "hp.value"){
 				if(read<int>("hp.value") <= 0) {
