@@ -24,7 +24,6 @@ class barco : public component::base {
 	private:
 
 		float cx, cy;
-		float destx, desty;
 		float targetx, targety;
 		bool selected;
 	        bool gameplay; //flag para o barco saber se está na etapa de movimentação
@@ -106,8 +105,8 @@ class barco : public component::base {
 			cx = x + w/2;
 			cy = y + h/2;
 
-			destx = cx;
-			desty = cy;
+			targetx = cx;
+			targety = cy;
 
 			selected = false;
 			gameplay = true; //incializando como true para não prejudicar os demais testes
@@ -129,43 +128,38 @@ class barco : public component::base {
 			cx = x + w/2;
 			cy = y + h/2;
 
-	        	//verifica se é o turno do barco antes de executar a movimentação
-	        	if( gameplay && ( destx - cx || desty - cy ) )
-	        	{
-	            		write("x.speed", destx - cx);
-	            		write("y.speed", desty - cy);
-	        	}
+        	//verifica se é o turno do barco antes de executar a movimentação
+        	//!selected usado pra não prejudicar testes
+        	if( gameplay && !selected )
+        	{
+            	write("x.speed", targetx - cx);
+            	write("y.speed", targety - cy);
+        	}
 
-	        	if (selected)
-	        	{
+	        if (selected)
+	        {
 				int mousex = read<int>("mouse.x");
 				int mousey = read<int>("mouse.y");
 
 				float dx = mousex - cx;
 				float dy = mousey - cy;
-				targetx = dx;
-				targety = dy;
 
 				float distance = sqrt(dx*dx + dy*dy);
 
 				if(distance > atr.range) {
-					targetx = targetx * (atr.range/distance);
-					targety = targety * (atr.range/distance);
+					dx = dx * (atr.range/distance);
+					dy = dy * (atr.range/distance);
 				}
+				
+				targetx = cx + dx;
+				targety = cy + dy;
 
-				write("target.position.x", targetx + w/2 - 8);
-				write("target.position.y", targety + h/2 - 8);
+				write("target.position.x", targetx - 8);
+				write("target.position.y", targety - 8);
 			}
-			else
-			{
-				write("target.position.x", destx - cx + w/2 - 8);
-				write("target.position.y", desty - cy + h/2 - 8);
-
-				/*cout << "destx: " << destx << endl;
-				cout << "cx: " << cx << endl;
-				cout << "destx - cx: " << destx - cx << endl;
-				cout << endl;*/
-			}
+			
+			//clip da barra de hp proporcional ao hp
+			write("hpbar.clip.w", (atr.hp*64)/100);
 		}
 
 		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
@@ -208,8 +202,6 @@ class barco : public component::base {
 		virtual void handleClick(parameterbase::id pid, base* lastwrite, object::id owner) {
 			if (mouse1 == 1) {
 				if (selected) {
-					destx = targetx + cx;
-					desty = targety + cy;
 					selected = false;
 					write("range.render", false);
 					//write("target.render", false);
