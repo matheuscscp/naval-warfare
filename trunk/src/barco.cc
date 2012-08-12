@@ -102,10 +102,12 @@ class barco : public component::base {
 			write("target.render", false);
 			
 			//iniciando todos os valores do range de movimento
+			
+			float rangeWH = (float)read<int>("range.position.w")/2; 
 			write("range.render", false);
-			write("range.position.x",-128.0f+(w/2.0f));
-			write("range.position.y",-128.0f+(h/2.0f));
-			write("range.zoom", atr.moverange/128.0f);
+			write("range.position.x",-rangeWH+(w/2.0f));
+			write("range.position.y",-rangeWH+(h/2.0f));
+			write("range.zoom", atr.moverange/rangeWH);
 			
 			write("barcohover.render", false);
 			
@@ -184,7 +186,7 @@ class barco : public component::base {
 			float dx, dy =0.0f;
 			if (pid == "collider.collision"){
 				
-				cout<<"colisao ";
+				//cout<<"colisao ";
 				component::base * inimigo = read<component::base*>(pid);
 				longe = sphereCollision(read<float>("x")+read<float>("collider.aabb.x"),read<float>("y")+read<float>("collider.aabb.y"),atr.range,
 										inimigo->read<float>("x"),inimigo->read<float>("y"),inimigo->read<float>("w"));
