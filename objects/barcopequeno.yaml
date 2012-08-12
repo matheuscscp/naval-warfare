@@ -12,10 +12,6 @@ range.position.z: 9
 target.position.z : 11
 barcohover.position.z: 11
 
-range.zoom: 2.3
-range.position.x: -112
-range.position.y: -112
-
 target.bind: 0
 
 hpbar.position.x: -16
