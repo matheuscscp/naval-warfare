@@ -63,9 +63,9 @@ class barco : public component::base {
 		virtual void setup(object::signature & sig) {
 			barcotype t = eval(sig["barcotype"], small);
 			init<int>	("hp.value"  , sig["hp.value"]  , 100);
-			init<float>	("range"     , sig["range"]     , 64);
-			init<float>	("moverange" , sig["moverange"] , 128);
-			init<float>	("speed"     , sig["speed"]     , 300);
+			init<float>	("range"     , sig["range"]     , 64.0f);
+			init<float>	("moverange" , sig["moverange"] , 128.0f);
+			init<float>	("speed"     , sig["speed"]     , 300.0f);
 			init<int>	("dmg"       , sig["dmg"]       , 10);
 			init<int>	("loot.value", sig["loot.value"], 100);
 
@@ -85,11 +85,12 @@ class barco : public component::base {
 
 			write<component::base *>("porto", NULL);
 			porto = NULL;
-
-//			write("collider.aabb.x",0.0);
-//			write("collider.aabb.y",0.0);
-//			write("collider.aabb.w",1.0);
-//			write("collider.aabb.h",1.0);
+			
+			//alterando range de ataque do barco
+			write("collider.aabb.x",x - (atr.range-w)/2);
+			write("collider.aabb.y",y - (atr.range-h)/2);
+			write("collider.aabb.w",atr.range*2);
+			write("collider.aabb.h",atr.range*2);
 
 			hook("porto");
 			hook("mouse.1", (component::call)&barco::handleClick);
@@ -98,12 +99,17 @@ class barco : public component::base {
 			hook("hp.value", (component::call)&barco::updateHpText);
 			hook("mouseover", (component::call)&barco::handleMouseover);
 
-
-			write("range.render", false);
 			write("target.render", false);
-//			write("range.zoom", 1.0);
+			
+			//iniciando todos os valores do range de movimento
+			write("range.render", false);
+			write("range.position.x",-128.0f+(w/2.0f));
+			write("range.position.y",-128.0f+(h/2.0f));
+			write("range.zoom", atr.moverange/128.0f);
+			
 			write("barcohover.render", false);
-
+			
+			
 			cx = x + w/2;
 			cy = y + h/2;
 
@@ -117,16 +123,17 @@ class barco : public component::base {
 
 		virtual void update(timediff dt) 
 		{
+			/*cout<<" X: "<<x<<" Y: "<<y<<" w: "<<w<<" h: "<<h<<endl;
 			//Descomentar para testes de collider bounding box
-			/*float auxX,auxY,auxW,auxH;
+			float auxX,auxY,auxW,auxH;
 
 			auxX = read<float>("collider.aabb.x");
 			auxY = read<float>("collider.aabb.y");
 			auxW = read<float>("collider.aabb.w");
 			auxH = read<float>("collider.aabb.h");
 
-			cout<<" X: "<<auxX<<" Y: "<<auxY<<" W: "<<auxW<<" H: "<<auxH<<endl;*/
-
+			cout<<" X: "<<auxX<<" Y: "<<auxY<<" iX: "<<auxW<<" iY: "<<auxH<<endl;*/
+			
 			cx = x + w/2;
 			cy = y + h/2;
 
@@ -161,7 +168,7 @@ class barco : public component::base {
 			}
 			
 			//clip da barra de hp proporcional ao hp
-			write("hpbar.clip.w", (atr.hp*64)/100);
+			write("hpbar.clip.w", (atr.hp*64)/100.0);
 		}
 
 		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
@@ -173,10 +180,40 @@ class barco : public component::base {
 		}
 
 		virtual void handleCollision(parameterbase::id pid, base* lastwrite, object::id owner) {
+			bool longe, perto = false;
+			float dx, dy =0.0f;
 			if (pid == "collider.collision"){
+				
+				cout<<"colisao ";
 				component::base * inimigo = read<component::base*>(pid);
-				if(inimigo->read<string>("collider.tag") == "barco")
-					cout<<"colisao"<<endl;
+				longe = sphereCollision(read<float>("x")+read<float>("collider.aabb.x"),read<float>("y")+read<float>("collider.aabb.y"),atr.range,
+										inimigo->read<float>("x"),inimigo->read<float>("y"),inimigo->read<float>("w"));
+				
+				perto = sphereCollision(x,y,w,
+										inimigo->read<float>("x"),inimigo->read<float>("y"),inimigo->read<float>("w"));
+				
+				//colisao de longe (range do barco vs. barco inimigo)
+				if(longe)
+				{
+					//cout<<"longe ";	
+					if((inimigo->read<string>("collider.tag") == "barco")||(inimigo->read<string>("collider.tag") == "porto"))
+					{
+						//removeHP(inimigo,1);
+					}
+				}
+				
+				//colisao de perto (barco vs barco inimigo)
+				if(perto)
+				{
+		//			cout<<"perto ";
+					if(inimigo->read<string>("collider.tag") == "barco")
+					if(inimigo->read<string>("collider.tag") == "loot")
+					{
+						porto->write("cash",porto->read<float>("cash") + inimigo->read<float>("cash"));
+						inimigo->destroy();
+					}
+				}
+				//cout<<endl;
 			}
 
 		}
@@ -191,8 +228,9 @@ class barco : public component::base {
 			}
 			return true;
 		}
-
-		bool sphereCollision(int ax,int ay, int ar, int bx, int by, int br) {
+		
+		//funcao calcula colisao esferica entre objetos a e b (ar = raio de a)
+		bool sphereCollision(float ax,float ay,float ar,float bx, float by,float br) {
 			int dX   = ax - bx;
 			int dY   = ay - by;
 			int dR   = br + ar;
