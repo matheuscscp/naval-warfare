@@ -1,6 +1,6 @@
-attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d keyboard/keyboard
+attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d
 
-renderer.surfaces: barco=barco2.png range=range.png target=target.png hpbar=hpbar.png barcohover=barco2mouseover.png
+renderer.surfaces: barco=barco2.png range=range.png target=target.png hpbar=hpbar.png barcohover=barco2mouseover.png 
 
 w: 48
 h: 48
@@ -26,5 +26,3 @@ moverange: 200.0
 speed: 200.0
 dmg: 200
 loot.value: 200
-
-keyboard.interested: n

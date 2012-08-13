@@ -10,6 +10,6 @@ loot.position.z: 8
 
 collider.tag: loot
 
-value: 0
+cash: 0
 
 
