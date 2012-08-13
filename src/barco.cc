@@ -69,19 +69,19 @@ class barco : public component::base {
 			init<int>	("dmg"       , sig["dmg"]       , 10);
 			init<int>	("loot.value", sig["loot.value"], 100);
 
-			atr.hp 		= fetch<int>  ("hp.value");
-			atr.range	= fetch<float>("range");
+			atr.hp 			= fetch<int>  ("hp.value");
+			atr.range		= fetch<float>("range");
 			atr.moverange 	= fetch<float>("moverange");
-			atr.speed	= fetch<float>("speed");
-			atr.dmg		= fetch<int>  ("dmg");
-			atr.loot	= fetch<int>  ("loot.value");
+			atr.speed		= fetch<float>("speed");
+			atr.dmg			= fetch<int>  ("dmg");
+			atr.loot		= fetch<int>  ("loot.value");
 
 			x 		= fetch<float>("x");
 			y 		= fetch<float>("y");
 			w 		= fetch<float>("w");
 			h 		= fetch<float>("h");
 
-			mouse1 		= fetch<int>  ("mouse.1");
+			mouse1 	= fetch<int>  ("mouse.1");
 
 			write<component::base *>("porto", NULL);
 			porto = NULL;
@@ -96,21 +96,27 @@ class barco : public component::base {
 			write("collider.aabb.h",atr.range*2);
 			
 			write("target.render", false);
+			write("rangeatk.render", false);
 			write("barcohover.render", false);
-			
-			//iniciando todos os valores do range de movimento
-			float rangeWH = (float)read<int>("range.position.w")/2; 
 			write("range.render", false);
+			
+			//iniciando todos os valores do range de movimento e de ataque
+			float rangeWH = (float)read<int>("range.position.w")/2; 
+			float rangeatkWH = (float)read<int>("rangeatk.position.w")/2;
+			
 			write("range.position.x",(w/2.0f)-rangeWH);
 			write("range.position.y",(h/2.0f)-rangeWH);
 			write("range.zoom", atr.moverange/rangeWH);
 			
+			write("rangeatk.position.x",(w/2.0f)-rangeatkWH);
+			write("rangeatk.position.y",(h/2.0f)-rangeatkWH);
+			write("rangeatk.zoom", atr.range/rangeatkWH);
+			
 			/**HOOKS**/
 			hook("porto");
 			hook("mouse.1", (component::call)&barco::handleClick);
-			hook("collider.collision",(component::call)&barco::handleCollision);//hookando a colisao
-			hook("hp.value", (component::call)&barco::handleLife);//hookando a life
-			hook("hp.value", (component::call)&barco::updateHpText);
+			hook("collider.collision",(component::call)&barco::handleCollision);
+			hook("hp.value", (component::call)&barco::handleLife);
 			hook("mouseover", (component::call)&barco::handleMouseover);
 			
 			cx = x + w/2;
@@ -188,10 +194,10 @@ class barco : public component::base {
 				//checando as colisoes esfericas dentro da bounding box do collider(que eh uma caixa, duh)
 				//com o objeto "inimigo"
 				longe = sphereCollision(x+(w/2.0f),y+(h/2.0f),atr.range,
-										inimX+(inimW/2.0f),inimY+(inimW/2.0f),inimW/2);
+										inimX+(inimW/2.0f),inimY+(inimW/2.0f),inimW/2.0f);
 				
 				perto = sphereCollision(x+(w/2.0f),y+(h/2.0f),w/2,
-										inimX+(inimW/2.0f),inimY+(inimW/2.0f),inimW/2);
+										inimX+(inimW/2.0f),inimY+(inimW/2.0f),inimW/2.0f);
 				
 				//colisao de longe (range do barco vs. barco inimigo, range do barco vs, porto)
 				if(longe)
@@ -251,6 +257,7 @@ class barco : public component::base {
 				if (selected) {
 					selected = false;
 					write("range.render", false);
+					write("rangeatk.render", false);
 					//write("target.render", false);
 				}
 				else {
@@ -259,6 +266,7 @@ class barco : public component::base {
 						selected = true;
 						write("range.render", true);
 						write("target.render", true);
+						write("rangeatk.render", true);
 					}
 				}
 			}

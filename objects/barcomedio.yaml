@@ -1,6 +1,6 @@
 attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d
 
-renderer.surfaces: barco=barco2.png range=range.png target=target.png hpbar=hpbar.png barcohover=barco2mouseover.png 
+renderer.surfaces: barco=barco2.png range=range.png rangeatk=rangeatk.png target=target.png hpbar=hpbar.png barcohover=barco2mouseover.png 
 
 w: 48
 h: 48
@@ -8,7 +8,8 @@ h: 48
 collider.tag: barco
 
 barco.position.z: 10
-range.position.z: 9
+range.position.z: 8
+rangeatk.position.z: 9
 target.position.z : 11
 barcohover.position.z: 11
 
@@ -21,7 +22,7 @@ barcohover.position.x: -4
 barcohover.position.y: -4
 
 hp.value: 100
-range: 200.0
+range: 160.0
 moverange: 200.0
 speed: 200.0
 dmg: 200
