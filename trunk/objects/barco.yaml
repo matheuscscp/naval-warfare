@@ -1,5 +1,0 @@
-attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d
-
-renderer.surfaces: barco=barco.png range=range.png target=target.png
-
-collider.tag: barco
