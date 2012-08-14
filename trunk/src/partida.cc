@@ -29,21 +29,8 @@ class partida : public component::base {
 
 		virtual void setup(object::signature & sig) {
 			// spawna os portos
-			try {
-				for (int i = 1; ; ++i) {
-					stringstream ss;
-					ss << "porto-p";
-					ss << i;
-					object::id porto = spawn( ss.str() );
-					
-					// encerra o loop
-					if( !porto )
-						throw evil();
-					
-					portos.push_back( porto->component("porto") );
-				}
-			} catch(evil&) {
-			}
+			portos.push_back(spawn("porto-p1")->component("porto"));
+			portos.push_back(spawn("porto-p2")->component("porto"));
 		}
 		
 		virtual void update(timediff dt) {
