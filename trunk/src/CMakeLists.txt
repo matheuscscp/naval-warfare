@@ -35,3 +35,10 @@ add_library(painel MODULE painel.cc)
 install(TARGETS painel
 		LIBRARY
 		DESTINATION menu)
+
+
+add_library(partida MODULE partida.cc)		
+		
+install(TARGETS partida
+		LIBRARY
+		DESTINATION partida)
