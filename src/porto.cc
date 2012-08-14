@@ -95,6 +95,10 @@ class porto : public component::base {
 			// zerando a quantidade de barcos deste porto
 			for( int i = 0; i < last; ++i )
 				qtde_barcos[i] = 0;
+			
+			// zerando os dados da partida para este porto
+			write<int>("cashusado", 0);
+			write<int>("cashganho", 0);
 		}
 		
 		virtual void update(timediff dt) {
@@ -109,8 +113,10 @@ class porto : public component::base {
 				qtde_barcos[barco_t]++;
 				
 				// debita se for pra debitar
-				if(debitar)
+				if(debitar) {
 					cash = (cash - custo_barco[barco_t]);
+					add<int>("cashusado", custo_barco[barco_t]);
+				}
 			}
 		}
 

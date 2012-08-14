@@ -1,1 +1,62 @@
-attach: partida/partida
+attach: partida/partida keyboard/keyboard renderer/renderer
+
+renderer.surfaces: stat=stat.png
+renderer.texts: cashusado1 cashganho1 cashusado2 cashganho2
+
+keyboard.interested: tab
+
+x: 112
+y: 84
+
+stat.render: 0
+stat.position.x: 0
+stat.position.y: 0
+stat.position.z: 200
+
+# status do porto 1
+
+cashusado1.render: 0
+cashusado1.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
+cashusado1.font: ttf/fontin_sans.otf
+cashusado1.font.size: 20
+cashusado1.font.r: 1
+cashusado1.font.g: 1
+cashusado1.font.b: 1
+cashusado1.position.x: 67
+cashusado1.position.y: 15
+cashusado1.position.z: 201
+
+cashganho1.render: 0
+cashganho1.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
+cashganho1.font: ttf/fontin_sans.otf
+cashganho1.font.size: 20
+cashganho1.font.r: 1
+cashganho1.font.g: 1
+cashganho1.font.b: 1
+cashganho1.position.x: 67
+cashganho1.position.y: 45
+cashganho1.position.z: 201
+
+# status do porto 2
+
+cashusado2.render: 0
+cashusado2.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
+cashusado2.font: ttf/fontin_sans.otf
+cashusado2.font.size: 20
+cashusado2.font.r: 1
+cashusado2.font.g: 1
+cashusado2.font.b: 1
+cashusado2.position.x: 467
+cashusado2.position.y: 15
+cashusado2.position.z: 201
+
+cashganho2.render: 0
+cashganho2.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
+cashganho2.font: ttf/fontin_sans.otf
+cashganho2.font.size: 20
+cashganho2.font.r: 1
+cashganho2.font.g: 1
+cashganho2.font.b: 1
+cashganho2.position.x: 467
+cashganho2.position.y: 45
+cashganho2.position.z: 201
