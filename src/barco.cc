@@ -5,7 +5,7 @@ using namespace gear2d;
 using namespace std;
 
 enum barcotype {
-	big,
+	big = 0,
 	medium,
 	small,
 	last
