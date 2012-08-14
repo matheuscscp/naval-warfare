@@ -99,6 +99,12 @@ class porto : public component::base {
 			// zerando os dados da partida para este porto
 			write<int>("cashusado", 0);
 			write<int>("cashganho", 0);
+			write<int>("grandefabricado", 0);
+			write<int>("mediofabricado", 0);
+			write<int>("pequenofabricado", 0);
+			write<int>("grandedestruido", 0);
+			write<int>("mediodestruido", 0);
+			write<int>("pequenodestruido", 0);
 		}
 		
 		virtual void update(timediff dt) {
@@ -107,10 +113,20 @@ class porto : public component::base {
 		virtual void criarBarco(const string& tbarco, barcotype barco_t, bool debitar = true) {
 			// soh cria se eh pra debitar e tem dinheiro OU se nao eh pra debitar
 			if (((debitar) && (cash >= custo_barco[barco_t])) || (!debitar)) {
+				// cria e poe na lista
 				component::base* barco = spawn(tbarco)->component("unit");
-				barcos.push_back(barco);
 				barco->write("porto", this);
+				barcos.push_back(barco);
+				
+				// incrementa os contadores
 				qtde_barcos[barco_t]++;
+				switch (barco_t) {
+					case big:		add<int>("grandefabricado", 1);	break;
+					case medium:	add<int>("mediofabricado", 1);		break;
+					case small:		add<int>("pequenofabricado", 1);	break;
+					default:
+						break;
+				}
 				
 				// debita se for pra debitar
 				if(debitar) {
@@ -136,14 +152,17 @@ class porto : public component::base {
 		}
 		
 		void getTurnCash() {
+			// itera nos 3 tipos de barco, somando a contribuicao do desconto no cash que sera ganho naquele turno
 			float desconto = 0;
-			
 			for( int i = 0; i < last; ++i ) {
 				float peso = ( float( last * (last + 1) ) / 2 ) * (i + 1);
 				desconto += ( peso * qtde_barcos[i] / cash_max_barcos[i] );
 			}
 			
-			cash = cash + max<int>(min_cash_turn, max_cash_turn * ( 1 - desconto ));
+			int cash_final = max<int>(min_cash_turn, max_cash_turn * ( 1 - desconto ));
+			
+			cash = cash + cash_final;
+			add<int>("cashganho", cash_final);
 		}
 		
 		void updateHpText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
@@ -158,9 +177,20 @@ class porto : public component::base {
 		}
 		
 		void removeBarco(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
+			// remove da lista
 			component::base* barco = read<component::base*>("barcomorrendo");
-			--qtde_barcos[barco->read<barcotype>("tipo")];
 			barcos.remove(barco);
+			
+			// decrementa os contadores
+			int tipo = barco->read<barcotype>("tipo");
+			--qtde_barcos[tipo];
+			switch (tipo) {
+				case big:		add<int>("grandedestruido", 1);	break;
+				case medium:	add<int>("mediodestruido", 1);		break;
+				case small:		add<int>("pequenodestruido", 1);	break;
+				default:
+					break;
+			}
 		}
 		
 
