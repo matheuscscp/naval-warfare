@@ -14,6 +14,7 @@ class partida : public component::base {
 	private:
 		// private vars
 		
+		
 	public:
 		// constructor and destructor
 		partida() {
@@ -31,12 +32,57 @@ class partida : public component::base {
 			// spawna os portos
 			portos.push_back(spawn("porto-p1")->component("porto"));
 			portos.push_back(spawn("porto-p2")->component("porto"));
+			
+			// hooka o tab para mostrar dados da partida
+			hook("key.tab", (component::call)&partida::handleTab);
 		}
 		
 		virtual void update(timediff dt) {
 			
 		}
 		
+		virtual void handleTab(parameterbase::id pid, component::base * last, object::id owns) {
+			// mostra (e atualiza) ou esconde os dados da partida se o jogador estiver segurando tab
+			int tab = read<int>("key.tab");
+			if (tab < 2) {
+				write("stat.render", tab);	// esconde ou mostra o fundo dos dados
+				
+				// atualiza (se for pra mostrar) e esconde ou mostra os dados da partida
+				int i = 1;
+				for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
+					// dados de cada porto
+					updateParamText(*it, "cashusado", i, "Cash usado", tab);
+					updateParamText(*it, "cashganho", i, "Cash ganho", tab);
+					
+					++i;
+				}
+			}
+		}
+		
+		void updateParamText(component::base* porto, const string& param, int id, const string& param_name, int tab) {
+			string paramstr = textSurfaceStr(param, id);
+			
+			// atualiza o texto, pois eh para mostrar e nao esconder
+			if (tab) {
+				stringstream ss;
+				ss << param_name;
+				ss << " - Porto ";
+				ss << id;
+				ss << ": ";
+				ss << porto->read<int>(param);
+				write(paramstr + ".text", ss.str());
+			}
+			
+			// esconde ou mostra o dado
+			write(paramstr + ".render", tab);
+		}
+		
+		string textSurfaceStr(const string& param, int id) {
+			stringstream ss;
+			ss << param;
+			ss << id;
+			return ss.str();
+		}
 		
 	private:
 		// static vars declaration

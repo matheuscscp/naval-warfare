@@ -221,7 +221,8 @@ class barco : public component::base {
 					{
 						if(inimigo->read<string>("collider.tag") == "loot")
 						{
-							porto->write("cash.value",porto->read<int>("cash.value") + inimigo->read<int>("cash"));
+							porto->add("cash.value", inimigo->read<int>("cash"));
+							porto->add("cashganho", inimigo->read<int>("cash"));
 							inimigo->destroy();
 						}
 					}
