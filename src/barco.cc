@@ -8,7 +8,7 @@ enum barcotype {
 	big,
 	medium,
 	small,
-	none
+	last
 };
 
 namespace gear2d {
@@ -32,17 +32,16 @@ class barco : public component::base {
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
 
-
-
+		
 		struct atributos
 		{
-			gear2d::link<string> tipo;		//tipo do barco
-			gear2d::link<int>    hp;		//vida
-			gear2d::link<float>  range;		//range de ataque
-			gear2d::link<float>  moverange;		//range de movimento
-			gear2d::link<float>  speed;		//velocidade de movimento
-			gear2d::link<int>    dmg;		//dano por segundo
-			gear2d::link<int>    loot;		//loot dropado
+			gear2d::link<int>	tipo;		//tipo do barco
+			gear2d::link<int>	hp;			//vida
+			gear2d::link<float>	range;		//range de ataque
+			gear2d::link<float>	moverange;	//range de movimento
+			gear2d::link<float>	speed;		//velocidade de movimento
+			gear2d::link<int>	dmg;		//dano por segundo
+			gear2d::link<int>	loot;		//loot dropado
 		}atr;
 
 		component::base * alvoPrincipal;
@@ -61,7 +60,7 @@ class barco : public component::base {
 		}
 
 		virtual void setup(object::signature & sig) {
-			barcotype t = eval(sig["barcotype"], small);
+			init<int>	("tipo"      , sig["tipo"]      , big);
 			init<int>	("hp.value"  , sig["hp.value"]  , 100);
 			init<float>	("range"     , sig["range"]     , 64.0f);
 			init<float>	("moverange" , sig["moverange"] , 128.0f);
@@ -69,12 +68,13 @@ class barco : public component::base {
 			init<int>	("dmg"       , sig["dmg"]       , 10);
 			init<int>	("loot.value", sig["loot.value"], 100);
 
-			atr.hp 			= fetch<int>  ("hp.value");
-			atr.range		= fetch<float>("range");
-			atr.moverange 	= fetch<float>("moverange");
-			atr.speed		= fetch<float>("speed");
-			atr.dmg			= fetch<int>  ("dmg");
-			atr.loot		= fetch<int>  ("loot.value");
+			atr.tipo 		= fetch<int>	("tipo");
+			atr.hp 			= fetch<int>	("hp.value");
+			atr.range		= fetch<float>	("range");
+			atr.moverange 	= fetch<float>	("moverange");
+			atr.speed		= fetch<float>	("speed");
+			atr.dmg			= fetch<int>	("dmg");
+			atr.loot		= fetch<int>	("loot.value");
 
 			x 		= fetch<float>("x");
 			y 		= fetch<float>("y");
@@ -280,15 +280,15 @@ class barco : public component::base {
 		virtual void handleLife(parameterbase::id pid, component::base * last, object::id owns) {
 			if (pid == "hp.value"){
 				if(read<int>("hp.value") <= 0) {
-					float x = read<float>("x"), y = read<float>("y");
+					porto->write<component::base*>("barcomorrendo", this);
 					
-					destroy();
-
 					component::base* loot;
 					loot = spawn("loot")->component("spatial");
 					loot->write("cash",read<int>("loot.value"));
-					loot->write("x",x);
-					loot->write("y",y);
+					loot->write("x",read<float>("x"));
+					loot->write("y",read<float>("y"));
+					
+					destroy();
 				 }
 			}
 		}

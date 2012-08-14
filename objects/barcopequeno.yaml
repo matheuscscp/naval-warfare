@@ -21,6 +21,7 @@ hpbar.position.y: -16
 barcohover.position.x: -4
 barcohover.position.y: -4
 
+tipo: 2
 hp.value: 100
 range: 220.0
 moverange: 300.0

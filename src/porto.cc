@@ -49,6 +49,10 @@ class porto : public component::base {
 			write("gamesetup", 0);
 			write("gameplay", 0);
 			
+			// inicializa um parametro para hookar um barco que acabou de morrer
+			write<component::base*>("barcomorrendo", 0);
+			hook("barcomorrendo", (component::call)&porto::removeBarco);
+			
 // 			cout << "port: " << player << endl;
 			
 			// dinheiro do porto
@@ -145,6 +149,12 @@ class porto : public component::base {
 		
 		void handlePainel(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
 			criarBarco(read<string>("spawn.tamanho"), read<barcotype>("spawn.tipo"));
+		}
+		
+		void removeBarco(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
+			component::base* barco = read<component::base*>("barcomorrendo");
+			--qtde_barcos[barco->read<barcotype>("tipo")];
+			barcos.remove(barco);
 		}
 		
 
