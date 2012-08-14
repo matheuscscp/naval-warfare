@@ -13,7 +13,7 @@ enum barcotype {
 class partida : public component::base {
 	private:
 		// private vars
-		
+		bool force_update;
 		
 	public:
 		// constructor and destructor
@@ -35,16 +35,46 @@ class partida : public component::base {
 			
 			// hooka o tab para mostrar dados da partida
 			hook("key.tab", (component::call)&partida::handleTab);
+			
+			// hooka os parametros dos portos na apresentacao dos dados da partida
+			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
+				hook(*it, "cashusado");
+				hook(*it, "cashganho");
+				hook(*it, "grandefabricado");
+				hook(*it, "mediofabricado");
+				hook(*it, "pequenofabricado");
+				hook(*it, "grandedestruido");
+				hook(*it, "mediodestruido");
+				hook(*it, "pequenodestruido");
+			}
+			
+			// flag para atualizar os textos quando os parametros de um porto forem alterados
+			force_update = false;
 		}
 		
 		virtual void update(timediff dt) {
 			
 		}
 		
+		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
+			// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
+			int tab = read<int>("key.tab");
+			if (tab == 2) {
+				force_update = true;
+				handleTab("", 0, 0);
+			}
+		}
+		
 		virtual void handleTab(parameterbase::id pid, component::base * last, object::id owns) {
 			// mostra (e atualiza) ou esconde os dados da partida se o jogador estiver segurando tab
 			int tab = read<int>("key.tab");
-			if (tab < 2) {
+			if ( (tab < 2) || (force_update) ) {
+				// cancela o update forcado para o proximo handleTab (ocorre apenas quando um parametro de porto eh alterado)
+				if (force_update) {
+					force_update = false;
+					tab = 1;
+				}
+				
 				write("stat.render", tab);	// esconde ou mostra o fundo dos dados
 				
 				// atualiza (se for pra mostrar) e esconde ou mostra os dados da partida
@@ -53,6 +83,12 @@ class partida : public component::base {
 					// dados de cada porto
 					updateParamText(*it, "cashusado", i, "Cash usado", tab);
 					updateParamText(*it, "cashganho", i, "Cash ganho", tab);
+					updateParamText(*it, "grandefabricado", i, "+ Barcos grandes", tab);
+					updateParamText(*it, "mediofabricado", i, "+ Barcos medios", tab);
+					updateParamText(*it, "pequenofabricado", i, "+ Barcos pequenos", tab);
+					updateParamText(*it, "grandedestruido", i, "- Barcos grandes", tab);
+					updateParamText(*it, "mediodestruido", i, "- Barcos medios", tab);
+					updateParamText(*it, "pequenodestruido", i, "- Barcos pequenos", tab);
 					
 					++i;
 				}
@@ -66,8 +102,6 @@ class partida : public component::base {
 			if (tab) {
 				stringstream ss;
 				ss << param_name;
-				ss << " - Porto ";
-				ss << id;
 				ss << ": ";
 				ss << porto->read<int>(param);
 				write(paramstr + ".text", ss.str());
