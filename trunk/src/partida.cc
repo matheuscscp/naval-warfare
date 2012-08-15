@@ -7,7 +7,7 @@ enum barcotype {
 	big = 0,
 	medium,
 	small,
-	last
+	lastsize
 };
 
 class partida : public component::base {
@@ -36,8 +36,11 @@ class partida : public component::base {
 			// hooka o tab para mostrar dados da partida
 			hook("key.tab", (component::call)&partida::handleTab);
 			
-			// hooka os parametros dos portos na apresentacao dos dados da partida
 			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
+				// hooka a flag morto
+				hook(*it, "morto");
+				
+				// hooka os parametros dos portos na apresentacao dos dados da partida
 				hook(*it, "cashusado");
 				hook(*it, "cashganho");
 				hook(*it, "grandefabricado");
@@ -53,15 +56,18 @@ class partida : public component::base {
 		}
 		
 		virtual void update(timediff dt) {
-			
 		}
 		
 		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
-			// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
-			int tab = read<int>("key.tab");
-			if (tab == 2) {
-				force_update = true;
-				handleTab("", 0, 0);
+			if (pid == "morto") {
+				portos.remove(last);
+			} else {
+				// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
+				int tab = read<int>("key.tab");
+				if (tab == 2) {
+					force_update = true;
+					handleTab("", 0, 0);
+				}
 			}
 		}
 		
