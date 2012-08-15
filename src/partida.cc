@@ -14,12 +14,17 @@ class partida : public component::base {
 	private:
 		// private vars
 		bool force_update;
+		bool init;
 		
 	public:
 		// constructor and destructor
-		partida() {
+		partida() : init(false), force_update(false) {
 		}
 		virtual ~partida() {
+			while (portos.size()) {
+				portos.back()->destroy();
+				portos.pop_back();
+			}
 		}
 		
 		virtual gear2d::component::family family() { return "partida"; }
@@ -50,24 +55,29 @@ class partida : public component::base {
 				hook(*it, "mediodestruido");
 				hook(*it, "pequenodestruido");
 			}
-			
-			// flag para atualizar os textos quando os parametros de um porto forem alterados
-			force_update = false;
 		}
 		
 		virtual void update(timediff dt) {
+			if (!init) {
+				init = true;
+				force_update = true;	// forca a inicializacao dos textos
+				handleTab("", 0, 0);	// inicializa os textos
+				handleTab("", 0, 0);	// apaga a tela de dados
+			}
 		}
 		
 		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
-			if (pid == "morto") {
-				portos.remove(last);
-			} else {
+			if (pid != "morto") {
 				// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
 				int tab = read<int>("key.tab");
 				if (tab == 2) {
 					force_update = true;
 					handleTab("", 0, 0);
 				}
+			} else {
+				std::list<component::base*>::iterator it = portos.begin();
+				while (*it != last);
+				*it = NULL;
 			}
 		}
 		
@@ -105,7 +115,7 @@ class partida : public component::base {
 			string paramstr = textSurfaceStr(param, id);
 			
 			// atualiza o texto, pois eh para mostrar e nao esconder
-			if (tab) {
+			if ( (tab) && (porto) ) {
 				stringstream ss;
 				ss << param_name;
 				ss << ": ";
