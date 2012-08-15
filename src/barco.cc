@@ -8,7 +8,7 @@ enum barcotype {
 	big = 0,
 	medium,
 	small,
-	last
+	lastsize
 };
 
 namespace gear2d {

@@ -7,7 +7,7 @@ enum barcotype {
 	big = 0,
 	medium,
 	small,
-	last
+	lastsize
 };
 
 class painel : public component::base {

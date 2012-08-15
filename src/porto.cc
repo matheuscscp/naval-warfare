@@ -7,7 +7,7 @@ enum barcotype {
 	big = 0,
 	medium,
 	small,
-	last
+	lastsize
 };
 
 namespace gear2d {
@@ -24,7 +24,7 @@ class porto : public component::base {
 		gear2d::link<int> cash;
 		gear2d::link<int> hp;
 		std::list< component::base* > barcos;
-		int qtde_barcos[last];
+		int qtde_barcos[lastsize];
 		component::base* painel;
 	public:
 		// constructor and destructor
@@ -48,6 +48,9 @@ class porto : public component::base {
 			player = eval<int>(sig["porto.player"], 0);
 			write("gamesetup", 0);
 			write("gameplay", 0);
+			
+			// flag para a partida hookar
+			write<bool>("morto", false);
 			
 			// inicializa um parametro para hookar um barco que acabou de morrer
 			write<component::base*>("barcomorrendo", 0);
@@ -85,7 +88,7 @@ class porto : public component::base {
 			
 			// painel de fabricacao de barcos
 			write<string>("spawn.tamanho", "");
-			write<int>("spawn.tipo", last);
+			write<int>("spawn.tipo", lastsize);
 			hook("spawn.tamanho", (component::call)&porto::handlePainel);
 			painel = spawn("painel")->component("spatial");
 			painel->write("porto", this);
@@ -93,7 +96,7 @@ class porto : public component::base {
 			painel->write<float>("y", eval<float>(sig["painel.y"], 0));
 			
 			// zerando a quantidade de barcos deste porto
-			for( int i = 0; i < last; ++i )
+			for( int i = 0; i < lastsize; ++i )
 				qtde_barcos[i] = 0;
 			
 			// zerando os dados da partida para este porto
@@ -108,6 +111,25 @@ class porto : public component::base {
 		}
 		
 		virtual void update(timediff dt) {
+			// destroi o porto
+			if (hp <= 0 ) {
+				// avisa a partida
+				write<bool>("morto", true);
+				
+				// destroi o painel
+				painel->destroy();
+				
+				// destroi os barcos
+				for (int i = 0; i < lastsize; ++i) {
+					qtde_barcos[i] = 0;
+				}
+				while (barcos.size()) {
+					barcos.back()->destroy();
+					barcos.pop_back();
+				}
+				
+				destroy();
+			}
 		}
 		
 		virtual void criarBarco(const string& tbarco, barcotype barco_t, bool debitar = true) {
@@ -154,8 +176,8 @@ class porto : public component::base {
 		void getTurnCash() {
 			// itera nos 3 tipos de barco, somando a contribuicao do desconto no cash que sera ganho naquele turno
 			float desconto = 0;
-			for( int i = 0; i < last; ++i ) {
-				float peso = ( float( last * (last + 1) ) / 2 ) * (i + 1);
+			for( int i = 0; i < lastsize; ++i ) {
+				float peso = ( float( lastsize * (lastsize + 1) ) / 2 ) * (i + 1);
 				desconto += ( peso * qtde_barcos[i] / cash_max_barcos[i] );
 			}
 			
@@ -197,10 +219,10 @@ class porto : public component::base {
 	private:
 		static std::list<porto *> portos;
 		static bool initialized;
-		static int custo_barco[last];
+		static int custo_barco[lastsize];
 		static int min_cash_turn;
 		static int max_cash_turn;
-		static int cash_max_barcos[last];
+		static int cash_max_barcos[lastsize];
 		
 	private:
 		static void initialize() {
@@ -211,10 +233,10 @@ class porto : public component::base {
 
 std::list<porto *> porto::portos;
 bool porto::initialized = false;
-int porto::custo_barco[last];
+int porto::custo_barco[lastsize];
 int porto::min_cash_turn;
 int porto::max_cash_turn;
-int porto::cash_max_barcos[last];
+int porto::cash_max_barcos[lastsize];
 
 // the build function
 extern "C" { component::base * build() { return new porto(); } }
