@@ -139,8 +139,8 @@ class barco : public component::base {
         	//!selected usado pra não prejudicar testes
         	if( gameplay && !selected )
         	{
-            	write("x.speed", targetx - cx);
-            	write("y.speed", targety - cy);
+                    write("x.speed", targetx - cx);
+                    write("y.speed", targety - cy);
         	}
 
 	        if (selected)
@@ -174,7 +174,13 @@ class barco : public component::base {
 				porto = read<component::base *>("porto");
 				hook(porto, "gamesetup");
 				hook(porto, "gameplay");
-			}
+                        }
+                        else if (pid == "gamesetup") {
+                            gamesetup = porto->read<bool>("gamesetup");
+                        }
+                        else if (pid == "gameplay") {
+                            gameplay = porto->read<bool>("gameplay");
+                        }
 		}
 
 		//Cuida das colisoes gerais
