@@ -162,7 +162,7 @@ class barco : public component::base {
 			}
 			
 			//clip da barra de hp proporcional ao hp
-			cout << "atr.hp: " << atr.hp << endl;
+			//cout << "atr.hp: " << atr.hp << endl;
 			write("hpbar.clip.w", (atr.hp*64)/100);
 		}
 
@@ -190,17 +190,11 @@ class barco : public component::base {
 				
 				component::base * inimigo = read<component::base*>(pid);
 				
-				if(inimigo->owner == porto->owner)
+				if((inimigo->owner == porto->owner)||(inimigo->read<component::base*>("porto") == porto ))
 				{
 					cout<<"mesmo porto"<<endl;
 					return;
 				}
-				if(inimigo->owner == owner)
-				{
-					cout<<"mesmo porto"<<endl;
-					return;
-				}
-				
 				
 				inimX = inimigo->read<float>("x");
 				inimY = inimigo->read<float>("y");
@@ -217,19 +211,19 @@ class barco : public component::base {
 				//colisao de longe (range do barco vs. barco inimigo, range do barco vs, porto)
 				if(longe)
 				{
-					// if((inimigo->read<string>("collider.tag") == "barco")||(inimigo->read<string>("collider.tag") == "porto"))
-					if((inimigo->read<string>("collider.tag") == "barco"))
+					if((inimigo->read<string>("collider.tag") == "barco")||(inimigo->read<string>("collider.tag") == "porto"))
 					{
 						//em teoria isso deveria estar funcionando: guarda o primeiro inimigo a entrar no range de ataque,
 						//somente esse primeiro inimigo vai ser atacado. Quando ele morrer, o proximo alvo vai ser atacado.
-						if(alvoPrincipal==NULL)
+						/*if(alvoPrincipal==NULL)
 							alvoPrincipal = inimigo;
 						else
 						{
 							if(alvoPrincipal==inimigo)
 								if(removeHP(inimigo,atr.dmg))
 									alvoPrincipal=NULL;
-						}
+						}*/
+						removeHP(inimigo,atr.dmg);
 					}	
 				}
 				
