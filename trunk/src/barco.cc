@@ -84,7 +84,8 @@ class barco : public component::base {
 			mouse1 	= fetch<int>  ("mouse.1");
 
 			write<component::base *>("porto", NULL);
-			porto = NULL;
+			porto 			= NULL;
+			alvoPrincipal 	= NULL;
 			
 			//alterando range de ataque do barco
 			//NOTA: isso vai aumentar a caixa de colisao dos barcos, fazendo com que
@@ -154,8 +155,8 @@ class barco : public component::base {
 				float distance = sqrt(dx*dx + dy*dy);
 
 				if(distance > atr.range) {
-					dx = dx * (atr.range/distance);
-					dy = dy * (atr.range/distance);
+					dx = dx * (atr.moverange/distance);
+					dy = dy * (atr.moverange/distance);
 				}
 				
 				targetx = cx + dx;
@@ -166,7 +167,7 @@ class barco : public component::base {
 			}
 			
 			//clip da barra de hp proporcional ao hp
-			write("hpbar.clip.w", (atr.hp*64)/100.0);
+			write("hpbar.clip.w", (atr.hp*64)/100);
 		}
 
 		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
@@ -193,6 +194,18 @@ class barco : public component::base {
 				
 				component::base * inimigo = read<component::base*>(pid);
 				
+				if(inimigo->owner == porto->owner)
+				{
+					cout<<"mesmo porto"<<endl;
+					return;
+				}
+				if(inimigo->owner == owner)
+				{
+					cout<<"mesmo porto"<<endl;
+					return;
+				}
+				
+				
 				inimX = inimigo->read<float>("x");
 				inimY = inimigo->read<float>("y");
 				inimW = inimigo->read<float>("w");
@@ -210,7 +223,16 @@ class barco : public component::base {
 				{
 					if((inimigo->read<string>("collider.tag") == "barco")||(inimigo->read<string>("collider.tag") == "porto"))
 					{
-						removeHP(inimigo,1);
+						//em teoria isso deveria estar funcionando: guarda o primeiro inimigo a entrar no range de ataque,
+						//somente esse primeiro inimigo vai ser atacado. Quando ele morrer, o proximo alvo vai ser atacado.
+						if(alvoPrincipal==NULL)
+							alvoPrincipal = inimigo;
+						else
+						{
+							if(alvoPrincipal==inimigo)
+								if(removeHP(inimigo,atr.dmg))
+									alvoPrincipal=NULL;
+						}
 					}	
 				}
 				
@@ -219,6 +241,7 @@ class barco : public component::base {
 				{
 					if(inimigo->read<string>("collider.tag") == "barco")
 					{
+						//se colidirem, os dois se causam dano.
 						int danoFisico = inimigo->read<int>("hp.value");
 						removeHP(inimigo,atr.hp);
 						atr.hp = atr.hp-danoFisico; 

@@ -26,5 +26,5 @@ hp.value: 100
 range: 80.0
 moverange: 100.0
 speed: 100.0
-dmg: 300
+dmg: 3
 loot.value: 300
