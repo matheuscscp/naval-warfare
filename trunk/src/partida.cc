@@ -22,7 +22,11 @@ class partida : public component::base {
 		}
 		virtual ~partida() {
 			while (portos.size()) {
-				portos.back()->destroy();
+				// destroi os portos ainda vivos
+				if (portos.back())
+					portos.back()->destroy();
+				
+				// remove o ponteiro
 				portos.pop_back();
 			}
 		}
@@ -75,8 +79,10 @@ class partida : public component::base {
 					handleTab("", 0, 0);
 				}
 			} else {
+				// atribui NULL ao morto que acabou de morrer
 				std::list<component::base*>::iterator it = portos.begin();
-				while (*it != last);
+				while (*it != last)
+					++it;
 				*it = NULL;
 			}
 		}
