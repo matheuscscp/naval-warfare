@@ -96,11 +96,6 @@ class barco : public component::base {
 			write("collider.aabb.w",atr.range*2);
 			write("collider.aabb.h",atr.range*2);
 			
-			write("target.render", false);
-			write("rangeatk.render", false);
-			write("barcohover.render", false);
-			write("range.render", false);
-			
 			//iniciando todos os valores do range de movimento e de ataque
 			float rangeWH = (float)read<int>("range.position.w")/2; 
 			float rangeatkWH = (float)read<int>("rangeatk.position.w")/2;
@@ -154,7 +149,7 @@ class barco : public component::base {
 
 				float distance = sqrt(dx*dx + dy*dy);
 
-				if(distance > atr.range) {
+				if(distance > atr.moverange) {
 					dx = dx * (atr.moverange/distance);
 					dy = dy * (atr.moverange/distance);
 				}
@@ -167,6 +162,7 @@ class barco : public component::base {
 			}
 			
 			//clip da barra de hp proporcional ao hp
+			cout << "atr.hp: " << atr.hp << endl;
 			write("hpbar.clip.w", (atr.hp*64)/100);
 		}
 
@@ -221,7 +217,8 @@ class barco : public component::base {
 				//colisao de longe (range do barco vs. barco inimigo, range do barco vs, porto)
 				if(longe)
 				{
-					if((inimigo->read<string>("collider.tag") == "barco")||(inimigo->read<string>("collider.tag") == "porto"))
+					// if((inimigo->read<string>("collider.tag") == "barco")||(inimigo->read<string>("collider.tag") == "porto"))
+					if((inimigo->read<string>("collider.tag") == "barco"))
 					{
 						//em teoria isso deveria estar funcionando: guarda o primeiro inimigo a entrar no range de ataque,
 						//somente esse primeiro inimigo vai ser atacado. Quando ele morrer, o proximo alvo vai ser atacado.
