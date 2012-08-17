@@ -26,6 +26,8 @@ class porto : public component::base {
 		std::list< component::base* > barcos;
 		int qtde_barcos[lastsize];
 		component::base* painel;
+		gear2d::link<float> spawn_x;
+		gear2d::link<float> spawn_y;
 	public:
 		// constructor and destructor
 		porto() { 
@@ -108,6 +110,12 @@ class porto : public component::base {
 			write<int>("grandedestruido", 0);
 			write<int>("mediodestruido", 0);
 			write<int>("pequenodestruido", 0);
+			
+			// inicia a posicao de spawn de barcos
+			init<float>("spawn.x", sig["spawn.x"], 0);
+			init<float>("spawn.y", sig["spawn.y"], 0);
+			spawn_x = fetch<float>("spawn.x");
+			spawn_y = fetch<float>("spawn.y");
 		}
 		
 		virtual void update(timediff dt) {
@@ -155,6 +163,10 @@ class porto : public component::base {
 					cash = (cash - custo_barco[barco_t]);
 					add<int>("cashusado", custo_barco[barco_t]);
 				}
+				
+				// setta a posicao
+				barco->write<float>("x", spawn_x);
+				barco->write<float>("y", spawn_y);
 			}
 		}
 
