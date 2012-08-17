@@ -46,8 +46,8 @@ class porto : public component::base {
 			initialize();
 			player = fetch<int>("porto.player");
 			player = eval<int>(sig["porto.player"], 0);
-			write("gamesetup", 0);
-			write("gameplay", 0);
+			write<bool>("gamesetup", 0);
+			write<bool>("gameplay", 0);
 			
 			// flag para a partida hookar
 			write<bool>("morto", false);

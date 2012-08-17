@@ -40,6 +40,7 @@ class partida : public component::base {
 		virtual void setup(object::signature & sig) {
 			// spawna os portos
 			portos.push_back(spawn("porto-p1")->component("porto"));
+			portos.back()->write<bool>("gamesetup", true);
 			portos.push_back(spawn("porto-p2")->component("porto"));
 			
 			// hooka o tab para mostrar dados da partida
