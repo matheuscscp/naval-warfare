@@ -13,6 +13,11 @@ rangeatk.position.z: 9
 target.position.z : 11
 barcohover.position.z: 11
 
+target.render: 0
+rangeatk.render: 0
+barcohover.render: 0
+range.render: 0
+
 target.bind: 0
 
 hpbar.position.x: -16
