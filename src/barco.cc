@@ -171,13 +171,13 @@ class barco : public component::base {
 				porto = read<component::base *>("porto");
 				hook(porto, "gamesetup");
 				hook(porto, "gameplay");
-                        }
-                        else if (pid == "gamesetup") {
-                            gamesetup = porto->read<bool>("gamesetup");
-                        }
-                        else if (pid == "gameplay") {
-                            gameplay = porto->read<bool>("gameplay");
-                        }
+			}
+			else if (pid == "gamesetup") {
+				gamesetup = porto->read<bool>("gamesetup");
+			}
+			else if (pid == "gameplay") {
+				gameplay = porto->read<bool>("gameplay");
+			}
 		}
 
 		//Cuida das colisoes gerais
