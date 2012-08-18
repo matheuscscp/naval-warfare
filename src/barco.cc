@@ -131,16 +131,16 @@ class barco : public component::base {
 			cx = x + w/2;
 			cy = y + h/2;
 
-        	//verifica se é o turno do barco antes de executar a movimentação
-        	//!selected usado pra não prejudicar testes
-        	if( gameplay && !selected )
-        	{
-                    write("x.speed", targetx - cx);
-                    write("y.speed", targety - cy);
+			//verifica se é o turno do barco antes de executar a movimentação
+			//!selected usado pra não prejudicar testes
+			if( gameplay && !selected )
+			{
+				write("x.speed", targetx - cx);
+				write("y.speed", targety - cy);
         	}
 
-	        if (selected)
-	        {
+			if (selected)
+			{
 				int mousex = read<int>("mouse.x");
 				int mousey = read<int>("mouse.y");
 
