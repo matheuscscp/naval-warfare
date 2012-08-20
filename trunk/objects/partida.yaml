@@ -1,7 +1,7 @@
 attach: gamestate/partida keyboard/keyboard renderer/renderer
 
 renderer.surfaces: stat=stat.png
-renderer.texts: gameover cashusado1 cashganho1 grandefabricado1 mediofabricado1 pequenofabricado1 grandedestruido1 mediodestruido1 pequenodestruido1 cashusado2 cashganho2 grandefabricado2 mediofabricado2 pequenofabricado2 grandedestruido2 mediodestruido2 pequenodestruido2
+renderer.texts: gameover porto1 porto2 cashusado1 cashganho1 grandefabricado1 mediofabricado1 pequenofabricado1 grandedestruido1 mediodestruido1 pequenodestruido1 cashusado2 cashganho2 grandefabricado2 mediofabricado2 pequenofabricado2 grandedestruido2 mediodestruido2 pequenodestruido2
 
 keyboard.interested: tab
 
@@ -14,15 +14,37 @@ stat.position.y: 0
 stat.position.z: 200
 
 gameover.render: 0
-gameover.text: GAME OVER
+gameover.text: PLAYER X WINS
 gameover.font: ttf/fontin_sans.otf
-gameover.font.size: 80
+gameover.font.size: 70
 gameover.font.r: 1
 gameover.font.g: 1
 gameover.font.b: 1
-gameover.position.x: 180
+gameover.position.x: 160
 gameover.position.y: 50
 gameover.position.z: 201
+
+porto1.render: 0
+porto1.text: Player 1
+porto1.font: ttf/fontin_sans.otf
+porto1.font.size: 40
+porto1.font.r: 1
+porto1.font.g: 0
+porto1.font.b: 0
+porto1.position.x: 110
+porto1.position.y: 140
+porto1.position.z: 201
+
+porto2.render: 0
+porto2.text: Player 2
+porto2.font: ttf/fontin_sans.otf
+porto2.font.size: 40
+porto2.font.r: 0
+porto2.font.g: 0
+porto2.font.b: 1
+porto2.position.x: 510
+porto2.position.y: 140
+porto2.position.z: 201
 
 # status do porto 1
 

@@ -122,8 +122,6 @@ class barco : public component::base {
 			targety = cy;
 
 			selected = false;
-			gameplay = true; //incializando como true para não prejudicar os demais testes
-			gamesetup = true;
 		}
 
 		virtual void update(timediff dt) 
@@ -171,6 +169,8 @@ class barco : public component::base {
 				porto = read<component::base *>("porto");
 				hook(porto, "gamesetup");
 				hook(porto, "gameplay");
+				gameplay = porto->read<bool>("gameplay");
+				gamesetup = porto->read<bool>("gamesetup");
 			}
 			else if (pid == "gamesetup") {
 				gamesetup = porto->read<bool>("gamesetup");

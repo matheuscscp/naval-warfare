@@ -93,6 +93,20 @@ class partida : public component::base {
 				write<int>("key.tab", 1);
 				gameover = true;
 				write<int>("gameover.render", 1);
+				write<int>("porto1.render", 1);
+				write<int>("porto2.render", 1);
+				if (last->read<int>("porto.player") == 1) {
+					write<string>("gameover.text", "PLAYER 2 WINS");
+					write<float>("gameover.font.r", read<float>("porto2.font.r"));
+					write<float>("gameover.font.g", read<float>("porto2.font.g"));
+					write<float>("gameover.font.b", read<float>("porto2.font.b"));
+				}
+				else {
+					write<string>("gameover.text", "PLAYER 1 WINS");
+					write<float>("gameover.font.r", read<float>("porto1.font.r"));
+					write<float>("gameover.font.g", read<float>("porto1.font.g"));
+					write<float>("gameover.font.b", read<float>("porto1.font.b"));
+				}
 				
 				// atribui NULL ao morto que acabou de morrer
 				std::list<component::base*>::iterator it = portos.begin();
@@ -115,7 +129,10 @@ class partida : public component::base {
 					tab = 1;
 				}
 				
-				write("stat.render", tab);	// esconde ou mostra o fundo dos dados
+				// esconde ou mostra os dados
+				write("stat.render", tab);
+				write("porto1.render", tab);
+				write("porto2.render", tab);
 				
 				// atualiza (se for pra mostrar) e esconde ou mostra os dados da partida
 				int i = 1;
