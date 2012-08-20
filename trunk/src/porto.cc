@@ -167,8 +167,8 @@ class porto : public component::base {
 				}
 				
 				// setta a posicao
-				//barco->write<float>("x", spawn_x);
-				//barco->write<float>("y", spawn_y);
+				barco->write<float>("x", spawn_x);
+				barco->write<float>("y", spawn_y);
 			}
 		}
 
