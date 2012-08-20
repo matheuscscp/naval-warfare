@@ -34,10 +34,8 @@ class porto : public component::base {
 	public:
 		// constructor and destructor
 		porto() { 
-			portos.push_back(this);
 		}
 		virtual ~porto() { 
-			portos.remove(this);
 		}
 		
 		virtual gear2d::component::family family() { return "porto"; }
@@ -231,7 +229,6 @@ class porto : public component::base {
 		
 
 	private:
-		static std::list<porto *> portos;
 		static bool initialized;
 		static int custo_barco[lastsize];
 		static int min_cash_turn;
@@ -245,7 +242,6 @@ class porto : public component::base {
 		}
 };
 
-std::list<porto *> porto::portos;
 bool porto::initialized = false;
 int porto::custo_barco[lastsize];
 int porto::min_cash_turn;
