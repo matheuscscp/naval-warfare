@@ -15,10 +15,15 @@ class partida : public component::base {
 		// private vars
 		bool force_update;
 		bool init;
+		bool gameover;
 		
 	public:
 		// constructor and destructor
-		partida() : init(false), force_update(false) {
+		partida() :
+		init(false),
+		force_update(false),
+		gameover(false)
+		{
 		}
 		virtual ~partida() {
 			while (portos.size()) {
@@ -85,6 +90,10 @@ class partida : public component::base {
 					handleTab("", 0, 0);
 				}
 			} else {
+				write<int>("key.tab", 1);
+				gameover = true;
+				write<int>("gameover.render", 1);
+				
 				// atribui NULL ao morto que acabou de morrer
 				std::list<component::base*>::iterator it = portos.begin();
 				while (*it != last)
@@ -94,6 +103,9 @@ class partida : public component::base {
 		}
 		
 		virtual void handleTab(parameterbase::id pid, component::base * last, object::id owns) {
+			if (gameover)
+				return;
+			
 			// mostra (e atualiza) ou esconde os dados da partida se o jogador estiver segurando tab
 			int tab = read<int>("key.tab");
 			if ( (tab < 2) || (force_update) ) {
