@@ -38,6 +38,11 @@ class partida : public component::base {
 		virtual std::string depends() { return "keyboard/keyboard renderer/renderer"; }
 
 		virtual void setup(object::signature & sig) {
+			// inicializa o nome do proximo gamestate para a entrance hookar
+			write<object::type>("newstate", "");
+			
+			spawn("background");
+			
 			// spawna os portos
 			portos.push_back(spawn("porto-p1")->component("porto"));
 			portos.back()->write<bool>("gamesetup", true);
