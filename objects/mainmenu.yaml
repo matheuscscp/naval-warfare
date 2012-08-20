@@ -1,1 +1,34 @@
-attach: gamestate/mainmenu
+attach: gamestate/mainmenu keyboard/keyboard spatial/space2d renderer/renderer kinematics/kinematic2d menu/singleselect
+
+renderer.texts: newgame exitgame
+
+keyboard.interested: up down return
+
+menu.options: newgame exitgame
+menu.focus: newgame
+menu.circular: 1
+
+x: 380
+y: 300
+
+newgame.order: 0
+newgame.text: New Game
+newgame.font.r: 0
+newgame.font.g: 0
+newgame.font.b: 0
+newgame.alpha: 0.5
+newgame.font: ttf/fontin_sans.otf
+newgame.font.size: 48
+newgame.position.x: 0
+newgame.position.y: 0
+
+exitgame.order: 1
+exitgame.text: Exit Game
+exitgame.font.r: 0
+exitgame.font.g: 0
+exitgame.font.b: 0
+exitgame.alpha: 0.5
+exitgame.font: ttf/fontin_sans.otf
+exitgame.font.size: 48
+exitgame.position.x: 0
+exitgame.position.y: 80
