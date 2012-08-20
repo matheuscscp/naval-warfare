@@ -16,6 +16,8 @@ class partida : public component::base {
 		bool force_update;
 		bool init;
 		bool gameover;
+		std::list<component::base*> portos;
+		std::list<component::base*>::iterator portoAtual;
 		
 	public:
 		// constructor and destructor
@@ -55,6 +57,7 @@ class partida : public component::base {
 			
 			// hooka o tab para mostrar dados da partida
 			hook("key.tab", (component::call)&partida::handleTab);
+			hook("key.enter", (component::call)&partida::handleReturn);
 			
 			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
 				// hooka a flag morto
@@ -90,6 +93,7 @@ class partida : public component::base {
 					updateDados();
 				}
 			} else {
+				/* gato pra mostrar a tela de game-over */
 				write<int>("key.tab", 1);
 				gameover = true;
 				write<int>("gameover.render", 1);
@@ -114,6 +118,20 @@ class partida : public component::base {
 					++it;
 				*it = NULL;
 			}
+		}
+		
+		/* O RETURN serve pra sinalizar o fim do setup da movimentação */
+		virtual void handleReturn(parameterbase::id pid, component::base * last, object::id owns) {
+			if (pid != "key.return") return;
+			int enterPressed = read<int>("key.return");
+			if (enterPressed) {
+				nextTurn();
+			}
+		}
+		
+		
+		void nextTurn() {
+			
 		}
 		
 		virtual void handleTab(parameterbase::id pid, component::base * last, object::id owns) {
@@ -178,14 +196,7 @@ class partida : public component::base {
 			ss << id;
 			return ss.str();
 		}
-		
-	private:
-		// static vars declaration
-		static std::list<component::base*> portos;
 };
-
-// static vars definition
-std::list<component::base*> partida::portos;
 
 // the build function
 extern "C" { component::base * build() { return new partida(); } }
