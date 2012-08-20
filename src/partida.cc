@@ -31,11 +31,11 @@ class partida : public component::base {
 			}
 		}
 		
-		virtual gear2d::component::family family() { return "partida"; }
+		virtual gear2d::component::family family() { return "gamestate"; }
 
 		virtual gear2d::component::type type() { return "partida"; }
 
-		virtual std::string depends() { return ""; }
+		virtual std::string depends() { return "keyboard/keyboard renderer/renderer"; }
 
 		virtual void setup(object::signature & sig) {
 			// spawna os portos
