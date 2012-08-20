@@ -21,6 +21,8 @@ namespace gear2d {
 
 class porto : public component::base {
 	private:
+		gear2d::link<int> player;
+		
 		gear2d::link<int> cash;
 		gear2d::link<int> hp;
 		std::list< component::base* > barcos;
@@ -28,6 +30,7 @@ class porto : public component::base {
 		component::base* painel;
 		gear2d::link<float> spawn_x;
 		gear2d::link<float> spawn_y;
+		
 	public:
 		// constructor and destructor
 		porto() { 
@@ -37,8 +40,6 @@ class porto : public component::base {
 			portos.remove(this);
 		}
 		
-		gear2d::link<int> player;
-		
 		virtual gear2d::component::family family() { return "porto"; }
 		virtual gear2d::component::type type() { return "porto"; }
 
@@ -46,8 +47,8 @@ class porto : public component::base {
 
 		virtual void setup(object::signature & sig) {
 			initialize();
+			init<int>("porto.player", sig["porto.player"], 0);
 			player = fetch<int>("porto.player");
-			player = eval<int>(sig["porto.player"], 0);
 			write<bool>("gamesetup", 0);
 			write<bool>("gameplay", 0);
 			
