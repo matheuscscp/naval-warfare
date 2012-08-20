@@ -76,8 +76,8 @@ class partida : public component::base {
 			if (!init) {
 				init = true;
 				force_update = true;	// forca a inicializacao dos textos
-				handleTab("", 0, 0);	// inicializa os textos
-				handleTab("", 0, 0);	// apaga a tela de dados
+				updateDados();			// inicializa os textos
+				updateDados();			// apaga a tela de dados
 			}
 		}
 		
@@ -87,7 +87,7 @@ class partida : public component::base {
 				int tab = read<int>("key.tab");
 				if (tab == 2) {
 					force_update = true;
-					handleTab("", 0, 0);
+					updateDados();
 				}
 			} else {
 				write<int>("key.tab", 1);
@@ -120,6 +120,10 @@ class partida : public component::base {
 			if (gameover)
 				return;
 			
+			updateDados();
+		}
+		
+		void updateDados() {
 			// mostra (e atualiza) ou esconde os dados da partida se o jogador estiver segurando tab
 			int tab = read<int>("key.tab");
 			if ( (tab < 2) || (force_update) ) {
