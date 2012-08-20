@@ -25,11 +25,6 @@ class mainmenu : public component::base {
 		virtual std::string depends() { return "keyboard/keyboard menu/singleselect"; }
 
 		virtual void setup(object::signature & sig) {
-			// inicializa o nome do proximo gamestate para a entrance hookar
-			write<object::type>("newstate", "");
-			
-			spawn("background");
-			
 			hook("key.up");
 			hook("key.down");
 			hook("key.return");
@@ -52,7 +47,7 @@ class mainmenu : public component::base {
 			}
 			else if (pid == "key.return") {
 				if (read<string>("menu.focus") == "newgame")
-					write<object::type>("newstate", "partida");
+					load("partida");
 			}
 			else if (pid == "menu.focus") {
 				if (read<string>("menu.focus") == "newgame") {

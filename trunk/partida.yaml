@@ -1,0 +1,20 @@
+compath: components,/usr/local/lib/gear2d/component
+
+objpath: objects/
+imgpath: images/
+
+objects: background partida
+
+renderer.w: 1024
+renderer.h: 768
+
+cost.barcopequeno: 100
+cost.barcomedio: 200
+cost.barcogrande: 300
+
+cash.minperturn: 50
+cash.maxperturn: 500
+
+cash.maxpequeno: 5
+cash.maxmedio: 4
+cash.maxgrande: 3

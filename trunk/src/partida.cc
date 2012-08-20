@@ -48,8 +48,6 @@ class partida : public component::base {
 			// inicializa o nome do proximo gamestate para a entrance hookar
 			write<object::type>("newstate", "");
 			
-			spawn("background");
-			
 			// spawna os portos
 			portos.push_back(spawn("porto-p1")->component("porto"));
 			portos.back()->write<bool>("gamesetup", true);
