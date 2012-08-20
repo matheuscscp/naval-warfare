@@ -41,4 +41,4 @@ add_library(partida MODULE partida.cc)
 		
 install(TARGETS partida
 		LIBRARY
-		DESTINATION partida)
+		DESTINATION gamestate)
