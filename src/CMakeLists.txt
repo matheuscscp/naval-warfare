@@ -56,3 +56,9 @@ add_library(entrance MODULE entrance.cc)
 install(TARGETS entrance
 		LIBRARY
 		DESTINATION entrance)
+
+add_library(geraIlha MODULE geraIlha.cc)
+		
+install(TARGETS geraIlha
+		LIBRARY
+		DESTINATION geraIlha)

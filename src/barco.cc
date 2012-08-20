@@ -108,6 +108,22 @@ class barco : public component::base {
 			write("rangeatk.position.y",(h/2.0f)-rangeatkWH);
 			write("rangeatk.zoom", atr.range/rangeatkWH);
 			
+			
+			//iniciando os valores do texto de atributos
+			stringstream dmg,spd,hp;
+			
+			dmg<<"DMG:"<<atr.dmg<<" ";
+			spd<<"SPD:"<<(int)atr.speed<<" ";
+			
+			write("atributoDano.text",dmg.str());
+			write("atributoSpeed.text",spd.str());
+			
+			write("atributoDano.position.x",w);
+			write("atributoDano.position.y",0.0f);
+			
+			write("atributoSpeed.position.x",w);
+			write("atributoSpeed.position.y",15.0f);
+			
 			/**HOOKS**/
 			hook("porto");
 			hook("mouse.1", (component::call)&barco::handleClick);
@@ -190,15 +206,16 @@ class barco : public component::base {
 				
 				component::base * inimigo = read<component::base*>(pid);
 				
-				if((inimigo->owner == porto->owner)||(inimigo->read<component::base*>("porto") == porto ))
-				{
-					cout<<"mesmo porto"<<endl;
-					return;
-				}
 				
 				inimX = inimigo->read<float>("x");
 				inimY = inimigo->read<float>("y");
 				inimW = inimigo->read<float>("w");
+				
+				if((inimigo->owner == porto->owner)||(inimigo->read<component::base*>("porto") == porto ))
+				{
+					///TODO: PARAR  BARCO SE ELE COLIDIR COM UM BARCO ALIADO
+					return;
+				}
 				 
 				//checando as colisoes esfericas dentro da bounding box do collider(que eh uma caixa, duh)
 				//com o objeto "inimigo"
@@ -215,15 +232,14 @@ class barco : public component::base {
 					{
 						//em teoria isso deveria estar funcionando: guarda o primeiro inimigo a entrar no range de ataque,
 						//somente esse primeiro inimigo vai ser atacado. Quando ele morrer, o proximo alvo vai ser atacado.
-						/*if(alvoPrincipal==NULL)
+						if(alvoPrincipal==NULL)
 							alvoPrincipal = inimigo;
 						else
 						{
 							if(alvoPrincipal==inimigo)
 								if(removeHP(inimigo,atr.dmg))
 									alvoPrincipal=NULL;
-						}*/
-						removeHP(inimigo,atr.dmg);
+						}
 					}	
 				}
 				
@@ -248,6 +264,8 @@ class barco : public component::base {
 					}
 				}
 			}
+			else
+				alvoPrincipal=NULL;
 		}
 
 		//Tira vida de um component, pelo amor de deus, use isso em algo que tem hp.value
@@ -262,7 +280,7 @@ class barco : public component::base {
 			return true;
 		}
 		
-		//funcao calcula colisao esferica entre objetos a e b (ar = raio de a)
+		//calcula colisao esferica entre objetos a e b (ar = raio de a)
 		//nota: mande o centro x e centro y de a e b
 		bool sphereCollision(float acx,float acy,float ar,float bcx, float bcy,float br) {
 			float  dX   = acx - bcx;
@@ -277,17 +295,23 @@ class barco : public component::base {
 			if (mouse1 == 1) {
 				if (selected) {
 					selected = false;
-					write("range.render", false);
-					write("rangeatk.render", false);
-					//write("target.render", false);
+					write("range.render"			, false);
+					write("rangeatk.render"			, false);
+					//write("target.render"			, false);
+					write("atributoDano.render"		, false);
+					write("atributoSpeed.render"	, false);
+					write("atributoHP.render"		, false);
 				}
 				else {
 					if (read<bool>("mouseover")) {
 						cout << "clicked over me" << endl;
 						selected = true;
-						write("range.render", true);
-						write("target.render", true);
-						write("rangeatk.render", true);
+						write("range.render"			, true);
+						write("target.render"			, true);
+						write("rangeatk.render"			, true);
+						write("atributoDano.render"		, true);
+						write("atributoSpeed.render"	, true);
+						write("atributoHP.render"		, true);
 					}
 				}
 			}

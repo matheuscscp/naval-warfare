@@ -147,6 +147,7 @@ class porto : public component::base {
 				// cria e poe na lista
 				component::base* barco = spawn(tbarco)->component("unit");
 				barco->write("porto", this);
+				
 				barcos.push_back(barco);
 				
 				// incrementa os contadores
@@ -166,8 +167,8 @@ class porto : public component::base {
 				}
 				
 				// setta a posicao
-				barco->write<float>("x", spawn_x);
-				barco->write<float>("y", spawn_y);
+				//barco->write<float>("x", spawn_x);
+				//barco->write<float>("y", spawn_y);
 			}
 		}
 

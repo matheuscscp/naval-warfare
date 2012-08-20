@@ -1,22 +1,44 @@
 attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d
 
 renderer.surfaces: barco=barco3.png range=range.png rangeatk=rangeatk.png target=target.png hpbar=hpbar.png barcohover=barco3mouseover.png
+renderer.texts: atributoDano atributoSpeed
 
 w: 64
 h: 64
 
 collider.tag: barco
 
+atributoDano.text: TEMP TEMP TEMP TEMP TEMP
+atributoDano.font: ttf/fontin_sans.otf
+atributoDano.font.size: 15
+atributoDano.font.r: 0
+atributoDano.font.g: 0
+atributoDano.font.b: 0
+
+atributoSpeed.text: TEMP TEMP TEMP TEMP TEMP
+atributoSpeed.font: ttf/fontin_sans.otf
+atributoSpeed.font.size: 15
+atributoSpeed.font.r: 0
+atributoSpeed.font.g: 0
+atributoSpeed.font.b: 0
+
 barco.position.z: 10
 range.position.z: 8
 rangeatk.position.z: 9
 target.position.z : 11
 barcohover.positon.z: 11
+hpbar.position.z: 13
+atributoDano.position.z: 13
+atributoSpeed.position.z: 13
+atributoHP.position.z: 13
 
 target.render: 0
 rangeatk.render: 0
 barcohover.render: 0
 range.render: 0
+atributoDano.render: 0
+atributoSpeed.render: 0
+atributoHP.render: 0
 
 target.bind: 0
 
@@ -25,6 +47,13 @@ hpbar.position.y: -16
 
 barcohover.position.x: -4
 barcohover.position.y: -4
+
+atributoDano.position.x: 0
+atributoDano.position.y: 0
+atributoSpeed.position.x: 0
+atributoSpeed.position.y: 0
+atributoHP.position.x: 0
+atributoHP.position.y: 0
 
 tipo: 0
 hp.value: 100
