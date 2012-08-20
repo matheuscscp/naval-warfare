@@ -1,0 +1,3 @@
+# script para limpar tudo
+
+rm -rf build components

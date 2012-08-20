@@ -1,4 +1,4 @@
-# script pra compilar e rodar o jogo
+# script para compilar e rodar o jogo
 
 cd build
 make install
