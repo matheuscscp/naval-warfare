@@ -1,0 +1,6 @@
+# script para configurar o que sera compilado
+
+mkdir build
+cd build
+cmake -DCMAKE_BUILD_TYPE=Debug ../
+cd ..
