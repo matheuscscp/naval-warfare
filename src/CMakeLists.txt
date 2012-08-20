@@ -42,3 +42,17 @@ add_library(partida MODULE partida.cc)
 install(TARGETS partida
 		LIBRARY
 		DESTINATION gamestate)
+
+
+add_library(mainmenu MODULE mainmenu.cc)
+		
+install(TARGETS mainmenu
+		LIBRARY
+		DESTINATION gamestate)
+
+
+add_library(entrance MODULE entrance.cc)
+		
+install(TARGETS entrance
+		LIBRARY
+		DESTINATION entrance)
