@@ -56,3 +56,10 @@ add_library(geraIlha MODULE geraIlha.cc)
 install(TARGETS geraIlha
 		LIBRARY
 		DESTINATION geraIlha)
+
+
+add_library(singleselectmanager MODULE singleselectmanager.cc)
+		
+install(TARGETS singleselectmanager
+		LIBRARY
+		DESTINATION menumanager)

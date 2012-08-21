@@ -1,4 +1,4 @@
-attach: keyboard/keyboard spatial/space2d renderer/renderer menu/singleselect
+attach: keyboard/keyboard spatial/space2d renderer/renderer menu/singleselect menumanager/singleselectmanager
 
 renderer.surfaces: stat=stat.png
 renderer.texts: resumegame exitgame
@@ -13,6 +13,8 @@ stat.position.z: 400
 menu.options: resumegame exitgame
 menu.focus: resumegame
 menu.circular: 1
+menu.keyprev: key.up
+menu.keynext: key.down
 
 resumegame.order: 0
 resumegame.text: Resume Game
@@ -22,8 +24,8 @@ resumegame.font.b: 1
 resumegame.alpha: 0.5
 resumegame.font: ttf/fontin_sans.otf
 resumegame.font.size: 48
-resumegame.position.x: 0
-resumegame.position.y: 0
+resumegame.position.x: 250
+resumegame.position.y: 200
 resumegame.position.z: 401
 
 exitgame.order: 1
@@ -34,6 +36,6 @@ exitgame.font.b: 1
 exitgame.alpha: 0.5
 exitgame.font: ttf/fontin_sans.otf
 exitgame.font.size: 48
-exitgame.position.x: 0
-exitgame.position.y: 80
+exitgame.position.x: 250
+exitgame.position.y: 280
 exitgame.position.z: 401
