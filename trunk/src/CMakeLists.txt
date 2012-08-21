@@ -58,6 +58,13 @@ install(TARGETS geraIlha
 		DESTINATION geraIlha)
 
 
+add_library(paused MODULE paused.cc)
+
+install(TARGETS paused
+		LIBRARY
+		DESTINATION paused)
+
+
 add_library(singleselectmanager MODULE singleselectmanager.cc)
 		
 install(TARGETS singleselectmanager
