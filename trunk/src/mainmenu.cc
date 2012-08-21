@@ -22,14 +22,10 @@ class mainmenu : public component::base {
 
 		virtual gear2d::component::type type() { return "mainmenu"; }
 
-		virtual std::string depends() { return "keyboard/keyboard menu/singleselect"; }
+		virtual std::string depends() { return "menumanager/singleselectmanager"; }
 
 		virtual void setup(object::signature & sig) {
-			hook("key.up");
-			hook("key.down");
-			hook("key.return");
-			
-			hook("menu.focus");
+			hook("menu.trigger");
 		}
 		
 		virtual void update(timediff dt) {
@@ -37,28 +33,9 @@ class mainmenu : public component::base {
 		}
 		
 		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
-			if (pid == "key.up") {
-				if (read<int>("key.up") == 1)
-					write("menu.prev", true);
-			}
-			else if (pid == "key.down") {
-				if (read<int>("key.down") == 1)
-					write("menu.next", true);
-			}
-			else if (pid == "key.return") {
-				if (read<string>("menu.focus") == "newgame")
-					load("partida");
-			}
-			else if (pid == "menu.focus") {
-				if (read<string>("menu.focus") == "newgame") {
-					write<float>("newgame.alpha", 1.0f);
-					write<float>("exitgame.alpha", 0.5f);
-				}
-				else {
-					write<float>("newgame.alpha", 0.5f);
-					write<float>("exitgame.alpha", 1.0f);
-				}
-			}
+			string opt = read<string>("menu.focus");
+			if (opt == "newgame")
+				load("partida");
 		}
 		
 	private:

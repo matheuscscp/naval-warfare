@@ -1,4 +1,4 @@
-attach: gamestate/mainmenu keyboard/keyboard spatial/space2d renderer/renderer menu/singleselect
+attach: gamestate/mainmenu keyboard/keyboard spatial/space2d renderer/renderer menu/singleselect menumanager/singleselectmanager
 
 renderer.texts: newgame exitgame
 
@@ -7,6 +7,9 @@ keyboard.interested: up down return
 menu.options: newgame exitgame
 menu.focus: newgame
 menu.circular: 1
+
+menu.keyprev: key.up
+menu.keynext: key.down
 
 x: 380
 y: 300

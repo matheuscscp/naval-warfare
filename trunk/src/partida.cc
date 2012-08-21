@@ -95,14 +95,7 @@ class partida : public component::base {
 		}
 		
 		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
-			if (pid != "morto") {
-				// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
-				int tab = read<int>("key.tab");
-				if (tab == 2) {
-					force_update = true;
-					updateDados();
-				}
-			} else {
+			if (pid == "morto") {
 				/* gato pra mostrar a tela de game-over */
 				write<int>("key.tab", 1);
 				gameover = true;
@@ -127,6 +120,20 @@ class partida : public component::base {
 				while (*it != last)
 					++it;
 				*it = NULL;
+			} else if (pid == "menu.trigger") {
+				// destroi o pause menu
+				string opt = pausemenu->read<string>("menu.focus");
+				if (opt == "resumegame") {
+					pausemenu->destroy();
+					pausemenu = NULL;
+				}
+			} else {
+				// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
+				int tab = read<int>("key.tab");
+				if (tab == 2) {
+					force_update = true;
+					updateDados();
+				}
 			}
 		}
 		
@@ -232,6 +239,7 @@ class partida : public component::base {
 		void handleEscape(parameterbase::id pid, component::base * last, object::id owns) {
 			if ( (read<int>("key.escape") == 1) && (!pausemenu) ) {
 				pausemenu = spawn("pausemenu")->component("spatial");
+				hook(pausemenu, "menu.trigger");
 			}
 		}
 		
