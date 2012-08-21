@@ -17,6 +17,7 @@ class partida : public component::base {
 		bool init;
 		bool gameover; /* game over? */
 		bool gameplay; /* gameplay? */
+		component::base* pausemenu;
 		
 		std::list<component::base*> portos; /* todos os portos */
 		std::list<component::base*>::iterator portoAtual; /* porto atual do turno */
@@ -27,7 +28,8 @@ class partida : public component::base {
 		partida() :
 		init(false),
 		force_update(false),
-		gameover(false)
+		gameover(false),
+		pausemenu(NULL)
 		{
 		}
 		virtual ~partida() {
@@ -63,6 +65,9 @@ class partida : public component::base {
 			// hooka o tab para mostrar dados da partida
 			hook("key.tab", (component::call)&partida::handleTab);
 			hook("key.enter", (component::call)&partida::handleReturn);
+			
+			// hooka o ESC pra mostrar um menu
+			hook("key.escape", (component::call)&partida::handleEscape);
 			
 			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
 				// hooka a flag morto
@@ -223,6 +228,13 @@ class partida : public component::base {
 			ss << id;
 			return ss.str();
 		}
+		
+		void handleEscape(parameterbase::id pid, component::base * last, object::id owns) {
+			if ( (read<int>("key.escape") == 1) && (!pausemenu) ) {
+				pausemenu = spawn("pausemenu")->component("spatial");
+			}
+		}
+		
 };
 
 // the build function
