@@ -3,4 +3,4 @@
 cd build
 make install
 cd ..
-gear2d
+gear2d partida.yaml

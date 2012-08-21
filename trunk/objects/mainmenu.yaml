@@ -1,4 +1,4 @@
-attach: gamestate/mainmenu keyboard/keyboard spatial/space2d renderer/renderer kinematics/kinematic2d menu/singleselect
+attach: gamestate/mainmenu keyboard/keyboard spatial/space2d renderer/renderer menu/singleselect
 
 renderer.texts: newgame exitgame
 
