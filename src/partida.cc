@@ -15,9 +15,12 @@ class partida : public component::base {
 		// private vars
 		bool force_update;
 		bool init;
-		bool gameover;
-		std::list<component::base*> portos;
-		std::list<component::base*>::iterator portoAtual;
+		bool gameover; /* game over? */
+		bool gameplay; /* gameplay? */
+		
+		std::list<component::base*> portos; /* todos os portos */
+		std::list<component::base*>::iterator portoAtual; /* porto atual do turno */
+		unsigned int turnos; /* numero de turnos */
 		
 	public:
 		// constructor and destructor
@@ -50,8 +53,12 @@ class partida : public component::base {
 			
 			// spawna os portos
 			portos.push_back(spawn("porto-p1")->component("porto"));
-			portos.back()->write<bool>("gamesetup", true);
 			portos.push_back(spawn("porto-p2")->component("porto"));
+			
+			/* primeiro porto eh o porto atual */
+			portoAtual = portos.begin();
+			(*portoAtual)->write<bool>("gamesetup", true);
+			
 			
 			// hooka o tab para mostrar dados da partida
 			hook("key.tab", (component::call)&partida::handleTab);
@@ -121,15 +128,37 @@ class partida : public component::base {
 		/* O RETURN serve pra sinalizar o fim do setup da movimentação */
 		virtual void handleReturn(parameterbase::id pid, component::base * last, object::id owns) {
 			if (pid != "key.return") return;
-			int enterPressed = read<int>("key.return");
-			if (enterPressed) {
-				nextTurn();
+			int enter = read<int>("key.return");
+			if (enter && !gameplay) {
+				proximoTurno();
+				if (gameplay) {
+					play();
+				}
 			}
 		}
 		
 		
-		void nextTurn() {
+		/* Calcula de quem eh o proximo turno, seta gameplay pra true se
+		 * for a hora do gameplay */
+		void proximoTurno() {
+			gameplay = false;
+			/* seta o game-setup como false para esse porto */
+			(*portoAtual)->write("gamesetup", false);
 			
+			/* proximo porto */
+			portoAtual++;
+			if (portoAtual == portos.end()) {
+				gameplay = true;
+				portoAtual = portos.begin();
+			} else {
+				(*portoAtual)->write("gamesetup", true);
+			}
+		}
+		
+		void play() {
+			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
+				(*it)->write("gameplay", true);
+			}
 		}
 		
 		virtual void handleTab(parameterbase::id pid, component::base * last, object::id owns) {
