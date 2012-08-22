@@ -1,4 +1,4 @@
-attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d
+attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d pause/paused
 
 renderer.surfaces: barco=barco3.png range=range.png rangeatk=rangeatk.png target=target.png hpbar=hpbar.png barcohover=barco3mouseover.png
 renderer.texts: atributoDano atributoSpeed
