@@ -62,7 +62,7 @@ add_library(paused MODULE paused.cc)
 
 install(TARGETS paused
 		LIBRARY
-		DESTINATION paused)
+		DESTINATION pause)
 
 
 add_library(singleselectmanager MODULE singleselectmanager.cc)

@@ -12,6 +12,7 @@ enum barcotype {
 
 class painel : public component::base {
 	private:
+		gear2d::link<bool> paused;
 
 	public:
 		// constructor and destructor
@@ -24,13 +25,15 @@ class painel : public component::base {
 
 		virtual gear2d::component::type type() { return "painel"; }
 
-		virtual std::string depends() { return "renderer/renderer mouse/mouse mouseover/mouseover"; }
+		virtual std::string depends() { return "renderer/renderer mouse/mouse mouseover/mouseover pause/paused"; }
 
 		virtual void setup(object::signature & sig) {
 			write<component::base*>("porto", NULL);
 			
 			// hooka input do mouse para fabricacao de barcos
 			hook("mouse.1", (component::call)&painel::checkSpawnRequest);
+			
+			paused = fetch<bool>("paused");
 		}
 		
 		virtual void update(timediff dt) {
@@ -39,7 +42,7 @@ class painel : public component::base {
 		
 		void checkSpawnRequest(parameterbase::id pid, component::base * last, object::id owns) {
 			// soh spawna se, ao receber click, o ponteiro do mouse estiver encima e o click sendo SOLTO (e nao PRESSIONADO)
-			if ( (read<bool>("mouseover")) && (!read<int>("mouse.1")) ) {
+			if ( (read<bool>("mouseover")) && (!read<int>("mouse.1")) && (!paused) ) {
 				float pos_y = read<int>("mouse.y") - read<float>("y");
 				float painel_h = read<float>("h");
 				string tamanho;
