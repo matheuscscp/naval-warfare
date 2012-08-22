@@ -1,4 +1,4 @@
-attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard
+attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard pause/paused
 
 renderer.surfaces: porto=porto2.png
 renderer.texts: cash hp
