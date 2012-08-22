@@ -1,4 +1,4 @@
-attach: gamestate/partida keyboard/keyboard renderer/renderer
+attach: gamestate/partida keyboard/keyboard renderer/renderer pause/paused
 
 renderer.surfaces: stat=stat.png
 renderer.texts: gameover porto1 porto2 cashusado1 cashganho1 grandefabricado1 mediofabricado1 pequenofabricado1 grandedestruido1 mediodestruido1 pequenodestruido1 cashusado2 cashganho2 grandefabricado2 mediofabricado2 pequenofabricado2 grandedestruido2 mediodestruido2 pequenodestruido2

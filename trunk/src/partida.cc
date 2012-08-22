@@ -23,6 +23,8 @@ class partida : public component::base {
 		std::list<component::base*>::iterator portoAtual; /* porto atual do turno */
 		unsigned int turnos; /* numero de turnos */
 		
+		gear2d::link<bool> paused;
+		
 	public:
 		// constructor and destructor
 		partida() :
@@ -47,7 +49,7 @@ class partida : public component::base {
 
 		virtual gear2d::component::type type() { return "partida"; }
 
-		virtual std::string depends() { return "keyboard/keyboard renderer/renderer"; }
+		virtual std::string depends() { return "keyboard/keyboard renderer/renderer pause/paused"; }
 
 		virtual void setup(object::signature & sig) {
 			// inicializa o nome do proximo gamestate para a entrance hookar
@@ -61,6 +63,7 @@ class partida : public component::base {
 			portoAtual = portos.begin();
 			(*portoAtual)->write<bool>("gamesetup", true);
 			
+			paused = fetch<bool>("paused");
 			
 			// hooka o tab para mostrar dados da partida
 			hook("key.tab", (component::call)&partida::handleTab);
@@ -126,6 +129,7 @@ class partida : public component::base {
 				if (opt == "resumegame") {
 					pausemenu->destroy();
 					pausemenu = NULL;
+					paused = false;
 				}
 			} else {
 				// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
@@ -240,6 +244,7 @@ class partida : public component::base {
 			if ( (read<int>("key.escape") == 1) && (!pausemenu) ) {
 				pausemenu = spawn("pausemenu")->component("spatial");
 				hook(pausemenu, "menu.trigger");
+				paused = true;
 			}
 		}
 		
