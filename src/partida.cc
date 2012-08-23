@@ -98,8 +98,17 @@ class partida : public component::base {
 		}
 		
 		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
-			if (paused) return;
-			if (pid == "morto") {
+			if (pid == "menu.trigger") {
+				// destroi o pause menu
+				string opt = pausemenu->read<string>("menu.focus");
+				if (opt == "resumegame") {
+					pausemenu->destroy();
+					pausemenu = NULL;
+					paused = false;
+				}
+			} else if (paused) {
+				return;
+			} else if (pid == "morto") {
 				/* gato pra mostrar a tela de game-over */
 				write<int>("key.tab", 1);
 				gameover = true;
@@ -124,14 +133,6 @@ class partida : public component::base {
 				while (*it != last)
 					++it;
 				*it = NULL;
-			} else if (pid == "menu.trigger") {
-				// destroi o pause menu
-				string opt = pausemenu->read<string>("menu.focus");
-				if (opt == "resumegame") {
-					pausemenu->destroy();
-					pausemenu = NULL;
-					paused = false;
-				}
 			} else {
 				// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
 				int tab = read<int>("key.tab");
