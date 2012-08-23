@@ -26,6 +26,10 @@ class porto : public component::base {
 		gear2d::link<int> cash;
 		gear2d::link<int> hp;
 		std::list< component::base* > barcos;
+		
+		/* numero de barcos prontos */
+		int barcos_prontos;
+		
 		int qtde_barcos[lastsize];
 		component::base* painel;
 		gear2d::link<float> spawn_x;
@@ -46,13 +50,17 @@ class porto : public component::base {
 		virtual std::string depends() { return "renderer/renderer pause/paused"; }
 
 		virtual void setup(object::signature & sig) {
-			initialize();
+// 			initialize();
+			
+			paused = fetch<bool>("paused");
+			
+			barcos_prontos = 0;
 			init<int>("porto.player", sig["porto.player"], 0);
 			player = fetch<int>("porto.player");
 			write<bool>("gamesetup", 0);
 			write<bool>("gameplay", 0);
 			
-			paused = fetch<bool>("paused");
+			write<bool>("done", false); /* se todos os barcos reportarem done */
 			
 			// flag para a partida hookar
 			write<bool>("morto", false);
@@ -121,8 +129,9 @@ class porto : public component::base {
 		}
 		
 		virtual void update(timediff dt) {
+			if (paused) return;
 			// destroi o porto
-			if ( (hp <= 0 ) && (!paused) ) {
+			if (hp <= 0 ) {
 				// avisa a partida
 				write<bool>("morto", true);
 				
@@ -143,8 +152,9 @@ class porto : public component::base {
 		}
 		
 		virtual void criarBarco(const string& tbarco, barcotype barco_t, bool debitar = true) {
+			if (paused) return;
 			// soh cria se eh pra debitar e tem dinheiro OU se nao eh pra debitar
-			if ( (((debitar) && (cash >= custo_barco[barco_t])) || (!debitar)) && (!paused) ) {
+			if (((debitar) && (cash >= custo_barco[barco_t])) || (!debitar)) {
 				// cria e poe na lista
 				component::base* barco = spawn(tbarco)->component("unit");
 				barco->write("porto", this);
@@ -174,64 +184,58 @@ class porto : public component::base {
 		}
 
 		void updateCashText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
-			if (!paused) {
-				stringstream ss;
-				ss << "Cash: ";
-				ss << cash;
-				write("cash.text", ss.str());
-			}
+			if (paused) return;
+			stringstream ss;
+			ss << "Cash: ";
+			ss << cash;
+			write("cash.text", ss.str());
 		}
 		
 		void getTurnCash() {
-			if (!paused) {
-				// itera nos 3 tipos de barco, somando a contribuicao do desconto no cash que sera ganho naquele turno
-				float desconto = 0;
-				for( int i = 0; i < lastsize; ++i ) {
-					float peso = ( float( lastsize * (lastsize + 1) ) / 2 ) * (i + 1);
-					desconto += ( peso * qtde_barcos[i] / cash_max_barcos[i] );
-				}
-				
-				int cash_final = max<int>(min_cash_turn, max_cash_turn * ( 1 - desconto ));
-				
-				cash = cash + cash_final;
-				add<int>("cashganho", cash_final);
+			if (paused) return;
+			// itera nos 3 tipos de barco, somando a contribuicao do desconto no cash que sera ganho naquele turno
+			float desconto = 0;
+			for( int i = 0; i < lastsize; ++i ) {
+				float peso = ( float( lastsize * (lastsize + 1) ) / 2 ) * (i + 1);
+				desconto += ( peso * qtde_barcos[i] / cash_max_barcos[i] );
 			}
+			
+			int cash_final = max<int>(min_cash_turn, max_cash_turn * ( 1 - desconto ));
+			
+			cash = cash + cash_final;
+			add<int>("cashganho", cash_final);
 		}
 		
 		void updateHpText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
-			if (!paused) {
-				stringstream ss;
-				ss << "HP: ";
-				ss << hp;
-				write("hp.text", ss.str());
-			}
+			if (paused) return;
+			stringstream ss;
+			ss << "HP: ";
+			ss << hp;
+			write("hp.text", ss.str());
 		}
 		
 		void handlePainel(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
-			if (!paused) {
-				criarBarco(read<string>("spawn.tamanho"), read<barcotype>("spawn.tipo"));
-			}
+			if (paused) return;
+			criarBarco(read<string>("spawn.tamanho"), read<barcotype>("spawn.tipo"));
 		}
 		
 		void removeBarco(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
-			if (!paused) {
-				// remove da lista
-				component::base* barco = read<component::base*>("barcomorrendo");
-				barcos.remove(barco);
-				
-				// decrementa os contadores
-				int tipo = barco->read<barcotype>("tipo");
-				--qtde_barcos[tipo];
-				switch (tipo) {
-					case big:		add<int>("grandedestruido", 1);	break;
-					case medium:	add<int>("mediodestruido", 1);		break;
-					case small:		add<int>("pequenodestruido", 1);	break;
-					default:
-						break;
-				}
+			if (paused) return;
+			// remove da lista
+			component::base* barco = read<component::base*>("barcomorrendo");
+			barcos.remove(barco);
+			
+			// decrementa os contadores
+			int tipo = barco->read<barcotype>("tipo");
+			--qtde_barcos[tipo];
+			switch (tipo) {
+				case big:		add<int>("grandedestruido", 1);	break;
+				case medium:	add<int>("mediodestruido", 1);		break;
+				case small:		add<int>("pequenodestruido", 1);	break;
+				default:
+					break;
 			}
 		}
-		
 
 	private:
 		static bool initialized;

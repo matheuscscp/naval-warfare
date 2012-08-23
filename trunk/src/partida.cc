@@ -98,61 +98,59 @@ class partida : public component::base {
 		}
 		
 		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
-			if (!paused) {
-				if (pid == "morto") {
-					/* gato pra mostrar a tela de game-over */
-					write<int>("key.tab", 1);
-					gameover = true;
-					write<int>("gameover.render", 1);
-					write<int>("porto1.render", 1);
-					write<int>("porto2.render", 1);
-					if (last->read<int>("porto.player") == 1) {
-						write<string>("gameover.text", "PLAYER 2 WINS");
-						write<float>("gameover.font.r", read<float>("porto2.font.r"));
-						write<float>("gameover.font.g", read<float>("porto2.font.g"));
-						write<float>("gameover.font.b", read<float>("porto2.font.b"));
-					}
-					else {
-						write<string>("gameover.text", "PLAYER 1 WINS");
-						write<float>("gameover.font.r", read<float>("porto1.font.r"));
-						write<float>("gameover.font.g", read<float>("porto1.font.g"));
-						write<float>("gameover.font.b", read<float>("porto1.font.b"));
-					}
-					
-					// atribui NULL ao morto que acabou de morrer
-					std::list<component::base*>::iterator it = portos.begin();
-					while (*it != last)
-						++it;
-					*it = NULL;
-				} else if (pid == "menu.trigger") {
-					// destroi o pause menu
-					string opt = pausemenu->read<string>("menu.focus");
-					if (opt == "resumegame") {
-						pausemenu->destroy();
-						pausemenu = NULL;
-						paused = false;
-					}
-				} else {
-					// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
-					int tab = read<int>("key.tab");
-					if (tab == 2) {
-						force_update = true;
-						updateDados();
-					}
+			if (paused) return;
+			if (pid == "morto") {
+				/* gato pra mostrar a tela de game-over */
+				write<int>("key.tab", 1);
+				gameover = true;
+				write<int>("gameover.render", 1);
+				write<int>("porto1.render", 1);
+				write<int>("porto2.render", 1);
+				if (last->read<int>("porto.player") == 1) {
+					write<string>("gameover.text", "PLAYER 2 WINS");
+					write<float>("gameover.font.r", read<float>("porto2.font.r"));
+					write<float>("gameover.font.g", read<float>("porto2.font.g"));
+					write<float>("gameover.font.b", read<float>("porto2.font.b"));
+				}
+				else {
+					write<string>("gameover.text", "PLAYER 1 WINS");
+					write<float>("gameover.font.r", read<float>("porto1.font.r"));
+					write<float>("gameover.font.g", read<float>("porto1.font.g"));
+					write<float>("gameover.font.b", read<float>("porto1.font.b"));
+				}
+				
+				// atribui NULL ao morto que acabou de morrer
+				std::list<component::base*>::iterator it = portos.begin();
+				while (*it != last)
+					++it;
+				*it = NULL;
+			} else if (pid == "menu.trigger") {
+				// destroi o pause menu
+				string opt = pausemenu->read<string>("menu.focus");
+				if (opt == "resumegame") {
+					pausemenu->destroy();
+					pausemenu = NULL;
+					paused = false;
+				}
+			} else {
+				// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
+				int tab = read<int>("key.tab");
+				if (tab == 2) {
+					force_update = true;
+					updateDados();
 				}
 			}
 		}
 		
 		/* O RETURN serve pra sinalizar o fim do setup da movimentação */
 		virtual void handleReturn(parameterbase::id pid, component::base * last, object::id owns) {
-			if (!paused) {
-				if (pid != "key.return") return;
-				int enter = read<int>("key.return");
-				if (enter && !gameplay) {
-					proximoTurno();
-					if (gameplay) {
-						play();
-					}
+			if (paused) return;
+			if (pid != "key.return") return;
+			int enter = read<int>("key.return");
+			if (enter && !gameplay) {
+				proximoTurno();
+				if (gameplay) {
+					play();
 				}
 			}
 		}
@@ -161,27 +159,25 @@ class partida : public component::base {
 		/* Calcula de quem eh o proximo turno, seta gameplay pra true se
 		 * for a hora do gameplay */
 		void proximoTurno() {
-			if (!paused) {
-				gameplay = false;
-				/* seta o game-setup como false para esse porto */
-				(*portoAtual)->write("gamesetup", false);
-				
-				/* proximo porto */
-				portoAtual++;
-				if (portoAtual == portos.end()) {
-					gameplay = true;
-					portoAtual = portos.begin();
-				} else {
-					(*portoAtual)->write("gamesetup", true);
-				}
+			if (paused) return;
+			gameplay = false;
+			/* seta o game-setup como false para esse porto */
+			(*portoAtual)->write("gamesetup", false);
+			
+			/* proximo porto */
+			portoAtual++;
+			if (portoAtual == portos.end()) {
+				gameplay = true;
+				portoAtual = portos.begin();
+			} else {
+				(*portoAtual)->write("gamesetup", true);
 			}
 		}
 		
 		void play() {
-			if (!paused) {
-				for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
-					(*it)->write("gameplay", true);
-				}
+			if (paused) return;
+			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
+				(*it)->write("gameplay", true);
 			}
 		}
 		
