@@ -23,6 +23,7 @@ namespace gear2d {
 class barco : public component::base {
 	private:
 
+		float xspeedbuf, yspeedbuf;
 		float cx, cy;
 		float targetx, targety;
 		bool selected;
@@ -148,7 +149,11 @@ class barco : public component::base {
 		}
 
 		virtual void update(timediff dt) {
-			if (paused) return;
+			if (paused) {
+				write<float>("x.speed", 0);
+				write<float>("y.speed", 0);
+				return;
+			}
 
 			cx = x + w/2;
 			cy = y + h/2;
