@@ -51,7 +51,10 @@ class barco : public component::base {
 
 	public:
 		barco() { }
-		virtual ~barco() { }
+		virtual ~barco() { 
+          unhook(porto, "gameplay");
+          unhook(porto, "gamesetup");
+        }
 
 		virtual gear2d::component::family family() { return "unit"; }
 
@@ -63,8 +66,8 @@ class barco : public component::base {
 
 		virtual void setup(object::signature & sig) {
 			
-			/* sinaliza que o barco terminou */
-			write("done", false);
+			/* o done indica que terminamos */
+			write<component::base*>("done", 0);
 			
 			init<int>	("tipo"      , sig["tipo"]      , big);
 			init<int>	("hp.value"  , sig["hp.value"]  , 100);
@@ -154,13 +157,16 @@ class barco : public component::base {
 				write<float>("y.speed", 0);
 				return;
 			}
+// 			modinfo("nw-barco");
 
 			cx = x + w/2;
 			cy = y + h/2;
+			
+// 			trace("Gameplay:", gameplay, "selected:", selected, "done",  read<component::base*>("done"));
 
 			//verifica se é o turno do barco antes de executar a movimentação
 			//!selected usado pra não prejudicar testes
-			if( gameplay && !selected )
+			if(gameplay && !selected)
 			{
 				float xs = targetx - cx;
 				float ys = targety - cy;
@@ -169,7 +175,11 @@ class barco : public component::base {
 				write("y.speed", ys);
 				if ((xs > -0.3 && xs < 0) || (xs > 0 && xs < 0.3)) done = true;
 				if ((ys > -0.3 && ys < 0) || (ys > 0 && ys < 0.3)) done = true;
-				if (done) write("done", done);
+				
+				if (done && (read<component::base*>("done") == NULL)) {
+// 					trace("Barco done");
+					write("done", this); 
+				}
 			}
 
 			if (selected)
@@ -208,9 +218,14 @@ class barco : public component::base {
 				gameplay = porto->read<bool>("gameplay");
 				gamesetup = porto->read<bool>("gamesetup");
 			}
+			
 			else if (pid == "gamesetup") {
 				gamesetup = porto->read<bool>("gamesetup");
+				if (!gamesetup) {
+					write<component::base*>("done", NULL);
+				}
 			}
+			
 			else if (pid == "gameplay") {
 				gameplay = porto->read<bool>("gameplay");
 			}
