@@ -1,5 +1,13 @@
 project(naval-warfare)
 
+if (NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE "RelWithDebInfo")
+endif (NOT CMAKE_BUILD_TYPE)
+
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+	add_definitions(-DLOGTRACE)
+endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+
 # add a new library called helloperson that will be created using
 # helloperson.cc
 add_library(barco MODULE barco.cc)
