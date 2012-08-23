@@ -37,6 +37,8 @@ class porto : public component::base {
 		
 		gear2d::link<bool> paused;
 		
+		
+		
 	public:
 		// constructor and destructor
 		porto() { 
@@ -57,10 +59,10 @@ class porto : public component::base {
 			barcos_prontos = 0;
 			init<int>("porto.player", sig["porto.player"], 0);
 			player = fetch<int>("porto.player");
-			write<bool>("gamesetup", 0);
-			write<bool>("gameplay", 0);
+			write<bool>("gamesetup", false);
+			write<bool>("gameplay", false);
 			
-			write<bool>("done", false); /* se todos os barcos reportarem done */
+			write<component::base*>("done", 0); /* se todos os barcos reportarem done */
 			
 			// flag para a partida hookar
 			write<bool>("morto", false);
@@ -149,6 +151,12 @@ class porto : public component::base {
 				
 				destroy();
 			}
+			
+			/* se nao tivermos barcos, estamos done no gameplay */
+			if (barcos.size() == 0 && read<bool>("gameplay")) { 
+				if (read<component::base*>("done") == NULL);
+				write("done", this);
+			}
 		}
 		
 		virtual void criarBarco(const string& tbarco, barcotype barco_t, bool debitar = true) {
@@ -158,6 +166,7 @@ class porto : public component::base {
 				// cria e poe na lista
 				component::base* barco = spawn(tbarco)->component("unit");
 				barco->write("porto", this);
+				hook(barco, "done", (component::call)&porto::handleBarcoDone);
 				
 				barcos.push_back(barco);
 				
@@ -212,6 +221,21 @@ class porto : public component::base {
 			ss << "HP: ";
 			ss << hp;
 			write("hp.text", ss.str());
+		}
+		
+		void handleBarcoDone(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
+			modinfo("nw-porto");
+			if (paused) return;
+			if (lastwrite->read<component::base*>("done") == 0 || lastwrite == this) return;
+			barcos_prontos++;
+			trace("Novo barco pronto");
+			
+			if (barcos_prontos >= barcos.size()) {
+				trace("Todos os", barcos_prontos, "barcos estao prontos do porto", this->owner->name(), "estao prontos!");
+				barcos_prontos = 0;
+				/* escreve done em si mesmo */
+				write("done", this);
+			}
 		}
 		
 		void handlePainel(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {

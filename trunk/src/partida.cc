@@ -22,6 +22,7 @@ class partida : public component::base {
 		std::list<component::base*> portos; /* todos os portos */
 		std::list<component::base*>::iterator portoAtual; /* porto atual do turno */
 		unsigned int turnos; /* numero de turnos */
+		int portos_prontos;
 		
 		gear2d::link<bool> paused;
 		
@@ -31,18 +32,20 @@ class partida : public component::base {
 		init(false),
 		force_update(false),
 		gameover(false),
+		gameplay(false),
+		portos_prontos(0),
 		pausemenu(NULL)
 		{
 		}
 		virtual ~partida() {
-			while (portos.size()) {
-				// destroi os portos ainda vivos
-				if (portos.back())
-					portos.back()->destroy();
-				
-				// remove o ponteiro
-				portos.pop_back();
-			}
+// 			while (portos.size()) {
+// 				// destroi os portos ainda vivos
+// 				if (portos.back())
+// 					portos.back()->destroy();
+// 				
+// 				// remove o ponteiro
+// 				portos.pop_back();
+// 			}
 		}
 		
 		virtual gear2d::component::family family() { return "gamestate"; }
@@ -67,7 +70,9 @@ class partida : public component::base {
 			
 			// hooka o tab para mostrar dados da partida
 			hook("key.tab", (component::call)&partida::handleTab);
-			hook("key.enter", (component::call)&partida::handleReturn);
+			
+			// o return passa de turno
+			hook("key.return", (component::call)&partida::handleReturn);
 			
 			// hooka o ESC pra mostrar um menu
 			hook("key.escape", (component::call)&partida::handleEscape);
@@ -85,6 +90,7 @@ class partida : public component::base {
 				hook(*it, "grandedestruido");
 				hook(*it, "mediodestruido");
 				hook(*it, "pequenodestruido");
+				hook(*it, "done", (component::call)&partida::handlePortoDone);
 			}
 		}
 		
@@ -94,6 +100,23 @@ class partida : public component::base {
 				force_update = true;	// forca a inicializacao dos textos
 				updateDados();			// inicializa os textos
 				updateDados();			// apaga a tela de dados
+			}
+		}
+		
+		/* quando um porto tah done, dah proximo turno */
+		virtual void handlePortoDone(parameterbase::id pid, component::base * last, object::id owns) {
+			modinfo("nw-partida");
+			if (paused) return;
+			if (last == this) return;
+			component::base * porto = last;
+			if (porto->read<component::base *>("done")) {
+				trace("Notificacao que o porto", last->owner->name(), "estah done");
+				portos_prontos++;
+				trace(portos_prontos, "portos estao prontos!");
+				if (portos_prontos >= portos.size()) {
+					proximoTurno();
+					portos_prontos = 0;
+				}
 			}
 		}
 		
@@ -148,11 +171,9 @@ class partida : public component::base {
 			if (paused) return;
 			if (pid != "key.return") return;
 			int enter = read<int>("key.return");
-			if (enter && !gameplay) {
+			modinfo("nw-partida");
+			if (enter == 1 && !gameplay) {
 				proximoTurno();
-				if (gameplay) {
-					play();
-				}
 			}
 		}
 		
@@ -160,25 +181,43 @@ class partida : public component::base {
 		/* Calcula de quem eh o proximo turno, seta gameplay pra true se
 		 * for a hora do gameplay */
 		void proximoTurno() {
+			modinfo("nw-partida");
 			if (paused) return;
-			gameplay = false;
-			/* seta o game-setup como false para esse porto */
-			(*portoAtual)->write("gamesetup", false);
 			
-			/* proximo porto */
-			portoAtual++;
-			if (portoAtual == portos.end()) {
-				gameplay = true;
+			if (gameplay) {
 				portoAtual = portos.begin();
+				stop();
 			} else {
-				(*portoAtual)->write("gamesetup", true);
+				write((*portoAtual)->owner, "gamesetup", false);
+				portoAtual++;
+			}
+			
+			if (portoAtual == portos.end()) {
+				play();
+			} else {
+				trace("Going to next porto");
+				write((*portoAtual)->owner, "gamesetup", true);
+			}
+		}
+		
+		void stop() {
+			modinfo("nw-partida");
+			if (paused) return;
+			trace("Stopping gameplay!");
+			gameplay = false;
+			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
+				write((*it)->owner, "gameplay", false);
+// 				write<component::base*>((*it)->owner, "done", 0);
 			}
 		}
 		
 		void play() {
+			modinfo("nw-partida");
 			if (paused) return;
+			trace("Playing to gameplay!");
+			gameplay = true;
 			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
-				(*it)->write("gameplay", true);
+				write((*it)->owner, "gameplay", true);
 			}
 		}
 		
