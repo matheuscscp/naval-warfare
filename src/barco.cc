@@ -49,11 +49,11 @@ class barco : public component::base {
 		component::base * alvoPrincipal;
 		component::base * porto;
 
-	public:
+	public:	
 		barco() { }
 		virtual ~barco() { 
-          unhook(porto, "gameplay");
-          unhook(porto, "gamesetup");
+          hook(porto, "gameplay");
+          hook(porto, "gamesetup");
         }
 
 		virtual gear2d::component::family family() { return "unit"; }
