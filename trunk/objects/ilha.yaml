@@ -1,0 +1,13 @@
+attach: renderer/renderer unit/ilha spatial/space2d
+
+
+renderer.surfaces: ilha=ilha.png
+
+w: 32
+h: 32
+
+loot.position.z: 0
+
+collider.tag: ilha
+
+
