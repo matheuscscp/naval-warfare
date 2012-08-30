@@ -65,12 +65,12 @@ class geraIlha : public component::base {
 			direcoes[7].x = 1;	direcoes[7].y = 1;
 
 			vol = rng(VOL_MAX,10);
-			cout<<"Gerando mapa:"
+			cout<<"Gerando mapa:";
 			if(generate())
 			{
 				cout<<"OK"<<endl;
-				cout<<"Sanity check:"
-				if(sanityCheck())
+				cout<<"Sanity check:";
+				if(sanityCheck(Ponto(),Ponto(),0))
 				{
 					cout<<"OK"<<endl;
 					cout<<"Posicionando sprites/objetos:"<<endl;
@@ -281,7 +281,7 @@ class geraIlha : public component::base {
 				{
 					if(mapa[i][j]==1)
 					{
-						component::base* ilha = spawn(ilha)->component("spatial");
+						component::base* ilha = spawn("ilha")->component("spatial");
 						ilha->write<float>("x", i*SPR_W);
 						ilha->write<float>("y", j*SPR_H);
 					}
