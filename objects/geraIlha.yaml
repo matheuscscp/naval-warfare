@@ -1,2 +1,9 @@
 attach: renderer/renderer geraIlha/geraIlha
 
+spr.w: 16
+spr.h: 16
+vol.max: 256
+vol.min: 64
+raiobrush: 5
+
+

@@ -6,10 +6,10 @@ using namespace std;
 
 #define RAD			0.01745
 #define NUM_EMERGENCIA_MAX 	1000000
-#define TAMX			32
-#define TAMY			24
+#define TAMX			64
+#define TAMY			48
 
-typedef int Matriz [TAMX][TAMY];
+
 
 struct Ponto
 {
@@ -18,12 +18,17 @@ struct Ponto
 
 class geraIlha : public component::base {
 	private:
-		
+		typedef int Matriz [TAMX][TAMY];
+
 		Matriz mapa;
 		
 		int vol;
 
-		int SPR_W, SPR_H, VOL_MAX, VOL_MIN, RAIO_BRUSH;
+		gear2d::link<int>	SPR_W;
+		gear2d::link<int>	SPR_H;
+		gear2d::link<int>	VOL_MAX;
+		gear2d::link<int>	VOL_MIN;
+		gear2d::link<int>	RAIO_BRUSH;
 
 		Ponto direcoes[8];
 
@@ -44,13 +49,17 @@ class geraIlha : public component::base {
 
 		virtual void setup(object::signature & sig)
 		{
-			SPR_W		= 32;//read<int>("spr.w");
-			SPR_H		= 32;//read<int>("spr.h");
-			VOL_MAX		= 256;//read<int>("vol.max");
-			VOL_MIN		= 128;//read<int>("vol.min");
-			RAIO_BRUSH	= 5;//read<int>("brush.raio");
+			init<int>	("spr.w"	, sig["spr.w"]		, 32);
+			init<int>	("spr.h"	, sig["spr.h"]		, 32);
+			init<int>	("vol.max"	, sig["vol.max"]	, 32);
+			init<int>	("vol.min"	, sig["vol.min"]	, 32);
+			init<int>	("raiobrush"	, sig["raiobrush"]	, 32);
 
-			cout<<VOL_MAX<<endl;
+			SPR_W		= fetch<int>("spr.w");
+			SPR_H		= fetch<int>("spr.h");
+			VOL_MAX		= fetch<int>("vol.max");
+			VOL_MIN		= fetch<int>("vol.min");
+			RAIO_BRUSH	= fetch<int>("raiobrush");
 
 			srand(time(NULL));
 
@@ -96,7 +105,7 @@ class geraIlha : public component::base {
 		virtual void brushSimetrico(Ponto xy, int i)
 		{
 			mapa[xy.x][xy.y] = i;
-			mapa[TAMX - xy.x][TAMY - xy.y] = i;
+			mapa[TAMX - xy.x-1][TAMY - xy.y-1] = i;
 		}
 
 		virtual void brushSimetrico(int x, int y, int i)
@@ -104,7 +113,7 @@ class geraIlha : public component::base {
 			if((x>0)&&(y<TAMY)&&(x>0)&&(y<TAMX))
 				mapa[x][y] = i;
 			if((TAMX - x>0)&&(TAMY - y<TAMY)&&(TAMX - x>0)&&(TAMY - y<TAMX))
-				mapa[TAMX - x][TAMY - y] = i;
+				mapa[TAMX - x-1][TAMY - y-1] = i;
 		}
 
 		virtual bool generate()
@@ -274,9 +283,6 @@ class geraIlha : public component::base {
 				circulo(pathway1[i],RAIO_BRUSH);
 			for(unsigned int i = 0;i<pathway2.size();++i)
 				circulo(pathway2[i],RAIO_BRUSH);
-
-			cout<<pathway1.size()<<endl;
-			cout<<pathway2.size()<<endl;
 			return true;
 		}
 
@@ -285,11 +291,12 @@ class geraIlha : public component::base {
 			for(int j=0;j<TAMY;++j)
 				for(int i=0;i<TAMX;++i)
 				{
-					if(mapa[i][j]==1)
+					if(mapa[i][j]!=0)
 					{
 						component::base* ilha = spawn("ilha")->component("spatial");
-						ilha->write<float>("x", 0);
-						ilha->write<float>("y", 0);
+						ilha->write<float>("x", i*SPR_W);
+						ilha->write<float>("y", j*SPR_H);
+						ilha->write<float>("z", 20);
 					}
 				}
 		}
