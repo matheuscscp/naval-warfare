@@ -1,8 +1,8 @@
 attach: renderer/renderer spatial/space2d 
 
-renderer.surfaces: ilha=ilha1.png
+renderer.surfaces: ilha=ilha2.png
 
-w: 64
-h: 64
+w: 32
+h: 32
 
 collider.tag: ilha

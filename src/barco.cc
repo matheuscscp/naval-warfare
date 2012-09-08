@@ -68,8 +68,7 @@ class barco : public component::base {
 		}
 
 		virtual void setup(object::signature & sig) {
-          
-          modinfo("barco");
+          		modinfo("barco");
 			
 			/* o done indica que terminamos */
 			write<component::base*>("done", 0);
@@ -85,7 +84,7 @@ class barco : public component::base {
 			atr.tipo 		= fetch<int>	("tipo");
 			atr.hp 			= fetch<int>	("hp.value");
 			atr.range		= fetch<float>	("range");
-			atr.moverange 	= fetch<float>	("moverange");
+			atr.moverange 		= fetch<float>	("moverange");
 			atr.speed		= fetch<float>	("speed");
 			atr.dmg			= fetch<int>	("dmg");
 			atr.loot		= fetch<int>	("loot.value");
@@ -116,15 +115,15 @@ class barco : public component::base {
 			float rangeWH = (float)read<int>("range.position.w")/2.0f; 
 			float rangeatkWH = (float)read<int>("rangeatk.position.w")/2.0f;
 			
-            write("range.position.x",(w/2.0f) - rangeWH);
-            write("range.position.y", (h/2.0f) - rangeWH);
+			write("range.position.x",(w/2.0f) - rangeWH);
+			write("range.position.y", (h/2.0f) - rangeWH);
             trace("rpx",
                   read<float>("range.position.x"),
                   read<int>("range.position.w"),
                   "rpy",
                   read<float>("range.position.y"),
                   read<int>("range.position.h"));
-// 			write("range.zoom", atr.moverange/rangeWH);
+ 			write("range.zoom", atr.moverange/rangeWH);
             
             trace("rpx",
                   read<float>("range.position.x"),
@@ -133,9 +132,8 @@ class barco : public component::base {
                   read<float>("range.position.y"),
                   read<int>("range.position.h"));
             
-			
-            write("rangeatk.position.x",(w/2.0f) - rangeatkWH);
-            write("rangeatk.position.y",(h/2.0f) - rangeatkWH);
+			write("rangeatk.position.x",(w/2.0f) - rangeatkWH);
+			write("rangeatk.position.y",(h/2.0f) - rangeatkWH);
 			write("rangeatk.zoom", atr.range/rangeatkWH);
 			
 			

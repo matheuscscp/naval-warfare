@@ -51,9 +51,9 @@ class geraIlha : public component::base {
 		{
 			init<int>	("spr.w"	, sig["spr.w"]		, 32);
 			init<int>	("spr.h"	, sig["spr.h"]		, 32);
-			init<int>	("vol.max"	, sig["vol.max"]	, 32);
-			init<int>	("vol.min"	, sig["vol.min"]	, 32);
-			init<int>	("raiobrush"	, sig["raiobrush"]	, 32);
+			init<int>	("vol.max"	, sig["vol.max"]	, 10);
+			init<int>	("vol.min"	, sig["vol.min"]	, 5);
+			init<int>	("raiobrush"	, sig["raiobrush"]	, 5);
 
 			SPR_W		= fetch<int>("spr.w");
 			SPR_H		= fetch<int>("spr.h");
@@ -67,17 +67,23 @@ class geraIlha : public component::base {
 				for(int i = 0;i<TAMX;++i)
 					mapa[i][j] = 0;
 
-			direcoes[0].x = 1;	direcoes[0].y = 0;
+			/*direcoes[0].x = 1;	direcoes[0].y = 0;
 			direcoes[1].x =-1;	direcoes[1].y = 0;
 			direcoes[2].x = 0;	direcoes[2].y =-1;
 			direcoes[3].x = 0;	direcoes[3].y = 1;
 			direcoes[4].x =-1;	direcoes[4].y =-1;
 			direcoes[5].x =-1;	direcoes[5].y = 1;
 			direcoes[6].x = 1;	direcoes[6].y =-1;
-			direcoes[7].x = 1;	direcoes[7].y = 1;
+			direcoes[7].x = 1;	direcoes[7].y = 1;*/
 
 			vol = rng(VOL_MAX,VOL_MIN);
-			cout<<"Gerando mapa:";
+			cout<<vol<<endl;
+			for(int i=0;i<vol;++i)
+			{
+				brushSimetrico(rng(TAMX-2,2),rng(TAMY-2,2),rng(3,1));
+			}
+			mapPrint();
+			/*cout<<"Gerando mapa:";
 			if(generate())
 			{
 				cout<<"OK"<<endl;
@@ -86,14 +92,16 @@ class geraIlha : public component::base {
 				if(sanityCheck({2,2},{30,22},5))
 				{
 					cout<<"OK"<<endl;
-					cout<<"Posicionando sprites/objetos:"<<endl;
+					cout<<"Posicionando sprites/objetos:";
 					mapPrint();
+					cout<<"OK"<<endl;
 				}
-//				else
-//					cout<<"Falha"<<endl;		
+				else
+					cout<<"Falha"<<endl;		
 			}
 			else
-				cout<<"Falha"<<endl;
+				cout<<"Falha"<<endl;*/
+
 			return;
 		}
 
@@ -171,16 +179,6 @@ class geraIlha : public component::base {
 			if((xy.y>0)&&(xy.y<TAMY)&&(xy.x>0)&&(xy.x<TAMX))
 				return xy;
 			return aux;
-		}
-
-		virtual void circulo(Ponto xy)
-		{
-			Ponto aux;
-								brushSimetrico(xy.x,xy.y-2,0);
-			brushSimetrico(xy.x-1,xy.y-1,0);	brushSimetrico(xy.x,xy.y-1,0);	brushSimetrico(xy.x+1,xy.y-1,0);
-			brushSimetrico(xy.x-2,xy.y,0);		brushSimetrico(xy.x-1,xy.y,0);		brushSimetrico(xy.x,xy.y,0);	brushSimetrico(xy.x+1,xy.y,0);		brushSimetrico(xy.x+2,xy.y,0);
-			brushSimetrico(xy.x-1,xy.y+1,0);	brushSimetrico(xy.x,xy.y+1,0);	brushSimetrico(xy.x+1,xy.y+1,0);
-								brushSimetrico(xy.x,xy.y+2,0);
 		}
 
 		void circulo(Ponto xy,int raio)
@@ -288,15 +286,35 @@ class geraIlha : public component::base {
 
 		virtual void mapPrint()
 		{
+			
 			for(int j=0;j<TAMY;++j)
 				for(int i=0;i<TAMX;++i)
 				{
-					if(mapa[i][j]!=0)
+					component::base* ilha;
+					/*if(mapa[i][j]!=0)
 					{
 						component::base* ilha = spawn("ilha")->component("spatial");
 						ilha->write<float>("x", i*SPR_W);
 						ilha->write<float>("y", j*SPR_H);
-						ilha->write<float>("z", 20);
+					}*/
+
+					switch(mapa[i][j])
+					{
+						case 1:
+							ilha = spawn("ilha")->component("spatial");
+							ilha->write<float>("x", i*SPR_W);
+							ilha->write<float>("y", j*SPR_H);
+						break;
+						case 2:
+							ilha = spawn("ilha2")->component("spatial");
+							ilha->write<float>("x", i*SPR_W);
+							ilha->write<float>("y", j*SPR_H);
+						break;
+						case 3:
+							ilha = spawn("ilha3")->component("spatial");
+							ilha->write<float>("x", i*SPR_W);
+							ilha->write<float>("y", j*SPR_H);
+						break;
 					}
 				}
 		}
