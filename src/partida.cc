@@ -14,7 +14,7 @@ class partida : public component::base {
 	private:
 		// private vars
 		bool force_update;
-		bool init;
+		bool isinit;
 		bool gameover; /* game over? */
 		bool gameplay; /* gameplay? */
 		component::base* pausemenu;
@@ -26,15 +26,21 @@ class partida : public component::base {
 		
 		gear2d::link<bool> paused;
 		
+		gear2d::link<timediff> gplay_cooldown;
+		timediff gplay_cooldown_timer;
+		bool stop_gameplay;
+		
 	public:
 		// constructor and destructor
 		partida() :
-		init(false),
+		isinit(false),
 		force_update(false),
 		gameover(false),
 		gameplay(false),
 		portos_prontos(0),
-		pausemenu(NULL)
+		pausemenu(NULL),
+		gplay_cooldown_timer(0.0f),
+		stop_gameplay(false)
 		{
 		}
 		virtual ~partida() {
@@ -91,14 +97,27 @@ class partida : public component::base {
 				hook(*it, "pequenodestruido");
 				hook(*it, "done", (component::call)&partida::handlePortoDone);
 			}
+			
+			init<timediff>("gameplay.cooldown", sig["gameplay.cooldown"], 1.0f);
+			gplay_cooldown = fetch<timediff>("gameplay.cooldown");
 		}
 		
 		virtual void update(timediff dt) {
-			if (!init) {
-				init = true;
+			if (!isinit) {
+				isinit = true;
 				force_update = true;	// forca a inicializacao dos textos
 				updateDados();			// inicializa os textos
 				updateDados();			// apaga a tela de dados
+			}
+			
+			if (paused) return;
+			
+			gplay_cooldown_timer += dt;
+			
+			if ((gplay_cooldown_timer >= gplay_cooldown) && (stop_gameplay)) {
+				stop();
+				write((*portoAtual)->owner, "gamesetup", true);
+				stop_gameplay = false;
 			}
 		}
 		
@@ -197,7 +216,7 @@ class partida : public component::base {
 			
 			if (gameplay) {
 				portoAtual = portos.begin();
-				stop();
+				stop_gameplay = true;
 			} else {
 				write((*portoAtual)->owner, "gamesetup", false);
 				portoAtual++;
@@ -205,7 +224,7 @@ class partida : public component::base {
 			
 			if (portoAtual == portos.end()) {
 				play();
-			} else {
+			} else if (!gameplay) {
 				trace("Going to next porto");
 				write((*portoAtual)->owner, "gamesetup", true);
 			}
@@ -226,6 +245,7 @@ class partida : public component::base {
 			modinfo("nw-partida");
 			if (paused) return;
 			trace("Playing to gameplay!");
+			gplay_cooldown_timer = 0.0f;
 			gameplay = true;
 			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
 				write((*it)->owner, "gameplay", true);

@@ -5,6 +5,8 @@ renderer.texts: gameover porto1 porto2 cashusado1 cashganho1 grandefabricado1 me
 
 keyboard.interested: tab return escape
 
+gameplay.cooldown: 3.0
+
 x: 112
 y: 84
 
