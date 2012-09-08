@@ -1,18 +1,13 @@
-#include <iostream>
+ #include <iostream>
 #include <cmath>
 #include "gear2d.h"
 using namespace gear2d;
 using namespace std;
 
-#define TAMX 				32
-#define TAMY 				32
-#define SPR_W				32
-#define SPR_H				32
-#define VOL_MAX				512
-#define LIM					5
-#define RAIO_BRUSH			5
-#define RAD					0.01745
-#define NUM_EMERGENCIA_MAX 	100000
+#define RAD			0.01745
+#define NUM_EMERGENCIA_MAX 	1000000
+#define TAMX			32
+#define TAMY			24
 
 typedef int Matriz [TAMX][TAMY];
 
@@ -27,20 +22,20 @@ class geraIlha : public component::base {
 		Matriz mapa;
 		
 		int vol;
-		
-		Ponto direcoes[7];
+
+		int SPR_W, SPR_H, VOL_MAX, VOL_MIN, RAIO_BRUSH;
+
+		Ponto direcoes[8];
 
 	public:
 		geraIlha() { }
 		virtual ~geraIlha() { }
 
-		virtual gear2d::component::family family() { return "unit"; }
+		virtual gear2d::component::family family() { return "geraIlha"; }
 
 		virtual gear2d::component::type type() { return "geraIlha"; }
 
-		virtual std::string depends() {
-			return "";
-		}
+		virtual std::string depends() {	return ""; }
 
 		virtual int rng(int max, int min=0)
 		{
@@ -49,6 +44,14 @@ class geraIlha : public component::base {
 
 		virtual void setup(object::signature & sig)
 		{
+			SPR_W		= 32;//read<int>("spr.w");
+			SPR_H		= 32;//read<int>("spr.h");
+			VOL_MAX		= 256;//read<int>("vol.max");
+			VOL_MIN		= 128;//read<int>("vol.min");
+			RAIO_BRUSH	= 5;//read<int>("brush.raio");
+
+			cout<<VOL_MAX<<endl;
+
 			srand(time(NULL));
 
 			for(int j = 0;j<TAMY;++j)
@@ -64,39 +67,36 @@ class geraIlha : public component::base {
 			direcoes[6].x = 1;	direcoes[6].y =-1;
 			direcoes[7].x = 1;	direcoes[7].y = 1;
 
-			vol = rng(VOL_MAX,10);
+			vol = rng(VOL_MAX,VOL_MIN);
 			cout<<"Gerando mapa:";
 			if(generate())
 			{
 				cout<<"OK"<<endl;
 				cout<<"Sanity check:";
-				if(sanityCheck(Ponto(),Ponto(),0))
+
+				if(sanityCheck({2,2},{30,22},0))
 				{
 					cout<<"OK"<<endl;
 					cout<<"Posicionando sprites/objetos:"<<endl;
-					mapPrint();
+					//mapPrint();
 				}
 				else
 					cout<<"Falha"<<endl;		
 			}
 			else
 				cout<<"Falha"<<endl;
+			return;
 		}
-
-
 
 		virtual void brush(Ponto xy, int i)
 		{
-			//							mapa[xy.x][xy.y-1] = i;
-			//mapa[xy.x-1][xy.y] = i;
-			mapa[xy.x][xy.y] = i;		//mapa[xy.x+1][xy.y] = i;
-				//						mapa[xy.x][xy.y+1] = i;
+			mapa[xy.x][xy.y] = i;
 		}
 
 		virtual void brushSimetrico(Ponto xy, int i)
 		{
 			mapa[xy.x][xy.y] = i;
-			mapa[TAMX - xy.x -1][TAMY - xy.y -1] = i;
+			mapa[TAMX - xy.x][TAMY - xy.y] = i;
 		}
 
 		virtual bool generate()
@@ -276,14 +276,14 @@ class geraIlha : public component::base {
 
 		virtual void mapPrint()
 		{
-			for(int j=0;j<TAMY;++j)
-				for(int i=0;i<TAMX;++i)
+//			for(int j=0;j<TAMY;++j)
+//				for(int i=0;i<TAMX;++i)
 				{
-					if(mapa[i][j]==1)
+//					if(mapa[i][j]==1)
 					{
 						component::base* ilha = spawn("ilha")->component("spatial");
-						ilha->write<float>("x", i*SPR_W);
-						ilha->write<float>("y", j*SPR_H);
+						ilha->write<float>("x", 0);
+						ilha->write<float>("y", 0);
 					}
 				}
 		}

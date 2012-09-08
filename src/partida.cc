@@ -59,6 +59,8 @@ class partida : public component::base {
 			portos.push_back(spawn("porto-p1")->component("porto"));
 			portos.push_back(spawn("porto-p2")->component("porto"));
 			
+			//gerando mapa
+			spawn("geraIlha");
 			/* primeiro porto eh o porto atual */
 			portoAtual = portos.begin();
 			(*portoAtual)->write<bool>("gamesetup", true);
