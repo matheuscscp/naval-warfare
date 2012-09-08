@@ -124,6 +124,7 @@ class partida : public component::base {
 				// destroi o pause menu
 				string opt = pausemenu->read<string>("menu.focus");
 				if (opt == "resumegame") {
+					unhook(pausemenu, "menu.trigger");
 					pausemenu->destroy();
 					pausemenu = NULL;
 					paused = false;
@@ -154,6 +155,18 @@ class partida : public component::base {
 				std::list<component::base*>::iterator it = portos.begin();
 				while (*it != last)
 					++it;
+				
+				unhook(*it, "morto");
+				unhook(*it, "cashusado");
+				unhook(*it, "cashganho");
+				unhook(*it, "grandefabricado");
+				unhook(*it, "mediofabricado");
+				unhook(*it, "pequenofabricado");
+				unhook(*it, "grandedestruido");
+				unhook(*it, "mediodestruido");
+				unhook(*it, "pequenodestruido");
+				unhook(*it, "done");
+				
 				*it = NULL;
 			} else {
 				// faz com que o update dos textos ocorra quando um parametro dos portos for alterado
@@ -291,6 +304,7 @@ class partida : public component::base {
 					hook(pausemenu, "menu.trigger");
 					paused = true;
 				} else {
+					unhook(pausemenu, "menu.trigger");
 					pausemenu->destroy();
 					pausemenu = NULL;
 					paused = false;
