@@ -74,7 +74,7 @@ class geraIlha : public component::base {
 				cout<<"OK"<<endl;
 				cout<<"Sanity check:";
 
-//				if(sanityCheck({2,2},{30,22},0))
+				if(sanityCheck({2,2},{30,22},5))
 				{
 					cout<<"OK"<<endl;
 					cout<<"Posicionando sprites/objetos:"<<endl;
@@ -164,13 +164,26 @@ class geraIlha : public component::base {
 			return aux;
 		}
 
-		virtual void circulo(Ponto xy,int raio)
+		virtual void circulo(Ponto xy)
 		{
 			Ponto aux;
-
+								brushSimetrico(xy.x,xy.y-2,0);
 			brushSimetrico(xy.x-1,xy.y-1,0);	brushSimetrico(xy.x,xy.y-1,0);	brushSimetrico(xy.x+1,xy.y-1,0);
-			brushSimetrico(xy.x-1,xy.y,0);		brushSimetrico(xy.x,xy.y,0);	brushSimetrico(xy.x+1,xy.y,0);
+			brushSimetrico(xy.x-2,xy.y,0);		brushSimetrico(xy.x-1,xy.y,0);		brushSimetrico(xy.x,xy.y,0);	brushSimetrico(xy.x+1,xy.y,0);		brushSimetrico(xy.x+2,xy.y,0);
 			brushSimetrico(xy.x-1,xy.y+1,0);	brushSimetrico(xy.x,xy.y+1,0);	brushSimetrico(xy.x+1,xy.y+1,0);
+								brushSimetrico(xy.x,xy.y+2,0);
+		}
+
+		void circulo(Ponto xy,int raio)
+		{
+			Ponto aux;
+			for(int i=0;i<360;++i)
+			{
+				aux.x = cos(i*RAD)*raio+xy.x;
+				aux.y = sin(i*RAD)*raio+xy.y;
+				if((aux.y>0)&&(aux.y<TAMY)&&(aux.x>0)&&(aux.x<TAMX))
+					brushSimetrico(aux,0);
+			}
 		}
 
 		//recebe as coordenadas de dois portos e forca 3 caminhos distintos entre eles
@@ -181,13 +194,11 @@ class geraIlha : public component::base {
 			Ponto ini, fim;
 			int counter	= stepSize; //contador que serah usado para a checagem de passos aleatorios
 			int passos 	= 0;		//contador para saber quantos passos foram feitos
-			int numEm 	= 0;
-			vector<Ponto> pathway1,pathway2,pathway3;
+
+			vector<Ponto> pathway1,pathway2;
 
 			//segura a mao de deus e tenha fe pq eu nao vou explicar isso direito
-			
 			//caminha ate nao poder mais pelo eixo X primeiro
-			//mas gracas a simetria, vai caminhar pelo eixo Y em sentido contrario ao mesmo tempo
 			ini=porto1;
 			fim=porto2;
 			do
@@ -215,20 +226,15 @@ class geraIlha : public component::base {
 				brushSimetrico(ini,0);
 				--counter;
 				++passos;
-				++numEm;
-			}while ((ini.x!=fim.x)||(ini.y!=fim.y)||(numEm<NUM_EMERGENCIA_MAX));
-
-			if (numEm>NUM_EMERGENCIA_MAX)
-				return false;
-
+			}while ((ini.x!=fim.x)||(ini.y!=fim.y));
 			pathway1.resize(passos);
 
 			//caminha por ambos os eixos, alternando entre X e Y em cada loop.
-			passos=numEm=0;
+			passos=0;
 			counter=stepSize;
 			ini=porto1;
 			fim=porto2;
-			while((ini.x!=fim.x)||(ini.y!=fim.y)||(numEm<NUM_EMERGENCIA_MAX))
+			while((ini.x!=fim.x)||(ini.y!=fim.y))
 			{
 				if(counter != 0)
 				{
@@ -241,7 +247,7 @@ class geraIlha : public component::base {
 					ini=randomDir(ini);
 					counter=stepSize;
 				}
-				pathway3.push_back(ini);
+				pathway2.push_back(ini);
 				brushSimetrico(ini,0);
 				--counter;
 				++passos;
@@ -257,25 +263,20 @@ class geraIlha : public component::base {
 					ini=randomDir(ini);
 					counter=stepSize;
 				}
-				pathway3.push_back(ini);
+				pathway2.push_back(ini);
 				brushSimetrico(ini,0);
 				--counter;
 				++passos;
-				++numEm;
 			}
-
-			if (numEm>NUM_EMERGENCIA_MAX)
-				return false;
-
-			pathway3.resize(passos);
+			pathway2.resize(passos);
 
 			for(unsigned int i = 0;i<pathway1.size();++i)
 				circulo(pathway1[i],RAIO_BRUSH);
 			for(unsigned int i = 0;i<pathway2.size();++i)
 				circulo(pathway2[i],RAIO_BRUSH);
-			for(unsigned int i = 0;i<pathway3.size();++i)
-				circulo(pathway3[i],RAIO_BRUSH);
 
+			cout<<pathway1.size()<<endl;
+			cout<<pathway2.size()<<endl;
 			return true;
 		}
 
