@@ -1,0 +1,17 @@
+attach: renderer/renderer animation/fade
+
+renderer.texts: msg
+
+fade.surface: msg
+fade.delay: 1.5
+
+msg.order: 0
+msg.text: Turno do  Player X
+msg.font.r: 0
+msg.font.g: 0
+msg.font.b: 0
+msg.font: ttf/fontin_sans.otf
+msg.font.size: 85
+msg.position.x: 150
+msg.position.y: 300
+msg.position.z: 300

@@ -209,6 +209,7 @@ class partida : public component::base {
 			} else {
 				trace("Going to next porto");
 				write((*portoAtual)->owner, "gamesetup", true);
+				spawn("abre-turno");
 			}
 		}
 		
