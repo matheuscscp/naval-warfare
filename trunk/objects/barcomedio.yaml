@@ -57,10 +57,10 @@ atributoSpeed.position.y: 0
 
 
 tipo: 1
-hp.value: 250
+hp.value: 1000
 range: 160.0
 moverange: 200.0
 speed: 200.0
-dmg: 100
+dmg: 250
 loot.value: 200
-attackTimer: 200
+
