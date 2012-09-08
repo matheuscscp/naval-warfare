@@ -29,6 +29,7 @@ class barco : public component::base {
 		bool selected;
 		bool gameplay; //flag para o barco saber se está na etapa de movimentação
 		bool gamesetup; //flag para o barco saber se está na etapa de setup
+		bool done;
 
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
@@ -103,6 +104,7 @@ class barco : public component::base {
 			alvoPrincipal 	= NULL;
 			
 			paused = fetch<bool>("paused");
+			done = fetch<bool>("done");
 			
 			//alterando range de ataque do barco
 			//NOTA: isso vai aumentar a caixa de colisao dos barcos, fazendo com que
@@ -172,7 +174,8 @@ class barco : public component::base {
 		}
 
 		virtual void update(timediff dt) {
-			if (paused) {
+			if (paused)
+			{
 				write<float>("x.speed", 0);
 				write<float>("y.speed", 0);
 				return;
@@ -186,15 +189,20 @@ class barco : public component::base {
 
 			//verifica se é o turno do barco antes de executar a movimentação
 			//selected usado pra não prejudicar testes
-			if(gameplay && !selected)
+			if(gameplay)
 			{
 				float xs = targetx - cx;
 				float ys = targety - cy;
-				bool done = false;
 				write("x.speed", xs);
 				write("y.speed", ys);
-				if ((xs > -0.3 && xs < 0) || (xs > 0 && xs < 0.3)) done = true;
-				if ((ys > -0.3 && ys < 0) || (ys > 0 && ys < 0.3)) done = true;
+				bool done = false;
+				
+				if ((xs > -0.3 && xs < 0.3) && (ys > -0.3 && ys < 0.3))
+				{
+					write("x.speed", 0.0);
+					write("y.speed", 0.0);
+					done = true;
+				}
 				
 				if (done && (read<component::base*>("done") == NULL)) {
 // 					trace("Barco done");
@@ -202,6 +210,7 @@ class barco : public component::base {
 				}
 			}
 
+			//posiciona o target quando o barco esta selecionado
 			if (selected)
 			{
 				int mousex = read<int>("mouse.x");
@@ -230,7 +239,6 @@ class barco : public component::base {
 			}
 					
 			//clip da barra de hp proporcional ao hp
-			//cout << "atr.hp: " << atr.hp << endl;
 			write("hpbar.clip.w", (atr.hp*64)/100);
 		}
 
@@ -358,7 +366,7 @@ class barco : public component::base {
 		}
 
 		virtual void handleClick(parameterbase::id pid, base* lastwrite, object::id owner) {
-			if (paused || !gamesetup) return;
+			if (paused || !gamesetup || gameplay) return;
 			if (mouse1 == 1) {
 				if (selected) {
 					selected = false;
@@ -386,7 +394,7 @@ class barco : public component::base {
 		
 		virtual void handleMouseover(parameterbase::id pid, base* lastwrite, object::id owner) {
 			if (paused) return;
-			write("barcohover.render", read<bool>("mouseover"));
+			if (gamesetup) write("barcohover.render", read<bool>("mouseover"));
 		}
 		
 		//Na morte do barco, dah spawn num loot aonde o barco morreu
