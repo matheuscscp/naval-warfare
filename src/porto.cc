@@ -173,7 +173,7 @@ class porto : public component::base {
 				// incrementa os contadores
 				qtde_barcos[barco_t]++;
 				switch (barco_t) {
-					case big:		add<int>("grandefabricado", 1);	break;
+					case big:		add<int>("grandefabricado", 1);		break;
 					case medium:	add<int>("mediofabricado", 1);		break;
 					case small:		add<int>("pequenofabricado", 1);	break;
 					default:
@@ -249,11 +249,13 @@ class porto : public component::base {
 			component::base* barco = read<component::base*>("barcomorrendo");
 			barcos.remove(barco);
 			
+			unhook(barco, "done");
+			
 			// decrementa os contadores
 			int tipo = barco->read<barcotype>("tipo");
 			--qtde_barcos[tipo];
 			switch (tipo) {
-				case big:		add<int>("grandedestruido", 1);	break;
+				case big:		add<int>("grandedestruido", 1);		break;
 				case medium:	add<int>("mediodestruido", 1);		break;
 				case small:		add<int>("pequenodestruido", 1);	break;
 				default:

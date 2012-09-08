@@ -13,12 +13,14 @@ enum barcotype {
 class painel : public component::base {
 	private:
 		gear2d::link<bool> paused;
+		bool gamesetup;
 
 	public:
 		// constructor and destructor
 		painel() {
 		}
 		virtual ~painel() {
+			unhook(read<component::base*>("porto"), "gamesetup");
 		}
 		
 		virtual gear2d::component::family family() { return "menu"; }
@@ -34,15 +36,26 @@ class painel : public component::base {
 			hook("mouse.1", (component::call)&painel::checkSpawnRequest);
 			
 			paused = fetch<bool>("paused");
+			
+			// hooka no porto para, no handle, hookar o gamesetup
+			hook("porto", (component::call)&painel::handlePorto);
 		}
 		
 		virtual void update(timediff dt) {
-			
+		}
+		
+		virtual void handlePorto(parameterbase::id pid, base* lastwrite, object::id owner) {
+			hook(read<component::base*>("porto"), "gamesetup", (component::call)&painel::handleGameSetup);
+			gamesetup = read<component::base*>("porto")->read<bool>("gamesetup");
+		}
+		
+		virtual void handleGameSetup(parameterbase::id pid, base* lastwrite, object::id owner) {
+			gamesetup = read<component::base*>("porto")->read<bool>("gamesetup");
 		}
 		
 		void checkSpawnRequest(parameterbase::id pid, component::base * last, object::id owns) {
 			// soh spawna se, ao receber click, o ponteiro do mouse estiver encima e o click sendo SOLTO (e nao PRESSIONADO)
-			if ( (read<bool>("mouseover")) && (!read<int>("mouse.1")) && (!paused) ) {
+			if ( (read<bool>("mouseover")) && (!read<int>("mouse.1")) && (!paused) && (gamesetup) ) {
 				float pos_y = read<int>("mouse.y") - read<float>("y");
 				float painel_h = read<float>("h");
 				string tamanho;
