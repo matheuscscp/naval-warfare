@@ -154,8 +154,8 @@ class porto : public component::base {
 			
 			/* se nao tivermos barcos, estamos done no gameplay */
 			if (barcos.size() == 0 && read<bool>("gameplay")) { 
-				if (read<component::base*>("done") == NULL);
-				write("done", this);
+				if (read<component::base*>("done") == NULL)
+					write("done", this);
 			}
 		}
 		

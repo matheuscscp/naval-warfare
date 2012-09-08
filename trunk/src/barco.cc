@@ -177,12 +177,12 @@ class barco : public component::base {
 				write<float>("y.speed", 0);
 				return;
 			}
-// 			modinfo("nw-barco");
+			modinfo("nw-barco");
 
 			cx = x + w/2;
 			cy = y + h/2;
 			
-// 			trace("Gameplay:", gameplay, "selected:", selected, "done",  read<component::base*>("done"));
+			trace("Gameplay:", gameplay, "selected:", selected, "done",  read<component::base*>("done"));
 
 			//verifica se é o turno do barco antes de executar a movimentação
 			//selected usado pra não prejudicar testes
@@ -223,13 +223,19 @@ class barco : public component::base {
 				write("target.position.x", targetx - 8);
 				write("target.position.y", targety - 8);
 			}
-				
+			
+			if (!gameplay) {
+				write("x.speed", 0);
+				write("y.speed", 0);
+			}
+					
 			//clip da barra de hp proporcional ao hp
 			//cout << "atr.hp: " << atr.hp << endl;
 			write("hpbar.clip.w", (atr.hp*64)/100);
 		}
 
 		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
+			modinfo("nw-barco");
 			if (paused) return;
 			if (pid == "porto") {
 				porto = read<component::base *>("porto");
@@ -247,6 +253,7 @@ class barco : public component::base {
 			}
 			
 			else if (pid == "gameplay") {
+				trace("Gameplay being set");
 				gameplay = porto->read<bool>("gameplay");
 			}
 		}

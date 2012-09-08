@@ -104,12 +104,12 @@ class partida : public component::base {
 		
 		/* quando um porto tah done, dah proximo turno */
 		virtual void handlePortoDone(parameterbase::id pid, component::base * last, object::id owns) {
-			modinfo("nw-partida");
+			modinfo("nw-partida-done");
 			if (paused) return;
 			if (last == this) return;
 			component::base * porto = last;
 			if (porto->read<component::base *>("done")) {
-				trace("Notificacao que o porto", last->owner->name(), "estah done");
+				trace("Notificacao que o porto", last->owner->name(), "estah done", last->read<component::base *>("done"));
 				portos_prontos++;
 				trace(portos_prontos, "portos estao prontos!");
 				if (portos_prontos >= portos.size()) {
