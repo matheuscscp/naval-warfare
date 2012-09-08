@@ -65,6 +65,8 @@ class barco : public component::base {
 		}
 
 		virtual void setup(object::signature & sig) {
+          
+          modinfo("barco");
 			
 			/* o done indica que terminamos */
 			write<component::base*>("done", 0);
@@ -108,15 +110,29 @@ class barco : public component::base {
 			write("collider.aabb.h",atr.range*2);
 			
 			//iniciando todos os valores do range de movimento e de ataque
-			float rangeWH = (float)read<int>("range.position.w")/2; 
-			float rangeatkWH = (float)read<int>("rangeatk.position.w")/2;
+			float rangeWH = (float)read<int>("range.position.w")/2.0f; 
+			float rangeatkWH = (float)read<int>("rangeatk.position.w")/2.0f;
 			
-			write("range.position.x",(w/2.0f)-rangeWH);
-			write("range.position.y",(h/2.0f)-rangeWH);
-			write("range.zoom", atr.moverange/rangeWH);
+            write("range.position.x",(w/2.0f) - rangeWH);
+            write("range.position.y", (h/2.0f) - rangeWH);
+            trace("rpx",
+                  read<float>("range.position.x"),
+                  read<int>("range.position.w"),
+                  "rpy",
+                  read<float>("range.position.y"),
+                  read<int>("range.position.h"));
+// 			write("range.zoom", atr.moverange/rangeWH);
+            
+            trace("rpx",
+                  read<float>("range.position.x"),
+                  read<int>("range.position.w"),
+                  "rpy",
+                  read<float>("range.position.y"),
+                  read<int>("range.position.h"));
+            
 			
-			write("rangeatk.position.x",(w/2.0f)-rangeatkWH);
-			write("rangeatk.position.y",(h/2.0f)-rangeatkWH);
+            write("rangeatk.position.x",(w/2.0f) - rangeatkWH);
+            write("rangeatk.position.y",(h/2.0f) - rangeatkWH);
 			write("rangeatk.zoom", atr.range/rangeatkWH);
 			
 			
@@ -165,7 +181,7 @@ class barco : public component::base {
 // 			trace("Gameplay:", gameplay, "selected:", selected, "done",  read<component::base*>("done"));
 
 			//verifica se é o turno do barco antes de executar a movimentação
-			//!selected usado pra não prejudicar testes
+			//selected usado pra não prejudicar testes
 			if(gameplay && !selected)
 			{
 				float xs = targetx - cx;
@@ -241,7 +257,6 @@ class barco : public component::base {
 			{//arrumar essa colisao de ultimo segundo com loot
 				
 				component::base * inimigo = read<component::base*>(pid);
-				
 				
 				inimX = inimigo->read<float>("x");
 				inimY = inimigo->read<float>("y");
@@ -329,7 +344,7 @@ class barco : public component::base {
 		}
 
 		virtual void handleClick(parameterbase::id pid, base* lastwrite, object::id owner) {
-			if (paused) return;
+			if (paused || !gamesetup) return;
 			if (mouse1 == 1) {
 				if (selected) {
 					selected = false;
