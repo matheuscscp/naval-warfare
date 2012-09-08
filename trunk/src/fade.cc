@@ -15,6 +15,7 @@ class fade : public component::base {
 		string surface;
 		timediff delay;
 		timediff timer;
+		float alphadiff;
 		
 	public:
 		// constructor and destructor
@@ -33,6 +34,7 @@ class fade : public component::base {
 			surface = sig["fade.surface"];
 			delay = eval<timediff>(sig["fade.delay"]);
 			timer = 0.0f;
+			alphadiff = eval<float>(sig["fade.alphadiff"]);
 			
 			write<float>("fade.x.speed", 0.0f);
 			write<float>("fade.y.speed", 0.0f);
@@ -54,13 +56,13 @@ class fade : public component::base {
 			}
 			
 			// caso novo valor do alpha seja negativo, setta para zero e retorna
-			if (alpha - 0.01f < 0.0f) {
+			if (alpha - alphadiff < 0.0f) {
 				write<float>(surface + ".alpha", 0.0f);
 				return;
 			}
 			
 			// decrementa a opacidade exponencialmente
-			add<float>(surface + ".alpha", -0.01f);
+			add<float>(surface + ".alpha", -alphadiff);
 		}
 		
 		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {

@@ -4,6 +4,7 @@ renderer.texts: msg
 
 fade.surface: msg
 fade.delay: 1.5
+fade.alphadiff: 0.01
 
 msg.order: 0
 msg.text: Turno do Player X

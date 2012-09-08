@@ -34,3 +34,6 @@ painel.y: 68
 
 spawn.x: 112
 spawn.y: 104
+
+animacao.x.speed: -100.0
+animacao.y.speed: -100.0
