@@ -29,6 +29,7 @@ class partida : public component::base {
 		gear2d::link<timediff> gplay_cooldown;
 		timediff gplay_cooldown_timer;
 		bool stop_gameplay;
+		component::base* gplay_animation;
 		
 	public:
 		// constructor and destructor
@@ -40,7 +41,8 @@ class partida : public component::base {
 		portos_prontos(0),
 		pausemenu(NULL),
 		gplay_cooldown_timer(0.0f),
-		stop_gameplay(false)
+		stop_gameplay(false),
+		gplay_animation(0)
 		{
 		}
 		virtual ~partida() {
@@ -100,6 +102,8 @@ class partida : public component::base {
 			
 			init<timediff>("gameplay.cooldown", sig["gameplay.cooldown"], 1.0f);
 			gplay_cooldown = fetch<timediff>("gameplay.cooldown");
+			init<float>("gameplay.animacao.y.speed", sig["gameplay.animacao.y.speed"], 0.0f);
+			init<float>("gameplay.animacao.x", sig["gameplay.animacao.x"], 0.0f);
 		}
 		
 		virtual void update(timediff dt) {
@@ -118,6 +122,10 @@ class partida : public component::base {
 				stop();
 				write((*portoAtual)->owner, "gamesetup", true);
 				stop_gameplay = false;
+				if (gplay_animation) {
+					gplay_animation->destroy();
+					gplay_animation = 0;
+				}
 			}
 		}
 		
@@ -247,8 +255,19 @@ class partida : public component::base {
 			trace("Playing to gameplay!");
 			gplay_cooldown_timer = 0.0f;
 			gameplay = true;
+			gplay_animation = spawn("abre-turno")->component("spatial");
+			gplay_animation->write("fade.y.speed", read<float>("gameplay.animacao.y.speed"));
+			gplay_animation->write<string>("msg.text", "Fire!!!");
+			gplay_animation->write("x", read<float>("gameplay.animacao.x"));
+			hook(gplay_animation, "morri", (component::call)&partida::handleGPlayAnimation);
 			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
 				write((*it)->owner, "gameplay", true);
+			}
+		}
+		
+		virtual void handleGPlayAnimation(parameterbase::id pid, component::base * last, object::id owns) {
+			if (pid == "morri") {
+				gplay_animation = 0;
 			}
 		}
 		
