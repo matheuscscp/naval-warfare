@@ -38,6 +38,8 @@ class fade : public component::base {
 			
 			write<float>("fade.x.speed", 0.0f);
 			write<float>("fade.y.speed", 0.0f);
+			
+			write("morri", false);
 		}
 		
 		virtual void update(timediff dt) {
@@ -51,6 +53,7 @@ class fade : public component::base {
 			
 			// destroi o objeto e retorna o update caso o alpha ja seja zero
 			if (alpha == 0.0f) {
+				write("morri", true);
 				destroy();
 				return;
 			}

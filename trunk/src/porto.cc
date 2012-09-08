@@ -37,7 +37,7 @@ class porto : public component::base {
 		
 		gear2d::link<bool> paused;
 		
-		
+		component::base* animation;
 		
 	public:
 		// constructor and destructor
@@ -62,6 +62,7 @@ class porto : public component::base {
 			write<bool>("gamesetup", false);
 			write<bool>("gameplay", false);
 			hook("gamesetup", (component::call)&porto::handleGameSetup);
+			hook("gameplay", (component::call)&porto::handleGamePlay);
 			
 			write<component::base*>("done", 0); /* se todos os barcos reportarem done */
 			
@@ -271,13 +272,25 @@ class porto : public component::base {
 		void handleGameSetup(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
 			if (!read<bool>("gamesetup")) return;
 			
-			component::base* animation = spawn("abre-turno")->component("renderer");
+			animation = spawn("abre-turno")->component("renderer");
+			hook(animation, "morri", (component::call)&porto::handleAnimationMorta);
 			animation->write("fade.x.speed", read<float>("animacao.x.speed"));
 			animation->write("fade.y.speed", read<float>("animacao.y.speed"));
 			stringstream ss;
 			ss << "Turno do Player ";
 			ss << player;
 			animation->write<string>("msg.text", ss.str());
+		}
+		
+		void handleGamePlay(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
+			if (animation) {
+				animation->destroy();
+				animation = 0;
+			}
+		}
+		
+		void handleAnimationMorta(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
+			animation = 0;
 		}
 		
 	private:
