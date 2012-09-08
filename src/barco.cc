@@ -52,8 +52,8 @@ class barco : public component::base {
 	public:	
 		barco() { }
 		virtual ~barco() { 
-			//unhook(porto, "gameplay");
-			//unhook(porto, "gamesetup");
+			unhook(porto, "gameplay");
+			unhook(porto, "gamesetup");
         }
 
 		virtual gear2d::component::family family() { return "unit"; }
