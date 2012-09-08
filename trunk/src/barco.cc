@@ -30,6 +30,8 @@ class barco : public component::base {
 		bool gameplay; //flag para o barco saber se está na etapa de movimentação
 		bool gamesetup; //flag para o barco saber se está na etapa de setup
 		bool done;
+		
+		int timer;
 
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
@@ -45,6 +47,7 @@ class barco : public component::base {
 			gear2d::link<float>	speed;		//velocidade de movimento
 			gear2d::link<int>	dmg;		//dano por segundo
 			gear2d::link<int>	loot;		//loot dropado
+			gear2d::link<int>	attackTimer;		//tempo entre ataques
 		}atr;
 
 		component::base * alvoPrincipal;
@@ -83,6 +86,8 @@ class barco : public component::base {
 			init<float>	("speed"     , sig["speed"]     , 300.0f);
 			init<int>	("dmg"       , sig["dmg"]       , 10);
 			init<int>	("loot.value", sig["loot.value"], 100);
+			init<int>	("attackTimer", sig["attackTimer"], 100);
+
 
 			atr.tipo 		= fetch<int>	("tipo");
 			atr.hp 			= fetch<int>	("hp.value");
@@ -91,6 +96,7 @@ class barco : public component::base {
 			atr.speed		= fetch<float>	("speed");
 			atr.dmg			= fetch<int>	("dmg");
 			atr.loot		= fetch<int>	("loot.value");
+			atr.attackTimer		= fetch<int>	("attackTimer");
 
 			x 		= fetch<float>("x");
 			y 		= fetch<float>("y");
@@ -102,6 +108,7 @@ class barco : public component::base {
 			write<component::base *>("porto", NULL);
 			porto 			= NULL;
 			alvoPrincipal 	= NULL;
+			timer = 0;
 			
 			paused = fetch<bool>("paused");
 			done = fetch<bool>("done");
@@ -269,6 +276,7 @@ class barco : public component::base {
 		//Cuida das colisoes gerais
 		virtual void handleCollision(parameterbase::id pid, base* lastwrite, object::id owner) {
 			if (paused) return;
+			if(!gameplay) return;
 			bool longe, perto = false;
 			float inimX,inimY,inimW = 0.0f;
 			
@@ -294,7 +302,8 @@ class barco : public component::base {
 				
 				perto = sphereCollision(x+(w/2.0f),y+(h/2.0f),w/2,
 										inimX+(inimW/2.0f),inimY+(inimW/2.0f),inimW/2.0f);
-				
+				if(timer==0)
+					timer=atr.attackTimer;				
 				//colisao de longe (range do barco vs. barco inimigo, range do barco vs, porto)
 				if(longe)
 				{
@@ -306,11 +315,11 @@ class barco : public component::base {
 							alvoPrincipal = inimigo;
 						else
 						{
-							if(alvoPrincipal==inimigo)
+							if((alvoPrincipal==inimigo)&&(timer==atr.attackTimer))
 								if(removeHP(inimigo,atr.dmg))
 									alvoPrincipal=NULL;
 						}
-					}	
+					}		
 				}
 				
 				//colisao de perto (barco vs barco inimigo, barco vs loot)
@@ -333,6 +342,7 @@ class barco : public component::base {
 						}
 					}
 				}
+				--timer;
 			}
 			else alvoPrincipal=NULL;
 		}
@@ -374,7 +384,7 @@ class barco : public component::base {
 					write("rangeatk.render"			, false);
 					//write("target.render"			, false);
 					write("atributoDano.render"		, false);
-					write("atributoSpeed.render"	, false);
+					write("atributoSpeed.render"		, false);
 					write("atributoHP.render"		, false);
 				}
 				else {
@@ -385,7 +395,7 @@ class barco : public component::base {
 						write("target.render"			, true);
 						write("rangeatk.render"			, true);
 						write("atributoDano.render"		, true);
-						write("atributoSpeed.render"	, true);
+						write("atributoSpeed.render"		, true);
 						write("atributoHP.render"		, true);
 					}
 				}
