@@ -129,6 +129,10 @@ class porto : public component::base {
 			init<float>("spawn.y", sig["spawn.y"], 0);
 			spawn_x = fetch<float>("spawn.x");
 			spawn_y = fetch<float>("spawn.y");
+			
+			// setta a velocidade da animacao de abertura de turno
+			init<float>("animacao.x.speed", sig["animacao.x.speed"], 0.0f);
+			init<float>("animacao.y.speed", sig["animacao.y.speed"], 0.0f);
 		}
 		
 		virtual void update(timediff dt) {
@@ -268,16 +272,12 @@ class porto : public component::base {
 			if (!read<bool>("gamesetup")) return;
 			
 			component::base* animation = spawn("abre-turno")->component("renderer");
-			if (player == 1) {
-				animation->write<string>("msg.text", "Turno do Player 1");
-				animation->write<float>("fade.x.speed", -100.0f);
-				animation->write<float>("fade.y.speed", -100.0f);
-			}
-			else {
-				animation->write<string>("msg.text", "Turno do Player 2");
-				animation->write<float>("fade.x.speed", 100.0f);
-				animation->write<float>("fade.y.speed", 100.0f);
-			}
+			animation->write("fade.x.speed", read<float>("animacao.x.speed"));
+			animation->write("fade.y.speed", read<float>("animacao.y.speed"));
+			stringstream ss;
+			ss << "Turno do Player ";
+			ss << player;
+			animation->write<string>("msg.text", ss.str());
 		}
 		
 	private:
