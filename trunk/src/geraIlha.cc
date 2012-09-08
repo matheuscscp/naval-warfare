@@ -302,18 +302,18 @@ class geraIlha : public component::base {
 					{
 						case 1:
 							ilha = spawn("ilha")->component("spatial");
-							ilha->write<float>("x", i*SPR_W);
-							ilha->write<float>("y", j*SPR_H);
+							ilha->write<float>("x", i*SPR_W-32);
+							ilha->write<float>("y", j*SPR_H-32);
 						break;
 						case 2:
 							ilha = spawn("ilha2")->component("spatial");
-							ilha->write<float>("x", i*SPR_W);
-							ilha->write<float>("y", j*SPR_H);
+							ilha->write<float>("x", i*SPR_W-16);
+							ilha->write<float>("y", j*SPR_H-16);
 						break;
 						case 3:
 							ilha = spawn("ilha3")->component("spatial");
-							ilha->write<float>("x", i*SPR_W);
-							ilha->write<float>("y", j*SPR_H);
+							ilha->write<float>("x", i*SPR_W-64);
+							ilha->write<float>("y", j*SPR_H-64);
 						break;
 					}
 				}

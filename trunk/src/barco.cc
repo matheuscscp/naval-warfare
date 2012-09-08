@@ -69,6 +69,8 @@ class barco : public component::base {
 
 		virtual void setup(object::signature & sig) {
           		modinfo("barco");
+
+		//	spawn("barcoCollisionBox");
 			
 			/* o done indica que terminamos */
 			write<component::base*>("done", 0);
@@ -158,6 +160,7 @@ class barco : public component::base {
 			hook("collider.collision",(component::call)&barco::handleCollision);
 			hook("hp.value", (component::call)&barco::handleLife);
 			hook("mouseover", (component::call)&barco::handleMouseover);
+		//	hook("barcoCollisionBox.collider.collision", (component::call)&barco::handleCollisionBox);
 			
 			cx = x + w/2;
 			cy = y + h/2;
@@ -317,6 +320,9 @@ class barco : public component::base {
 				}
 			}
 			else alvoPrincipal=NULL;
+		}
+
+		virtual void handleCollisionBox(parameterbase::id pid, base* lastwrite, object::id owner) {
 		}
 
 		//Tira vida de um component, pelo amor de deus, use isso em algo que tem hp.value
