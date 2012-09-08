@@ -30,6 +30,7 @@ class barco : public component::base {
 		bool gameplay; //flag para o barco saber se está na etapa de movimentação
 		bool gamesetup; //flag para o barco saber se está na etapa de setup
 		bool done;
+		bool recarregando;
 		
 		int timer;
 
@@ -47,7 +48,7 @@ class barco : public component::base {
 			gear2d::link<float>	speed;		//velocidade de movimento
 			gear2d::link<int>	dmg;		//dano por segundo
 			gear2d::link<int>	loot;		//loot dropado
-			gear2d::link<int>	attackTimer;		//tempo entre ataques
+			gear2d::link<int>	attackTimer;		//loot dropado
 		}atr;
 
 		component::base * alvoPrincipal;
@@ -86,8 +87,7 @@ class barco : public component::base {
 			init<float>	("speed"     , sig["speed"]     , 300.0f);
 			init<int>	("dmg"       , sig["dmg"]       , 10);
 			init<int>	("loot.value", sig["loot.value"], 100);
-			init<int>	("attackTimer", sig["attackTimer"], 100);
-
+			init<int>	("attackTimer", sig["attackTimer"], 200);
 
 			atr.tipo 		= fetch<int>	("tipo");
 			atr.hp 			= fetch<int>	("hp.value");
@@ -108,7 +108,7 @@ class barco : public component::base {
 			write<component::base *>("porto", NULL);
 			porto 			= NULL;
 			alvoPrincipal 	= NULL;
-			timer = 0;
+			recarregando = false;
 			
 			paused = fetch<bool>("paused");
 			done = fetch<bool>("done");
@@ -181,6 +181,15 @@ class barco : public component::base {
 		}
 
 		virtual void update(timediff dt) {
+
+
+			if(timer<=0)
+			{		
+				recarregando = false;
+				timer = atr.attackTimer;
+//				cout<<"RECARREGUEI"<<endl;
+			}
+
 			if (paused)
 			{
 				write<float>("x.speed", 0);
@@ -197,7 +206,7 @@ class barco : public component::base {
 			//verifica se é o turno do barco antes de executar a movimentação
 			//selected usado pra não prejudicar testes
 			if(gameplay)
-			{
+			{				
 				float xs = targetx - cx;
 				float ys = targety - cy;
 				write("x.speed", xs);
@@ -210,11 +219,18 @@ class barco : public component::base {
 					write("y.speed", 0.0);
 					done = true;
 				}
-				
+
+				if((recarregando==true)&&(timer>0))
+				{
+					--timer;
+				}
+
 				if (done && (read<component::base*>("done") == NULL)) {
 // 					trace("Barco done");
 					write("done", this); 
 				}
+
+				
 			}
 
 			//posiciona o target quando o barco esta selecionado
@@ -276,7 +292,6 @@ class barco : public component::base {
 		//Cuida das colisoes gerais
 		virtual void handleCollision(parameterbase::id pid, base* lastwrite, object::id owner) {
 			if (paused) return;
-			if(!gameplay) return;
 			bool longe, perto = false;
 			float inimX,inimY,inimW = 0.0f;
 			
@@ -302,8 +317,7 @@ class barco : public component::base {
 				
 				perto = sphereCollision(x+(w/2.0f),y+(h/2.0f),w/2,
 										inimX+(inimW/2.0f),inimY+(inimW/2.0f),inimW/2.0f);
-				if(timer==0)
-					timer=atr.attackTimer;				
+				
 				//colisao de longe (range do barco vs. barco inimigo, range do barco vs, porto)
 				if(longe)
 				{
@@ -315,11 +329,15 @@ class barco : public component::base {
 							alvoPrincipal = inimigo;
 						else
 						{
-							if((alvoPrincipal==inimigo)&&(timer==atr.attackTimer))
+							//if((alvoPrincipal==inimigo)&&(recarregando==false))
+							if(alvoPrincipal==inimigo)
+							{
 								if(removeHP(inimigo,atr.dmg))
 									alvoPrincipal=NULL;
+								//recarregando=true;
+							}
 						}
-					}		
+					}	
 				}
 				
 				//colisao de perto (barco vs barco inimigo, barco vs loot)
@@ -342,7 +360,6 @@ class barco : public component::base {
 						}
 					}
 				}
-				--timer;
 			}
 			else alvoPrincipal=NULL;
 		}
@@ -358,6 +375,7 @@ class barco : public component::base {
 			if(inimigo->read<int>("hp.value")>0){
 				newHp = inimigo->read<int>("hp.value")-dmg;
 				inimigo->write("hp.value",newHp);
+//				cout<<"ATIREI"<<endl;
 				return false;
 			}
 			return true;
@@ -384,7 +402,7 @@ class barco : public component::base {
 					write("rangeatk.render"			, false);
 					//write("target.render"			, false);
 					write("atributoDano.render"		, false);
-					write("atributoSpeed.render"		, false);
+					write("atributoSpeed.render"	, false);
 					write("atributoHP.render"		, false);
 				}
 				else {
@@ -395,7 +413,7 @@ class barco : public component::base {
 						write("target.render"			, true);
 						write("rangeatk.render"			, true);
 						write("atributoDano.render"		, true);
-						write("atributoSpeed.render"		, true);
+						write("atributoSpeed.render"	, true);
 						write("atributoHP.render"		, true);
 					}
 				}
