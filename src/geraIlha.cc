@@ -82,6 +82,7 @@ class geraIlha : public component::base {
 			{
 				brushSimetrico(rng(TAMX-2,2),rng(TAMY-2,2),rng(3,1));
 			}
+			sanityCheck({2,2},{30,22},5);
 			mapPrint();
 			/*cout<<"Gerando mapa:";
 			if(generate())

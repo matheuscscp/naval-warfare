@@ -1,0 +1,8 @@
+attach: renderer/renderer spatial/space2d unit/barco unit/barcoCollisionBox
+
+renderer.surfaces: barcoCollisionBox=ilha1.png
+
+w: 64
+h: 64
+
+collider.tag: barcoCollision

@@ -1,6 +1,6 @@
 attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d pause/paused
 
-renderer.surfaces: barco=barco3.png range=range.png rangeatk=rangeatk.png target=target.png hpbar=hpbar.png barcohover=barco3mouseover.png
+renderer.surfaces: barco=barco3.png range=range.png rangeatk=rangeatk.png target=target.png hpbar=hpbar.png barcohover=barco3mouseover.png hpbarback=hpbarback.png
 renderer.texts: atributoDano atributoSpeed
 
 w: 64
@@ -28,6 +28,7 @@ rangeatk.position.z: 9
 target.position.z : 11
 barcohover.positon.z: 11
 hpbar.position.z: 13
+hpbarback.position.z: 12
 atributoDano.position.z: 13
 atributoSpeed.position.z: 13
 atributoHP.position.z: 13
@@ -44,6 +45,8 @@ target.bind: 0
 
 hpbar.position.x: 0
 hpbar.position.y: -16
+hpbarback.position.x: 0
+hpbarback.position.y: -16
 
 barcohover.position.x: -4
 barcohover.position.y: -4
@@ -56,9 +59,10 @@ atributoHP.position.x: 0
 atributoHP.position.y: 0
 
 tipo: 0
-hp.value: 100
+hp.value: 500
 range: 80.0
 moverange: 100.0
 speed: 100.0
-dmg: 3
+dmg: 150
 loot.value: 300
+attackTimer: 200 
