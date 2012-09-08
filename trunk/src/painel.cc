@@ -20,7 +20,6 @@ class painel : public component::base {
 		painel() {
 		}
 		virtual ~painel() {
-			unhook(read<component::base*>("porto"), "gamesetup");
 		}
 		
 		virtual gear2d::component::family family() { return "menu"; }
