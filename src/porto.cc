@@ -171,6 +171,8 @@ class porto : public component::base {
 			if (((debitar) && (cash >= custo_barco[barco_t])) || (!debitar)) {
 				// cria e poe na lista
 				component::base* barco = spawn(tbarco)->component("unit");
+				barco->write<float>("x", spawn_x);
+				barco->write<float>("y", spawn_y);
 				barco->write("porto", this);
 				hook(barco, "done", (component::call)&porto::handleBarcoDone);
 				
@@ -191,10 +193,6 @@ class porto : public component::base {
 					cash = (cash - custo_barco[barco_t]);
 					add<int>("cashusado", custo_barco[barco_t]);
 				}
-				
-				// setta a posicao
-				barco->write<float>("x", spawn_x);
-				barco->write<float>("y", spawn_y);
 			}
 		}
 
@@ -270,7 +268,13 @@ class porto : public component::base {
 		}
 		
 		void handleGameSetup(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
-			if (!read<bool>("gamesetup")) return;
+			if (!read<bool>("gamesetup")) {
+				if (animation) {
+					animation->destroy();
+					animation = 0;
+				}
+				return;
+			}
 			
 			animation = spawn("abre-turno")->component("renderer");
 			hook(animation, "morri", (component::call)&porto::handleAnimationMorta);
