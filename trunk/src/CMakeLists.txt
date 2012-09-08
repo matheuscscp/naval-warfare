@@ -78,3 +78,10 @@ add_library(singleselectmanager MODULE singleselectmanager.cc)
 install(TARGETS singleselectmanager
 		LIBRARY
 		DESTINATION menumanager)
+
+
+add_library(fade MODULE fade.cc)
+		
+install(TARGETS fade
+		LIBRARY
+		DESTINATION animation)
