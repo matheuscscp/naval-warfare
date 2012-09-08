@@ -52,9 +52,12 @@ class barco : public component::base {
 	public:	
 		barco() { }
 		virtual ~barco() { 
+        }
+        
+        virtual void destroyed() {
 			unhook(porto, "gameplay");
 			unhook(porto, "gamesetup");
-        }
+		}
 
 		virtual gear2d::component::family family() { return "unit"; }
 
