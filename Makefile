@@ -14,7 +14,11 @@ install: build
 run: install
 	gear2d partida.yaml
 
+gdb: install
+	gdb gear2d
+
 clean:
 	rm -rf build components
 
-.PHONY: all build install run
+.PHONY: all build install run gdb
+
