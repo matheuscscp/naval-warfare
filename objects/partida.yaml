@@ -6,6 +6,8 @@ renderer.texts: gameover porto1 porto2 cashusado1 cashganho1 grandefabricado1 me
 keyboard.interested: tab return escape
 
 gameplay.cooldown: 3.0
+gameplay.animacao.y.speed: -100.0f
+gameplay.animacao.x: 260.0f
 
 x: 112
 y: 84
