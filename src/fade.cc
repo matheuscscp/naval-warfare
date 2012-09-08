@@ -27,12 +27,15 @@ class fade : public component::base {
 
 		virtual gear2d::component::type type() { return "fade"; }
 
-		virtual std::string depends() { return "renderer/renderer"; }
+		virtual std::string depends() { return "renderer/renderer kinematics/kinematic2d"; }
 
 		virtual void setup(object::signature & sig) {
 			surface = sig["fade.surface"];
 			delay = eval<timediff>(sig["fade.delay"]);
 			timer = 0.0f;
+			
+			write<float>("fade.x.speed", 0.0f);
+			write<float>("fade.y.speed", 0.0f);
 		}
 		
 		virtual void update(timediff dt) {
@@ -40,6 +43,9 @@ class fade : public component::base {
 			if (timer < delay) return;
 			
 			float alpha = read<float>(surface + ".alpha");
+			
+			write("x.speed", read<float>("fade.x.speed"));
+			write("y.speed", read<float>("fade.y.speed"));
 			
 			// destroi o objeto e retorna o update caso o alpha ja seja zero
 			if (alpha == 0.0f) {

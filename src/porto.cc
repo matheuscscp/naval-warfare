@@ -61,6 +61,7 @@ class porto : public component::base {
 			player = fetch<int>("porto.player");
 			write<bool>("gamesetup", false);
 			write<bool>("gameplay", false);
+			hook("gamesetup", (component::call)&porto::handleGameSetup);
 			
 			write<component::base*>("done", 0); /* se todos os barcos reportarem done */
 			
@@ -262,7 +263,23 @@ class porto : public component::base {
 					break;
 			}
 		}
-
+		
+		void handleGameSetup(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
+			if (!read<bool>("gamesetup")) return;
+			
+			component::base* animation = spawn("abre-turno")->component("renderer");
+			if (player == 1) {
+				animation->write<string>("msg.text", "Turno do Player 1");
+				animation->write<float>("fade.x.speed", -100.0f);
+				animation->write<float>("fade.y.speed", -100.0f);
+			}
+			else {
+				animation->write<string>("msg.text", "Turno do Player 2");
+				animation->write<float>("fade.x.speed", 100.0f);
+				animation->write<float>("fade.y.speed", 100.0f);
+			}
+		}
+		
 	private:
 		static bool initialized;
 		static int custo_barco[lastsize];

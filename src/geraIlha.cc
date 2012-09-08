@@ -77,7 +77,7 @@ class geraIlha : public component::base {
 			direcoes[7].x = 1;	direcoes[7].y = 1;*/
 
 			vol = rng(VOL_MAX,VOL_MIN);
-			cout<<vol<<endl;
+			//cout<<vol<<endl;
 			for(int i=0;i<vol;++i)
 			{
 				brushSimetrico(rng(TAMX-2,2),rng(TAMY-2,2),rng(3,1));

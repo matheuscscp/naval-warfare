@@ -38,6 +38,8 @@ class painel : public component::base {
 			
 			// hooka no porto para, no handle, hookar o gamesetup
 			hook("porto", (component::call)&painel::handlePorto);
+			
+			write<int>("painel.render", 0);
 		}
 		
 		virtual void update(timediff dt) {
@@ -50,6 +52,10 @@ class painel : public component::base {
 		
 		virtual void handleGameSetup(parameterbase::id pid, base* lastwrite, object::id owner) {
 			gamesetup = read<component::base*>("porto")->read<bool>("gamesetup");
+			if (gamesetup)
+				write<int>("painel.render", 1);
+			else
+				write<int>("painel.render", 0);
 		}
 		
 		void checkSpawnRequest(parameterbase::id pid, component::base * last, object::id owns) {
