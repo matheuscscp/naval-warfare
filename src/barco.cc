@@ -30,9 +30,7 @@ class barco : public component::base {
 		bool gameplay; //flag para o barco saber se está na etapa de movimentação
 		bool gamesetup; //flag para o barco saber se está na etapa de setup
 		bool done;
-		bool recarregando;
-		
-		int timer;
+
 
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
@@ -87,7 +85,6 @@ class barco : public component::base {
 			init<float>	("speed"     , sig["speed"]     , 300.0f);
 			init<int>	("dmg"       , sig["dmg"]       , 10);
 			init<int>	("loot.value", sig["loot.value"], 100);
-			init<int>	("attackTimer", sig["attackTimer"], 200);
 
 			atr.tipo 		= fetch<int>	("tipo");
 			atr.hp 			= fetch<int>	("hp.value");
@@ -96,7 +93,6 @@ class barco : public component::base {
 			atr.speed		= fetch<float>	("speed");
 			atr.dmg			= fetch<int>	("dmg");
 			atr.loot		= fetch<int>	("loot.value");
-			atr.attackTimer		= fetch<int>	("attackTimer");
 
 			x 		= fetch<float>("x");
 			y 		= fetch<float>("y");
@@ -108,7 +104,6 @@ class barco : public component::base {
 			write<component::base *>("porto", NULL);
 			porto 			= NULL;
 			alvoPrincipal 	= NULL;
-			recarregando = false;
 			
 			paused = fetch<bool>("paused");
 			done = fetch<bool>("done");
@@ -182,14 +177,6 @@ class barco : public component::base {
 
 		virtual void update(timediff dt) {
 
-
-			if(timer<=0)
-			{		
-				recarregando = false;
-				timer = atr.attackTimer;
-//				cout<<"RECARREGUEI"<<endl;
-			}
-
 			if (paused)
 			{
 				write<float>("x.speed", 0);
@@ -218,11 +205,6 @@ class barco : public component::base {
 					write("x.speed", 0.0);
 					write("y.speed", 0.0);
 					done = true;
-				}
-
-				if((recarregando==true)&&(timer>0))
-				{
-					--timer;
 				}
 
 				if (done && (read<component::base*>("done") == NULL)) {

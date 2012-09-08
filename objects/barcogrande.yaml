@@ -59,10 +59,10 @@ atributoHP.position.x: 0
 atributoHP.position.y: 0
 
 tipo: 0
-hp.value: 500
+hp.value: 1500
 range: 80.0
 moverange: 100.0
 speed: 100.0
-dmg: 150
+dmg: 500
 loot.value: 300
-attackTimer: 200 
+
