@@ -166,12 +166,6 @@ class barco : public component::base {
 			hook("mouseover", (component::call)&barco::handleMouseover);
 		//	hook("barcoCollisionBox.collider.collision", (component::call)&barco::handleCollisionBox);
 			
-			cx = x + w/2;
-			cy = y + h/2;
-
-			targetx = cx;
-			targety = cy;
-
 			selected = false;
 		}
 
@@ -256,6 +250,12 @@ class barco : public component::base {
 				hook(porto, "gameplay");
 				gameplay = porto->read<bool>("gameplay");
 				gamesetup = porto->read<bool>("gamesetup");
+				
+				cx = x + w/2;
+				cy = y + h/2;
+
+				targetx = cx;
+				targety = cy;
 			}
 			
 			else if (pid == "gamesetup") {
