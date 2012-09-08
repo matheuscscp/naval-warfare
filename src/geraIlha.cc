@@ -74,14 +74,14 @@ class geraIlha : public component::base {
 				cout<<"OK"<<endl;
 				cout<<"Sanity check:";
 
-				if(sanityCheck({2,2},{30,22},0))
+//				if(sanityCheck({2,2},{30,22},0))
 				{
 					cout<<"OK"<<endl;
 					cout<<"Posicionando sprites/objetos:"<<endl;
-					//mapPrint();
+					mapPrint();
 				}
-				else
-					cout<<"Falha"<<endl;		
+//				else
+//					cout<<"Falha"<<endl;		
 			}
 			else
 				cout<<"Falha"<<endl;
@@ -97,6 +97,14 @@ class geraIlha : public component::base {
 		{
 			mapa[xy.x][xy.y] = i;
 			mapa[TAMX - xy.x][TAMY - xy.y] = i;
+		}
+
+		virtual void brushSimetrico(int x, int y, int i)
+		{
+			if((x>0)&&(y<TAMY)&&(x>0)&&(y<TAMX))
+				mapa[x][y] = i;
+			if((TAMX - x>0)&&(TAMY - y<TAMY)&&(TAMX - x>0)&&(TAMY - y<TAMX))
+				mapa[TAMX - x][TAMY - y] = i;
 		}
 
 		virtual bool generate()
@@ -137,7 +145,7 @@ class geraIlha : public component::base {
 					}
 				}
 				else//caso nao estamos, voltamos pra posicao inicial
-					ptAux =xy;
+					ptAux = xy;
 
 				if(numEm>NUM_EMERGENCIA_MAX)
 					return false;
@@ -159,13 +167,10 @@ class geraIlha : public component::base {
 		virtual void circulo(Ponto xy,int raio)
 		{
 			Ponto aux;
-			for(int i=0;i<360;++i)
-			{
-				aux.x = cos(i*RAD)*raio+xy.x;
-				aux.y = sin(i*RAD)*raio+xy.y;
-				if((aux.y>0)&&(aux.y<TAMY)&&(aux.x>0)&&(aux.x<TAMX))
-					brushSimetrico(aux,0);
-			}
+
+			brushSimetrico(xy.x-1,xy.y-1,0);	brushSimetrico(xy.x,xy.y-1,0);	brushSimetrico(xy.x+1,xy.y-1,0);
+			brushSimetrico(xy.x-1,xy.y,0);		brushSimetrico(xy.x,xy.y,0);	brushSimetrico(xy.x+1,xy.y,0);
+			brushSimetrico(xy.x-1,xy.y+1,0);	brushSimetrico(xy.x,xy.y+1,0);	brushSimetrico(xy.x+1,xy.y+1,0);
 		}
 
 		//recebe as coordenadas de dois portos e forca 3 caminhos distintos entre eles
@@ -276,10 +281,10 @@ class geraIlha : public component::base {
 
 		virtual void mapPrint()
 		{
-//			for(int j=0;j<TAMY;++j)
-//				for(int i=0;i<TAMX;++i)
+			for(int j=0;j<TAMY;++j)
+				for(int i=0;i<TAMX;++i)
 				{
-//					if(mapa[i][j]==1)
+					if(mapa[i][j]==1)
 					{
 						component::base* ilha = spawn("ilha")->component("spatial");
 						ilha->write<float>("x", 0);
