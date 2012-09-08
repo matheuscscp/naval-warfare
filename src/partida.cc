@@ -124,7 +124,6 @@ class partida : public component::base {
 				// destroi o pause menu
 				string opt = pausemenu->read<string>("menu.focus");
 				if (opt == "resumegame") {
-					unhook(pausemenu, "menu.trigger");
 					pausemenu->destroy();
 					pausemenu = NULL;
 					paused = false;
@@ -304,7 +303,6 @@ class partida : public component::base {
 					hook(pausemenu, "menu.trigger");
 					paused = true;
 				} else {
-					unhook(pausemenu, "menu.trigger");
 					pausemenu->destroy();
 					pausemenu = NULL;
 					paused = false;
