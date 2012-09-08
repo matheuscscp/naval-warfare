@@ -8,14 +8,14 @@ h: 32
 
 collider.tag: barco
 
-atributoDano.text: TEMP
+atributoDano.text: TEMP TEMP TEMP TEMP TEMP
 atributoDano.font: ttf/fontin_sans.otf
 atributoDano.font.size: 15
 atributoDano.font.r: 0
 atributoDano.font.g: 0
 atributoDano.font.b: 0
 
-atributoSpeed.text: TEMP
+atributoSpeed.text: TEMP TEMP TEMP TEMP TEMP
 atributoSpeed.font: ttf/fontin_sans.otf
 atributoSpeed.font.size: 15
 atributoSpeed.font.r: 0
