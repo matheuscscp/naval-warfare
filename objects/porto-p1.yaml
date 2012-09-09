@@ -1,6 +1,6 @@
 attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard pause/paused
 
-renderer.surfaces: porto=porto_pirata.png
+renderer.surfaces: porto=pirata/porto.png
 renderer.texts: cash hp
 
 collider.tag: porto
