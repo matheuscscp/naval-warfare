@@ -32,8 +32,8 @@ cash.position.y: 3
 painel.x: 0
 painel.y: 164
 
-spawn.x: 112
-spawn.y: 104
+spawn.x: 150
+spawn.y: 200
 
 animacao.x.speed: -100.0
 animacao.y.speed: -100.0
