@@ -3,8 +3,8 @@ attach: renderer/renderer unit/loot keyboard/keyboard spatial/space2d
 
 renderer.surfaces: loot=chest.png
 
-w: 50
-h: 50
+w: 40
+h: 31
 
 loot.position.z: 8
 
