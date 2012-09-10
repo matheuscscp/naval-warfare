@@ -48,10 +48,13 @@ class barco : public component::base {
 			gear2d::link<int>	dmg;		//dano por segundo
 			gear2d::link<int>	loot;		//loot dropado
 			gear2d::link<int>	attackTimer;		//loot dropado
+			timediff			lifetime;	// tempo de vida
 		}atr;
 
 		component::base * alvoPrincipal;
 		component::base * porto;
+		
+		float barcohover_y0;
 
 	public:	
 		barco() { }
@@ -68,7 +71,7 @@ class barco : public component::base {
 		virtual gear2d::component::type type() { return "barco"; }
 
 		virtual std::string depends() {
-			return "renderer/renderer kinematics/kinematic2d mouse/mouse mouseover/mouseover collider/collider2d pause/paused";
+			return "renderer/renderer spatial/space2d kinematics/kinematic2d mouse/mouse mouseover/mouseover collider/collider2d pause/paused";
 		}
 
 		virtual void setup(object::signature & sig) {
@@ -159,6 +162,8 @@ class barco : public component::base {
 			
 			write("atributoSpeed.position.x",w);
 			write("atributoSpeed.position.y",15.0f);
+			
+			barcohover_y0 = eval<float>(sig["barcohover.position.y"]);
 			
 			/**HOOKS**/
 			hook("porto");
@@ -252,6 +257,10 @@ class barco : public component::base {
 				write<bool>("barco.render", true);
 				write<bool>("barcoinv.render", false);
 			}
+			
+			// animacao do mouseover
+			atr.lifetime += dt;
+			write<float>("barcohover.position.y", barcohover_y0 - 10*pow(cos(atr.lifetime), 2));
 		}
 
 		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
@@ -266,6 +275,9 @@ class barco : public component::base {
 				
 				write<float>("barco.position.z", 100.f);
 				write<float>("barcoinv.position.z", 100.f);
+				
+				write<float>("w", read<int>("barco.clip.w"));
+				write<float>("h", read<int>("barco.clip.h"));
 				
 				cx = x + w/2;
 				cy = y + h/2;

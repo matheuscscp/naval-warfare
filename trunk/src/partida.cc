@@ -284,7 +284,7 @@ class partida : public component::base {
 				}
 				
 				// esconde ou mostra os dados
-				write("stat.render", tab);
+				write("status_fundo.render", tab);
 				write("porto1.render", tab);
 				write("porto2.render", tab);
 				
