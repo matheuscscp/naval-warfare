@@ -1,6 +1,6 @@
 attach: gamestate/partida keyboard/keyboard renderer/renderer pause/paused
 
-renderer.surfaces: stat=stat.png porto1=player1.png porto2=player2.png
+renderer.surfaces: status_fundo=status_fundo.png porto1=player1.png porto2=player2.png
 renderer.texts: gameover cashusado1 cashganho1 grandefabricado1 mediofabricado1 pequenofabricado1 grandedestruido1 mediodestruido1 pequenodestruido1 cashusado2 cashganho2 grandefabricado2 mediofabricado2 pequenofabricado2 grandedestruido2 mediodestruido2 pequenodestruido2
 
 keyboard.interested: tab return escape
@@ -12,10 +12,10 @@ gameplay.animacao.x: 260.0f
 x: 112
 y: 84
 
-stat.render: 0
-stat.position.x: -112
-stat.position.y: -84
-stat.position.z: 200
+status_fundo.render: 0
+status_fundo.position.x: -112
+status_fundo.position.y: -84
+status_fundo.position.z: 200
 
 gameover.render: 0
 gameover.text: PLAYER X WINS
