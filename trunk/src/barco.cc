@@ -31,6 +31,7 @@ class barco : public component::base {
 		bool gamesetup; //flag para o barco saber se está na etapa de setup
 		bool done;
 
+		gear2d::link<int> recebeDano;
 
 		gear2d::link<float> x, y, w, h;
 		gear2d::link<int> mouse1;
@@ -89,6 +90,7 @@ class barco : public component::base {
 			init<float>	("speed"     , sig["speed"]     , 300.0f);
 			init<int>	("dmg"       , sig["dmg"]       , 10);
 			init<int>	("loot.value", sig["loot.value"], 100);
+			init<int>	("recebeDano", sig["recebeDano"], 0);
 
 			atr.tipo 		= fetch<int>	("tipo");
 			atr.hp 			= fetch<int>	("hp.value");
@@ -99,10 +101,12 @@ class barco : public component::base {
 			atr.dmg			= fetch<int>	("dmg");
 			atr.loot		= fetch<int>	("loot.value");
 
-			x 		= fetch<float>("x");
-			y 		= fetch<float>("y");
-			w 		= fetch<float>("w");
-			h 		= fetch<float>("h");
+			recebeDano = 0;
+
+			x 	= fetch<float>("x");
+			y 	= fetch<float>("y");
+			w 	= fetch<float>("w");
+			h 	= fetch<float>("h");
 
 			mouse1 	= fetch<int>  ("mouse.1");
 
@@ -173,7 +177,10 @@ class barco : public component::base {
 		}
 
 		virtual void update(timediff dt) {
-
+			
+			if (recebeDano>0)
+			{
+			}
 			if (paused)
 			{
 				write<float>("x.speed", 0);
@@ -347,12 +354,10 @@ class barco : public component::base {
 							alvoPrincipal = inimigo;
 						else
 						{
-							//if((alvoPrincipal==inimigo)&&(recarregando==false))
 							if(alvoPrincipal==inimigo)
 							{
 								if(removeHP(inimigo,atr.dmg))
 									alvoPrincipal=NULL;
-								//recarregando=true;
 							}
 						}
 					}	

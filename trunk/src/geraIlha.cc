@@ -1,4 +1,4 @@
- #include <iostream>
+#include <iostream>
 #include <cmath>
 #include "gear2d.h"
 using namespace gear2d;
@@ -8,8 +8,6 @@ using namespace std;
 #define NUM_EMERGENCIA_MAX 	1000000
 #define TAMX			64
 #define TAMY			48
-
-
 
 struct Ponto
 {
@@ -67,42 +65,13 @@ class geraIlha : public component::base {
 				for(int i = 0;i<TAMX;++i)
 					mapa[i][j] = 0;
 
-			/*direcoes[0].x = 1;	direcoes[0].y = 0;
-			direcoes[1].x =-1;	direcoes[1].y = 0;
-			direcoes[2].x = 0;	direcoes[2].y =-1;
-			direcoes[3].x = 0;	direcoes[3].y = 1;
-			direcoes[4].x =-1;	direcoes[4].y =-1;
-			direcoes[5].x =-1;	direcoes[5].y = 1;
-			direcoes[6].x = 1;	direcoes[6].y =-1;
-			direcoes[7].x = 1;	direcoes[7].y = 1;*/
-
 			vol = rng(VOL_MAX,VOL_MIN);
-			//cout<<vol<<endl;
 			for(int i=0;i<vol;++i)
 			{
 				brushSimetrico(rng(TAMX-2,2),rng(TAMY-2,2),rng(3,1));
 			}
 			sanityCheck({2,2},{30,22},5);
 			mapPrint();
-			/*cout<<"Gerando mapa:";
-			if(generate())
-			{
-				cout<<"OK"<<endl;
-				cout<<"Sanity check:";
-
-				if(sanityCheck({2,2},{30,22},5))
-				{
-					cout<<"OK"<<endl;
-					cout<<"Posicionando sprites/objetos:";
-					mapPrint();
-					cout<<"OK"<<endl;
-				}
-				else
-					cout<<"Falha"<<endl;		
-			}
-			else
-				cout<<"Falha"<<endl;*/
-
 			return;
 		}
 
@@ -125,51 +94,6 @@ class geraIlha : public component::base {
 				mapa[TAMX - x-1][TAMY - y-1] = i;
 		}
 
-		virtual bool generate()
-		{
-			int k, numEm, op;
-			Ponto ptAux;
-			Ponto xy;
-			k = numEm = op = ptAux.x = ptAux.y = xy.x = xy.y =0;
-
-			for(int j = 0;j<TAMY;++j)
-				for(int i = 0;i<TAMX;++i)
-					mapa[i][j] = 0;
-
-			//achando um ponto inicial, gravando ele na matriz
-			xy.x =rng(TAMX,0);
-			xy.y =rng(TAMY,0);
-
-			ptAux = xy;
-			brushSimetrico(xy,1);
-
-			//loop principal, checamos se chegamos ao volume desejado ou se já se foram 10000 repeticoes, pq depois disso nao da mais
-			while (k < vol)
-			{
-				numEm++;
-
-				op = rng(4);//se nao, escolhemos uma nova direcao
-
-				ptAux.x += direcoes[op].x;
-				ptAux.y += direcoes[op].y;
-
-				if((ptAux.y>0)&&(ptAux.y<TAMY)&&(ptAux.x>0)&&(ptAux.x<TAMX))//estamos nos limites do mapa?
-				{
-					xy = ptAux;
-					if(mapa[xy.x][xy.y]==0)//caso a posicao nao foi ocupada
-					{
-						brushSimetrico(xy,1);
-						k++;//aumentar k, ja que ocupou mais um espaco no volume da m
-					}
-				}
-				else//caso nao estamos, voltamos pra posicao inicial
-					ptAux = xy;
-
-				if(numEm>NUM_EMERGENCIA_MAX)
-					return false;
-			}
-			return true;
-		}
 
 		virtual Ponto randomDir(Ponto xy)
 		{
@@ -292,13 +216,6 @@ class geraIlha : public component::base {
 				for(int i=0;i<TAMX;++i)
 				{
 					component::base* ilha;
-					/*if(mapa[i][j]!=0)
-					{
-						component::base* ilha = spawn("ilha")->component("spatial");
-						ilha->write<float>("x", i*SPR_W);
-						ilha->write<float>("y", j*SPR_H);
-					}*/
-
 					switch(mapa[i][j])
 					{
 						case 1:
