@@ -1,7 +1,7 @@
 attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard pause/paused
 
-renderer.surfaces: porto=pirata/porto.png
-renderer.texts: cash hp
+renderer.surfaces: porto=pirata/porto.png hp=porto_hp.png hpback=porto_hp_back.png cashicon=porto_cash.png
+renderer.texts: cash
 
 images.path: pirata/
 images.direction: default
@@ -13,24 +13,26 @@ porto.player: 1
 porto.position.z: 1
 
 x: 0
-y: 20
+y: 35
 w: 167
 h: 164
 
 hp.value: 100
-hp.font: ttf/fontin_sans.otf
-hp.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-hp.font.size: 20
 hp.position.x: 3
-hp.position.y: -17
-hp.position.z: 1
+hp.position.y: -32
+hp.position.z: 2
+hpback.position.x: 3
+hpback.position.y: -32
+hpback.position.z: 1
 
 cash.value: 1000
+cashicon.position.x: 48
+cashicon.position.y: -32
 cash.font: ttf/fontin_sans.otf
 cash.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 cash.font.size: 20
-cash.position.x: 3
-cash.position.y: 3
+cash.position.x: 80
+cash.position.y: -23
 
 painel.x: 0
 painel.y: 164

@@ -41,6 +41,7 @@ class barco : public component::base {
 		{
 			gear2d::link<int>	tipo;		//tipo do barco
 			gear2d::link<int>	hp;			//vida
+			int					hp_max;			//vida maxima
 			gear2d::link<float>	range;		//range de ataque
 			gear2d::link<float>	moverange;	//range de movimento
 			gear2d::link<float>	speed;		//velocidade de movimento
@@ -88,6 +89,7 @@ class barco : public component::base {
 
 			atr.tipo 		= fetch<int>	("tipo");
 			atr.hp 			= fetch<int>	("hp.value");
+			atr.hp_max		= atr.hp;
 			atr.range		= fetch<float>	("range");
 			atr.moverange 		= fetch<float>	("moverange");
 			atr.speed		= fetch<float>	("speed");
@@ -238,7 +240,7 @@ class barco : public component::base {
 			}
 					
 			//clip da barra de hp proporcional ao hp
-			write("hpbar.clip.w", (atr.hp*64)/100);
+			write("hpbar.clip.w", (atr.hp*read<int>("hpbarback.clip.w"))/atr.hp_max);
 			
 			// troca de direcao se a velocidade em x nao for nula
 			float xspeed_direcao = read<float>("x.speed");

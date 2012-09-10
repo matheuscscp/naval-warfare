@@ -25,6 +25,8 @@ class porto : public component::base {
 		
 		gear2d::link<int> cash;
 		gear2d::link<int> hp;
+		int hp_max;
+		float hp_ypos;
 		std::list< component::base* > barcos;
 		
 		/* numero de barcos prontos */
@@ -100,6 +102,8 @@ class porto : public component::base {
 			init<int>("hp.value", sig["hp.value"], 100);
 			hook("hp.value", (component::call)&porto::updateHpText);
 			hp = fetch<int>("hp.value");
+			hp_max = hp;
+			hp_ypos = read<float>("hp.position.y");
 			updateHpText("",0,0);
 			
 			// painel de fabricacao de barcos
@@ -143,7 +147,7 @@ class porto : public component::base {
 		virtual void update(timediff dt) {
 			if (paused) return;
 			// destroi o porto
-			if (hp <= 0 ) {
+			if (hp <= 0) {
 				// avisa a partida
 				write<bool>("morto", true);
 				
@@ -167,6 +171,12 @@ class porto : public component::base {
 				if (read<component::base*>("done") == NULL)
 					write("done", this);
 			}
+			
+			// barra de hp
+			int icon_h = read<int>("hpback.clip.h");
+			write("hp.clip.h", (hp*icon_h)/hp_max);
+			write("hp.clip.y", icon_h - (hp*icon_h)/hp_max);
+			write<float>("hp.position.y", hp_ypos + icon_h - (hp*icon_h)/hp_max);
 		}
 		
 		virtual void criarBarco(const string& tbarco, barcotype barco_t, bool debitar = true) {
@@ -223,7 +233,6 @@ class porto : public component::base {
 		void updateCashText(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
 			if (paused) return;
 			stringstream ss;
-			ss << "Cash: ";
 			ss << cash;
 			write("cash.text", ss.str());
 		}
