@@ -35,7 +35,8 @@ cash.position.x: 80
 cash.position.y: -23
 
 painel.x: 0
-painel.y: 164
+painel.y: 179
+painel.z: 50
 
 spawn.x: 150
 spawn.y: 200

@@ -1,8 +1,4 @@
 attach: renderer/renderer menu/painel mouse/mouse mouseover/mouseover pause/paused
 
-renderer.surfaces: painel=painel.png
-
-w: 84
-h: 216
-
-painel.position.z: 100
+w: 100
+h: 300

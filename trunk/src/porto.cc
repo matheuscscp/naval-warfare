@@ -106,14 +106,20 @@ class porto : public component::base {
 			hp_ypos = read<float>("hp.position.y");
 			updateHpText("",0,0);
 			
+			// inicia o caminho das imagens de barco
+			init<string>("images.path", sig["images.path"], "");
+			init<string>("images.direction", sig["images.direction"], "");
+			
 			// painel de fabricacao de barcos
 			write<string>("spawn.tamanho", "");
 			write<int>("spawn.tipo", lastsize);
 			hook("spawn.tamanho", (component::call)&porto::handlePainel);
 			painel = spawn("painel")->component("spatial");
+			painel->add<string>("renderer.surfaces", " painel=" + sig["images.path"] + "painel.png");
 			painel->write("porto", this);
 			painel->write<float>("x", eval<float>(sig["painel.x"], 0));
 			painel->write<float>("y", eval<float>(sig["painel.y"], 0));
+			painel->write<float>("painel.position.z", eval<float>(sig["painel.z"], 0));
 			
 			// zerando a quantidade de barcos deste porto
 			for( int i = 0; i < lastsize; ++i )
@@ -138,10 +144,6 @@ class porto : public component::base {
 			// setta a velocidade da animacao de abertura de turno
 			init<float>("animacao.x.speed", sig["animacao.x.speed"], 0.0f);
 			init<float>("animacao.y.speed", sig["animacao.y.speed"], 0.0f);
-			
-			// inicia o caminho das imagens de barco
-			init<string>("images.path", sig["images.path"], "");
-			init<string>("images.direction", sig["images.direction"], "");
 		}
 		
 		virtual void update(timediff dt) {

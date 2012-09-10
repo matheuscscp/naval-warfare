@@ -287,9 +287,11 @@ class barco : public component::base {
 				if (!gamesetup) {
 					write<component::base*>("done", NULL);
 					write<bool>("target.render", false);
+					write("barcohover.render", false);
 				}
-				else if (selected) {
-					write<bool>("target.render", true);
+				else {
+					write<bool>("target.render", selected);
+					write("barcohover.render", read<bool>("mouseover"));
 				}
 			}
 			
@@ -425,6 +427,7 @@ class barco : public component::base {
 						write("atributoDano.render"		, true);
 						write("atributoSpeed.render"	, true);
 						write("atributoHP.render"		, true);
+						write<bool>("barcohover.render", false);
 					}
 				}
 			}
@@ -432,7 +435,12 @@ class barco : public component::base {
 		
 		virtual void handleMouseover(parameterbase::id pid, base* lastwrite, object::id owner) {
 			if (paused) return;
-			if (gamesetup) write("barcohover.render", read<bool>("mouseover"));
+			if (gamesetup) {
+				if (!selected)
+					write("barcohover.render", read<bool>("mouseover"));
+				else
+					write("barcohover.render", false);
+			}
 		}
 		
 		//Na morte do barco, dah spawn num loot aonde o barco morreu
