@@ -1,7 +1,7 @@
 attach: gamestate/partida keyboard/keyboard renderer/renderer pause/paused
 
-renderer.surfaces: stat=stat.png
-renderer.texts: gameover porto1 porto2 cashusado1 cashganho1 grandefabricado1 mediofabricado1 pequenofabricado1 grandedestruido1 mediodestruido1 pequenodestruido1 cashusado2 cashganho2 grandefabricado2 mediofabricado2 pequenofabricado2 grandedestruido2 mediodestruido2 pequenodestruido2
+renderer.surfaces: stat=stat.png porto1=player1.png porto2=player2.png
+renderer.texts: gameover cashusado1 cashganho1 grandefabricado1 mediofabricado1 pequenofabricado1 grandedestruido1 mediodestruido1 pequenodestruido1 cashusado2 cashganho2 grandefabricado2 mediofabricado2 pequenofabricado2 grandedestruido2 mediodestruido2 pequenodestruido2
 
 keyboard.interested: tab return escape
 
@@ -13,8 +13,8 @@ x: 112
 y: 84
 
 stat.render: 0
-stat.position.x: 0
-stat.position.y: 0
+stat.position.x: -112
+stat.position.y: -84
 stat.position.z: 200
 
 gameover.render: 0
@@ -29,23 +29,11 @@ gameover.position.y: 50
 gameover.position.z: 201
 
 porto1.render: 0
-porto1.text: Player 1
-porto1.font: ttf/fontin_sans.otf
-porto1.font.size: 40
-porto1.font.r: 1
-porto1.font.g: 0
-porto1.font.b: 0
 porto1.position.x: 110
 porto1.position.y: 140
 porto1.position.z: 201
 
 porto2.render: 0
-porto2.text: Player 2
-porto2.font: ttf/fontin_sans.otf
-porto2.font.size: 40
-porto2.font.r: 0
-porto2.font.g: 0
-porto2.font.b: 1
 porto2.position.x: 510
 porto2.position.y: 140
 porto2.position.z: 201
@@ -56,9 +44,9 @@ cashusado1.render: 0
 cashusado1.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 cashusado1.font: ttf/fontin_sans.otf
 cashusado1.font.size: 20
-cashusado1.font.r: 1
-cashusado1.font.g: 1
-cashusado1.font.b: 1
+cashusado1.font.r: 0.321568627
+cashusado1.font.g: 0.090196078
+cashusado1.font.b: 0
 cashusado1.position.x: 67
 cashusado1.position.y: 215
 cashusado1.position.z: 201
@@ -67,9 +55,9 @@ cashganho1.render: 0
 cashganho1.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 cashganho1.font: ttf/fontin_sans.otf
 cashganho1.font.size: 20
-cashganho1.font.r: 1
-cashganho1.font.g: 1
-cashganho1.font.b: 1
+cashganho1.font.r: 0.321568627
+cashganho1.font.g: 0.090196078
+cashganho1.font.b: 0
 cashganho1.position.x: 67
 cashganho1.position.y: 245
 cashganho1.position.z: 201
@@ -78,9 +66,9 @@ grandefabricado1.render: 0
 grandefabricado1.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 grandefabricado1.font: ttf/fontin_sans.otf
 grandefabricado1.font.size: 20
-grandefabricado1.font.r: 1
-grandefabricado1.font.g: 1
-grandefabricado1.font.b: 1
+grandefabricado1.font.r: 0.321568627
+grandefabricado1.font.g: 0.090196078
+grandefabricado1.font.b: 0
 grandefabricado1.position.x: 67
 grandefabricado1.position.y: 275
 grandefabricado1.position.z: 201
@@ -89,9 +77,9 @@ mediofabricado1.render: 0
 mediofabricado1.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 mediofabricado1.font: ttf/fontin_sans.otf
 mediofabricado1.font.size: 20
-mediofabricado1.font.r: 1
-mediofabricado1.font.g: 1
-mediofabricado1.font.b: 1
+mediofabricado1.font.r: 0.321568627
+mediofabricado1.font.g: 0.090196078
+mediofabricado1.font.b: 0
 mediofabricado1.position.x: 67
 mediofabricado1.position.y: 305
 mediofabricado1.position.z: 201
@@ -100,9 +88,9 @@ pequenofabricado1.render: 0
 pequenofabricado1.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 pequenofabricado1.font: ttf/fontin_sans.otf
 pequenofabricado1.font.size: 20
-pequenofabricado1.font.r: 1
-pequenofabricado1.font.g: 1
-pequenofabricado1.font.b: 1
+pequenofabricado1.font.r: 0.321568627
+pequenofabricado1.font.g: 0.090196078
+pequenofabricado1.font.b: 0
 pequenofabricado1.position.x: 67
 pequenofabricado1.position.y: 335
 pequenofabricado1.position.z: 201
@@ -111,9 +99,9 @@ grandedestruido1.render: 0
 grandedestruido1.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 grandedestruido1.font: ttf/fontin_sans.otf
 grandedestruido1.font.size: 20
-grandedestruido1.font.r: 1
-grandedestruido1.font.g: 1
-grandedestruido1.font.b: 1
+grandedestruido1.font.r: 0.321568627
+grandedestruido1.font.g: 0.090196078
+grandedestruido1.font.b: 0
 grandedestruido1.position.x: 67
 grandedestruido1.position.y: 365
 grandedestruido1.position.z: 201
@@ -122,9 +110,9 @@ mediodestruido1.render: 0
 mediodestruido1.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 mediodestruido1.font: ttf/fontin_sans.otf
 mediodestruido1.font.size: 20
-mediodestruido1.font.r: 1
-mediodestruido1.font.g: 1
-mediodestruido1.font.b: 1
+mediodestruido1.font.r: 0.321568627
+mediodestruido1.font.g: 0.090196078
+mediodestruido1.font.b: 0
 mediodestruido1.position.x: 67
 mediodestruido1.position.y: 395
 mediodestruido1.position.z: 201
@@ -133,9 +121,9 @@ pequenodestruido1.render: 0
 pequenodestruido1.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 pequenodestruido1.font: ttf/fontin_sans.otf
 pequenodestruido1.font.size: 20
-pequenodestruido1.font.r: 1
-pequenodestruido1.font.g: 1
-pequenodestruido1.font.b: 1
+pequenodestruido1.font.r: 0.321568627
+pequenodestruido1.font.g: 0.090196078
+pequenodestruido1.font.b: 0
 pequenodestruido1.position.x: 67
 pequenodestruido1.position.y: 425
 pequenodestruido1.position.z: 201
@@ -146,9 +134,9 @@ cashusado2.render: 0
 cashusado2.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 cashusado2.font: ttf/fontin_sans.otf
 cashusado2.font.size: 20
-cashusado2.font.r: 1
-cashusado2.font.g: 1
-cashusado2.font.b: 1
+cashusado2.font.r: 0.321568627
+cashusado2.font.g: 0.090196078
+cashusado2.font.b: 0
 cashusado2.position.x: 467
 cashusado2.position.y: 215
 cashusado2.position.z: 201
@@ -157,9 +145,9 @@ cashganho2.render: 0
 cashganho2.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 cashganho2.font: ttf/fontin_sans.otf
 cashganho2.font.size: 20
-cashganho2.font.r: 1
-cashganho2.font.g: 1
-cashganho2.font.b: 1
+cashganho2.font.r: 0.321568627
+cashganho2.font.g: 0.090196078
+cashganho2.font.b: 0
 cashganho2.position.x: 467
 cashganho2.position.y: 245
 cashganho2.position.z: 201
@@ -168,9 +156,9 @@ grandefabricado2.render: 0
 grandefabricado2.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 grandefabricado2.font: ttf/fontin_sans.otf
 grandefabricado2.font.size: 20
-grandefabricado2.font.r: 1
-grandefabricado2.font.g: 1
-grandefabricado2.font.b: 1
+grandefabricado2.font.r: 0.321568627
+grandefabricado2.font.g: 0.090196078
+grandefabricado2.font.b: 0
 grandefabricado2.position.x: 467
 grandefabricado2.position.y: 275
 grandefabricado2.position.z: 201
@@ -179,9 +167,9 @@ mediofabricado2.render: 0
 mediofabricado2.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 mediofabricado2.font: ttf/fontin_sans.otf
 mediofabricado2.font.size: 20
-mediofabricado2.font.r: 1
-mediofabricado2.font.g: 1
-mediofabricado2.font.b: 1
+mediofabricado2.font.r: 0.321568627
+mediofabricado2.font.g: 0.090196078
+mediofabricado2.font.b: 0
 mediofabricado2.position.x: 467
 mediofabricado2.position.y: 305
 mediofabricado2.position.z: 201
@@ -190,9 +178,9 @@ pequenofabricado2.render: 0
 pequenofabricado2.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 pequenofabricado2.font: ttf/fontin_sans.otf
 pequenofabricado2.font.size: 20
-pequenofabricado2.font.r: 1
-pequenofabricado2.font.g: 1
-pequenofabricado2.font.b: 1
+pequenofabricado2.font.r: 0.321568627
+pequenofabricado2.font.g: 0.090196078
+pequenofabricado2.font.b: 0
 pequenofabricado2.position.x: 467
 pequenofabricado2.position.y: 335
 pequenofabricado2.position.z: 201
@@ -201,9 +189,9 @@ grandedestruido2.render: 0
 grandedestruido2.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 grandedestruido2.font: ttf/fontin_sans.otf
 grandedestruido2.font.size: 20
-grandedestruido2.font.r: 1
-grandedestruido2.font.g: 1
-grandedestruido2.font.b: 1
+grandedestruido2.font.r: 0.321568627
+grandedestruido2.font.g: 0.090196078
+grandedestruido2.font.b: 0
 grandedestruido2.position.x: 467
 grandedestruido2.position.y: 365
 grandedestruido2.position.z: 201
@@ -212,9 +200,9 @@ mediodestruido2.render: 0
 mediodestruido2.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 mediodestruido2.font: ttf/fontin_sans.otf
 mediodestruido2.font.size: 20
-mediodestruido2.font.r: 1
-mediodestruido2.font.g: 1
-mediodestruido2.font.b: 1
+mediodestruido2.font.r: 0.321568627
+mediodestruido2.font.g: 0.090196078
+mediodestruido2.font.b: 0
 mediodestruido2.position.x: 467
 mediodestruido2.position.y: 395
 mediodestruido2.position.z: 201
@@ -223,9 +211,9 @@ pequenodestruido2.render: 0
 pequenodestruido2.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 pequenodestruido2.font: ttf/fontin_sans.otf
 pequenodestruido2.font.size: 20
-pequenodestruido2.font.r: 1
-pequenodestruido2.font.g: 1
-pequenodestruido2.font.b: 1
+pequenodestruido2.font.r: 0.321568627
+pequenodestruido2.font.g: 0.090196078
+pequenodestruido2.font.b: 0
 pequenodestruido2.position.x: 467
 pequenodestruido2.position.y: 425
 pequenodestruido2.position.z: 201

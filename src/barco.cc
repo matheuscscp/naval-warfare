@@ -12,11 +12,11 @@ enum barcotype {
 };
 
 namespace gear2d {
-		template<> barcotype eval<barcotype>(std::string t, barcotype def) {
-			if (t == "big") return big;
-			if (t == "medium") return medium;
-			if (t == "small") return small;
-			return def;
+	template<> barcotype eval<barcotype>(std::string t, barcotype def) {
+		if (t == "big") return big;
+		if (t == "medium") return medium;
+		if (t == "small") return small;
+		return def;
 	}
 }
 
@@ -278,6 +278,10 @@ class barco : public component::base {
 				gamesetup = porto->read<bool>("gamesetup");
 				if (!gamesetup) {
 					write<component::base*>("done", NULL);
+					write<bool>("target.render", false);
+				}
+				else if (selected) {
+					write<bool>("target.render", true);
 				}
 			}
 			

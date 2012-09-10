@@ -68,7 +68,7 @@ class partida : public component::base {
 			portos.push_back(spawn("porto-p2")->component("porto"));
 			
 			//gerando mapa
-			spawn("geraIlha");
+			//spawn("geraIlha");
 			/* primeiro porto eh o porto atual */
 			portoAtual = portos.begin();
 			(*portoAtual)->write<bool>("gamesetup", true);
@@ -166,15 +166,9 @@ class partida : public component::base {
 				write<int>("porto2.render", 1);
 				if (last->read<int>("porto.player") == 1) {
 					write<string>("gameover.text", "PLAYER 2 WINS");
-					write<float>("gameover.font.r", read<float>("porto2.font.r"));
-					write<float>("gameover.font.g", read<float>("porto2.font.g"));
-					write<float>("gameover.font.b", read<float>("porto2.font.b"));
 				}
 				else {
 					write<string>("gameover.text", "PLAYER 1 WINS");
-					write<float>("gameover.font.r", read<float>("porto1.font.r"));
-					write<float>("gameover.font.g", read<float>("porto1.font.g"));
-					write<float>("gameover.font.b", read<float>("porto1.font.b"));
 				}
 				
 				// atribui NULL ao morto que acabou de morrer
@@ -244,7 +238,8 @@ class partida : public component::base {
 			trace("Stopping gameplay!");
 			gameplay = false;
 			for (std::list<component::base*>::iterator it = portos.begin(); it != portos.end(); ++it) {
-				write((*it)->owner, "gameplay", false);
+				if (*it)
+					write((*it)->owner, "gameplay", false);
 // 				write<component::base*>((*it)->owner, "done", 0);
 			}
 		}
