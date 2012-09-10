@@ -21,9 +21,9 @@ gameover.render: 0
 gameover.text: PLAYER X WINS
 gameover.font: ttf/fontin_sans.otf
 gameover.font.size: 70
-gameover.font.r: 1
-gameover.font.g: 1
-gameover.font.b: 1
+gameover.font.r: 0.321568627
+gameover.font.g: 0.090196078
+gameover.font.b: 0
 gameover.position.x: 160
 gameover.position.y: 50
 gameover.position.z: 201
