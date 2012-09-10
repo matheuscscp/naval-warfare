@@ -3,9 +3,6 @@ attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d 
 renderer.surfaces: range=range.png rangeatk=rangeatk.png target=target.png hpbar=hpbar.png barcohover=mouseover.png hpbarback=hpbarback.png
 renderer.texts: atributoDano atributoSpeed
 
-w: 32
-h: 32
-
 collider.tag: barco
 
 atributoDano.text: TEMP TEMP TEMP TEMP TEMP
@@ -24,6 +21,7 @@ atributoSpeed.font.b: 0
 
 range.position.z: 8
 rangeatk.position.z: 9
+barcosprite.position.z: 10
 target.position.z : 11
 barcohover.positon.z: 11
 hpbar.position.z: 13
@@ -49,10 +47,10 @@ hpbarback.position.y: -16
 barcohover.position.x: 18
 barcohover.position.y: -45
 
-atributoDano.position.x: 0
+atributoDano.position.x: 80
 atributoDano.position.y: 0
-atributoSpeed.position.x: 0
-atributoSpeed.position.y: 0
+atributoSpeed.position.x: 80
+atributoSpeed.position.y: 15
 
 
 tipo: 2
