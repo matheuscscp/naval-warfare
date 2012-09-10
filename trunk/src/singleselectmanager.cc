@@ -52,8 +52,10 @@ class singleselectmanager : public component::base {
 			for (int i = 0; i < raw_options.size(); ++i) {
 				// poe uma opcao na lista e limpa o buffer
 				if (raw_options[i] == ' ') {
-					options.push_back(tmp_option);
-					tmp_option = "";
+					if (tmp_option.size()) {
+						options.push_back(tmp_option);
+						tmp_option = "";
+					}
 				}
 				// poe a ultima opcao na lista
 				else if (i == int(raw_options.size()) - 1) {
@@ -64,6 +66,9 @@ class singleselectmanager : public component::base {
 				else
 					tmp_option += raw_options[i];
 			}
+			
+			// inicializa a diferenca de altura da selecao para o item de menu
+			init<float>("selection.dy", sig["selection.dy"], 0.0f);
 		}
 		
 		virtual void update(timediff dt) {
@@ -84,14 +89,10 @@ class singleselectmanager : public component::base {
 					write<bool>("menu.trigger", true);
 			}
 			else if (pid == "menu.focus") {
-				// setta as opacidades das opcoes
+				// setta a posicao da selecao
 				string focus = read<string>("menu.focus");
-				for (std::list<string>::iterator it = options.begin(); it != options.end(); ++it) {
-					if (focus == *it)
-						write<float>((*it) + ".alpha", 1.0f);
-					else
-						write<float>((*it) + ".alpha", 0.5f);
-				}
+				write<float>("selection.position.x", read<float>(focus + ".position.x") - read<int>("selection.clip.w"));
+				write<float>("selection.position.y", read<float>(focus + ".position.y") + read<float>("selection.dy"));
 			}
 		}
 		

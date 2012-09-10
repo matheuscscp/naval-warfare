@@ -15,4 +15,4 @@ msg.font: ttf/fontin_sans.otf
 msg.font.size: 85
 msg.position.x: 140
 msg.position.y: 340
-msg.position.z: 300
+msg.position.z: 500
