@@ -151,17 +151,13 @@ class barco : public component::base {
 			//iniciando os valores do texto de atributos
 			stringstream dmg,spd,hp;
 			
-			dmg<<"DMG:"<<atr.dmg<<" ";
-			spd<<"SPD:"<<(int)atr.speed<<" ";
+			dmg<<"DMG: "<<atr.dmg<<" ";
+			spd<<"SPD: "<<(int)atr.speed<<" ";
 			
 			write("atributoDano.text",dmg.str());
 			write("atributoSpeed.text",spd.str());
 			
-			write("atributoDano.position.x",w);
-			write("atributoDano.position.y",0.0f);
-			
-			write("atributoSpeed.position.x",w);
-			write("atributoSpeed.position.y",15.0f);
+			init<float>("barcosprite.position.z", sig["barcosprite.position.z"], 0.0f);
 			
 			barcohover_y0 = eval<float>(sig["barcohover.position.y"]);
 			
@@ -273,8 +269,8 @@ class barco : public component::base {
 				gameplay = porto->read<bool>("gameplay");
 				gamesetup = porto->read<bool>("gamesetup");
 				
-				write<float>("barco.position.z", 100.f);
-				write<float>("barcoinv.position.z", 100.f);
+				write<float>("barco.position.z", read<float>("barcosprite.position.z"));
+				write<float>("barcoinv.position.z", read<float>("barcosprite.position.z"));
 				
 				write<float>("w", read<int>("barco.clip.w"));
 				write<float>("h", read<int>("barco.clip.h"));
