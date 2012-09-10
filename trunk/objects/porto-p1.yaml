@@ -3,6 +3,9 @@ attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard paus
 renderer.surfaces: porto=pirata/porto.png
 renderer.texts: cash hp
 
+images.path: pirata/
+images.direction: default
+
 collider.tag: porto
 
 porto.player: 1
