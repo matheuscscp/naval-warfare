@@ -288,9 +288,15 @@ class barco : public component::base {
 					write<component::base*>("done", NULL);
 					write<bool>("target.render", false);
 					write("barcohover.render", false);
+					
+					selected = false;
+					write("range.render"			, false);
+					write("rangeatk.render"			, false);
+					write("atributoDano.render"		, false);
+					write("atributoSpeed.render"	, false);
+					write("atributoHP.render"		, false);
 				}
 				else {
-					write<bool>("target.render", selected);
 					write("barcohover.render", read<bool>("mouseover"));
 				}
 			}
@@ -412,7 +418,6 @@ class barco : public component::base {
 					selected = false;
 					write("range.render"			, false);
 					write("rangeatk.render"			, false);
-					//write("target.render"			, false);
 					write("atributoDano.render"		, false);
 					write("atributoSpeed.render"	, false);
 					write("atributoHP.render"		, false);
