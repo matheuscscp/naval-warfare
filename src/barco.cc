@@ -67,7 +67,7 @@ class barco : public component::base {
 		virtual gear2d::component::type type() { return "barco"; }
 
 		virtual std::string depends() {
-			return "kinematics/kinematic2d mouse/mouse mouseover/mouseover collider/collider2d pause/paused";
+			return "renderer/renderer kinematics/kinematic2d mouse/mouse mouseover/mouseover collider/collider2d pause/paused";
 		}
 
 		virtual void setup(object::signature & sig) {
@@ -239,6 +239,17 @@ class barco : public component::base {
 					
 			//clip da barra de hp proporcional ao hp
 			write("hpbar.clip.w", (atr.hp*64)/100);
+			
+			// troca de direcao se a velocidade em x nao for nula
+			float xspeed_direcao = read<float>("x.speed");
+			if (xspeed_direcao < 0) {
+				write<bool>("barco.render", false);
+				write<bool>("barcoinv.render", true);
+			}
+			else if (xspeed_direcao > 0) {
+				write<bool>("barco.render", true);
+				write<bool>("barcoinv.render", false);
+			}
 		}
 
 		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
@@ -250,6 +261,9 @@ class barco : public component::base {
 				hook(porto, "gameplay");
 				gameplay = porto->read<bool>("gameplay");
 				gamesetup = porto->read<bool>("gamesetup");
+				
+				write<float>("barco.position.z", 100.f);
+				write<float>("barcoinv.position.z", 100.f);
 				
 				cx = x + w/2;
 				cy = y + h/2;

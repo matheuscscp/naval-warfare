@@ -134,6 +134,10 @@ class porto : public component::base {
 			// setta a velocidade da animacao de abertura de turno
 			init<float>("animacao.x.speed", sig["animacao.x.speed"], 0.0f);
 			init<float>("animacao.y.speed", sig["animacao.y.speed"], 0.0f);
+			
+			// inicia o caminho das imagens de barco
+			init<string>("images.path", sig["images.path"], "");
+			init<string>("images.direction", sig["images.direction"], "");
 		}
 		
 		virtual void update(timediff dt) {
@@ -171,9 +175,29 @@ class porto : public component::base {
 			if (((debitar) && (cash >= custo_barco[barco_t])) || (!debitar)) {
 				// cria e poe na lista
 				component::base* barco = spawn(tbarco)->component("unit");
+				
+				// posicao inicial
 				barco->write<float>("x", spawn_x);
 				barco->write<float>("y", spawn_y);
+				
+				// cria as surfaces dos barcos de acordo com o diretorio do porto e tambem a direcao padrao
+				string path = read<string>("images.path") + tbarco;
+				string barco_surface;
+				string barcoinv_surface;
+				if (read<string>("images.direction") == "default") {
+					barco_surface = string("barco=") + path + ".png";
+					barcoinv_surface = string("barcoinv=") + path + "_inv.png";
+				}
+				else {
+					barco_surface = string("barcoinv=") + path + ".png";
+					barcoinv_surface = string("barco=") + path + "_inv.png";
+				}
+				barco->add<string>("renderer.surfaces", string(" ") + barco_surface + " " + barcoinv_surface);
+				barco->write<bool>("barco.render", true);
+				barco->write<bool>("barcoinv.render", false);
+				
 				barco->write("porto", this);
+				
 				hook(barco, "done", (component::call)&porto::handleBarcoDone);
 				
 				barcos.push_back(barco);
