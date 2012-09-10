@@ -1,7 +1,7 @@
 attach: gamestate/partida keyboard/keyboard renderer/renderer pause/paused
 
-renderer.surfaces: status_fundo=status_fundo.png porto1=player1.png porto2=player2.png
-renderer.texts: gameover cashusado1 cashganho1 grandefabricado1 mediofabricado1 pequenofabricado1 grandedestruido1 mediodestruido1 pequenodestruido1 cashusado2 cashganho2 grandefabricado2 mediofabricado2 pequenofabricado2 grandedestruido2 mediodestruido2 pequenodestruido2
+renderer.surfaces: status=status.png statusfundo=status_fundo.png porto1=player1.png porto2=player2.png porto1vence=pirata/wins.png porto2vence=viking/wins.png
+renderer.texts: cashusado1 cashganho1 grandefabricado1 mediofabricado1 pequenofabricado1 grandedestruido1 mediodestruido1 pequenodestruido1 cashusado2 cashganho2 grandefabricado2 mediofabricado2 pequenofabricado2 grandedestruido2 mediodestruido2 pequenodestruido2
 
 keyboard.interested: tab return escape
 
@@ -12,21 +12,25 @@ gameplay.animacao.x: 260.0f
 x: 112
 y: 84
 
-status_fundo.render: 0
-status_fundo.position.x: -112
-status_fundo.position.y: -84
-status_fundo.position.z: 200
+statusfundo.render: 0
+statusfundo.position.x: -112
+statusfundo.position.y: -84
+statusfundo.position.z: 200
 
-gameover.render: 0
-gameover.text: PLAYER X WINS
-gameover.font: ttf/fontin_sans.otf
-gameover.font.size: 70
-gameover.font.r: 0.321568627
-gameover.font.g: 0.090196078
-gameover.font.b: 0
-gameover.position.x: 160
-gameover.position.y: 50
-gameover.position.z: 201
+status.render: 0
+status.position.x: 255
+status.position.y: 45
+status.position.z: 201
+
+porto1vence.render: 0
+porto1vence.position.x: 110
+porto1vence.position.y: 45
+porto1vence.position.z: 201
+
+porto2vence.render: 0
+porto2vence.position.x: 115
+porto2vence.position.y: 45
+porto2vence.position.z: 201
 
 porto1.render: 0
 porto1.position.x: 110
