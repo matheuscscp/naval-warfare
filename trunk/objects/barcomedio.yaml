@@ -3,6 +3,9 @@ attach: renderer/renderer unit/barco kinematics/kinematic2d collider/collider2d 
 renderer.surfaces: range=range.png rangeatk=rangeatk.png target=target.png hpbar=hpbar.png barcohover=mouseover.png hpbarback=hpbarback.png
 renderer.texts: atributoDano atributoSpeed
 
+w: 100
+h: 100
+
 collider.tag: barco
 
 atributoDano.text: TEMP TEMP TEMP TEMP TEMP
