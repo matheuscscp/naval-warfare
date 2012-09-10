@@ -161,14 +161,14 @@ class partida : public component::base {
 				/* gato pra mostrar a tela de game-over */
 				write<int>("key.tab", 1);
 				gameover = true;
-				write<int>("gameover.render", 1);
+				write<bool>("status.render", false);
 				write<int>("porto1.render", 1);
 				write<int>("porto2.render", 1);
-				if (last->read<int>("porto.player") == 1) {
-					write<string>("gameover.text", "PLAYER 2 WINS");
+				if (last->read<int>("porto.player") == 2) {
+					write<bool>("porto1vence.render", true);
 				}
 				else {
-					write<string>("gameover.text", "PLAYER 1 WINS");
+					write<bool>("porto2vence.render", true);
 				}
 				
 				// atribui NULL ao morto que acabou de morrer
@@ -284,7 +284,8 @@ class partida : public component::base {
 				}
 				
 				// esconde ou mostra os dados
-				write("status_fundo.render", tab);
+				write("statusfundo.render", tab);
+				write("status.render", tab);
 				write("porto1.render", tab);
 				write("porto2.render", tab);
 				
