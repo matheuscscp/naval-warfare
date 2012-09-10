@@ -317,6 +317,7 @@ class barco : public component::base {
 		//Cuida das colisoes gerais
 		virtual void handleCollision(parameterbase::id pid, base* lastwrite, object::id owner) {
 			if (paused) return;
+			if(!gameplay) return;
 			bool longe, perto = false;
 			float inimX,inimY,inimW = 0.0f;
 			
