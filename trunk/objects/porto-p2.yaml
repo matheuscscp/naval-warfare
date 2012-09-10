@@ -1,7 +1,7 @@
 attach: renderer/renderer porto/porto collider/collider2d keyboard/keyboard pause/paused
 
-renderer.surfaces: porto=viking/porto.png
-renderer.texts: cash hp
+renderer.surfaces: porto=viking/porto.png hp=porto_hp.png hpback=porto_hp_back.png cashicon=porto_cash.png
+renderer.texts: cash
 
 images.path: viking/
 images.direction: inverted
@@ -18,18 +18,21 @@ w: 200
 h: 130
 
 hp.value: 100
-hp.font: ttf/fontin_sans.otf
-hp.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
-hp.font.size: 20
-hp.position.x: 55
+hp.position.x: 50
 hp.position.y: -20
+hp.position.z: 2
+hpback.position.x: 50
+hpback.position.y: -20
+hpback.position.z: 1
 
 cash.value: 1000
+cashicon.position.x: 95
+cashicon.position.y: -20
 cash.font: ttf/fontin_sans.otf
 cash.text: TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP TEMP
 cash.font.size: 20
-cash.position.x: 55
-cash.position.y: 0
+cash.position.x: 127
+cash.position.y: -11
 
 painel.x: 940
 painel.y: 400
