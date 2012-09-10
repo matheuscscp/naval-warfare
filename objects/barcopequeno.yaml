@@ -4,6 +4,8 @@ renderer.surfaces: range=range.png rangeatk=rangeatk.png target=target.png hpbar
 renderer.texts: atributoDano atributoSpeed
 
 collider.tag: barco
+w: 70
+h: 70
 
 atributoDano.text: TEMP TEMP TEMP TEMP TEMP
 atributoDano.font: ttf/fontin_sans.otf
