@@ -101,7 +101,7 @@ class barco : public component::base {
 			atr.dmg			= fetch<int>	("dmg");
 			atr.loot		= fetch<int>	("loot.value");
 
-			recebeDano = 0;
+			recebeDano = fetch<int>("recebeDano");
 
 			x 	= fetch<float>("x");
 			y 	= fetch<float>("y");
