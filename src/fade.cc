@@ -54,7 +54,7 @@ class fade : public component::base {
 			// destroi o objeto e retorna o update caso o alpha ja seja zero
 			if (alpha == 0.0f) {
 				write("morri", true);
-//				destroy();
+				destroy();
 				return;
 			}
 			
