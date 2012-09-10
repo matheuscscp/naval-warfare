@@ -192,19 +192,17 @@ class porto : public component::base {
 				
 				// cria as surfaces dos barcos de acordo com o diretorio do porto e tambem a direcao padrao
 				string path = read<string>("images.path") + tbarco;
-				string barco_surface;
-				string barcoinv_surface;
+				string imagens = string(" barco=") + path + ".png";
+				imagens += string(" barcoinv=") + path + "_inv.png";
+				barco->add<string>("renderer.surfaces", imagens);
 				if (read<string>("images.direction") == "default") {
-					barco_surface = string("barco=") + path + ".png";
-					barcoinv_surface = string("barcoinv=") + path + "_inv.png";
+					barco->write<bool>("barco.render", true);
+					barco->write<bool>("barcoinv.render", false);
 				}
 				else {
-					barco_surface = string("barcoinv=") + path + ".png";
-					barcoinv_surface = string("barco=") + path + "_inv.png";
+					barco->write<bool>("barco.render", false);
+					barco->write<bool>("barcoinv.render", true);
 				}
-				barco->add<string>("renderer.surfaces", string(" ") + barco_surface + " " + barcoinv_surface);
-				barco->write<bool>("barco.render", true);
-				barco->write<bool>("barcoinv.render", false);
 				
 				barco->write("porto", this);
 				
