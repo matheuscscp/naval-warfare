@@ -314,8 +314,9 @@ class porto : public component::base {
 			animation->write("fade.x.speed", read<float>("animacao.x.speed"));
 			animation->write("fade.y.speed", read<float>("animacao.y.speed"));
 			stringstream ss;
-			ss << "Turno do Player ";
+			ss << "Player ";
 			ss << player;
+			ss << " turn!";
 			animation->write<string>("msg.text", ss.str());
 		}
 		

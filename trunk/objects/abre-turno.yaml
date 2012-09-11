@@ -13,6 +13,6 @@ msg.font.g: 0.117647059
 msg.font.b: 0.015686275
 msg.font: ttf/aparaj.ttf
 msg.font.size: 130
-msg.position.x: 145
+msg.position.x: 225
 msg.position.y: 320
 msg.position.z: 500

@@ -6,8 +6,8 @@ using namespace std;
 class mainmenu : public component::base {
 	private:
 		// private vars
-		component::base* credits;
-		bool credits_freshspawn;
+		component::base* screen;
+		bool screen_freshspawn;
 		
 		bool load_partida;
 		timediff loading_delay;
@@ -16,8 +16,8 @@ class mainmenu : public component::base {
 	public:
 		// constructor and destructor
 		mainmenu() :
-		credits(0),
-		credits_freshspawn(false),
+		screen(0),
+		screen_freshspawn(false),
 		load_partida(false),
 		loading_delay(0.0f),
 		lifetime(0.0f)
@@ -55,21 +55,26 @@ class mainmenu : public component::base {
 					load_partida = true;
 					loading_delay = lifetime + 3.0f;
 					spawn("loading");
+				} else if (opt == "directions") {
+					if (!screen) {
+						screen_freshspawn = true;
+						screen = spawn("instrucoes")->component("spatial");
+					}
 				} else if (opt == "credits") {
-					if (!credits) {
-						credits_freshspawn = true;
-						credits = spawn("creditos")->component("spatial");
+					if (!screen) {
+						screen_freshspawn = true;
+						screen = spawn("creditos")->component("spatial");
 					}
 				} else if (opt == "exitgame") {
 					exit(0);
 				}
 			} else if (pid == "key.return") {
-				if (credits_freshspawn) {
-					credits_freshspawn = false;
+				if (screen_freshspawn) {
+					screen_freshspawn = false;
 				}
-				else if ((credits) && (read<int>("key.return") == 1)) {
-					credits->destroy();
-					credits = 0;
+				else if ((screen) && (read<int>("key.return") == 1)) {
+					screen->destroy();
+					screen = 0;
 				}
 			}
 		}
