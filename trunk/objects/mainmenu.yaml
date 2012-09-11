@@ -16,13 +16,13 @@ bg.position.z: -1
 selection.dy: -45
 
 newgame.order: 0
-newgame.position.x: 410
+newgame.position.x: 400
 newgame.position.y: 350
 
 credits.order: 1
-credits.position.x: 455
+credits.position.x: 445
 credits.position.y: 430
 
 exitgame.order: 2
-exitgame.position.x: 485
+exitgame.position.x: 475
 exitgame.position.y: 510
