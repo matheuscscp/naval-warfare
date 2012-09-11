@@ -1,4 +1,0 @@
-attach: renderer/renderer 
-
-renderer.surfaces: bg=fundo.png
-bg.position.z: -1

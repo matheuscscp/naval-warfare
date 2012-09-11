@@ -8,11 +8,11 @@ fade.alphadiff: 0.01
 
 msg.order: 0
 msg.text: TEMP TEMP TEMP TEMP TEMP TEMP
-msg.font.r: 0.321568627
-msg.font.g: 0.090196078
-msg.font.b: 0
-msg.font: ttf/fontin_sans.otf
-msg.font.size: 85
-msg.position.x: 140
-msg.position.y: 340
+msg.font.r: 0.22745098
+msg.font.g: 0.117647059
+msg.font.b: 0.015686275
+msg.font: ttf/aparaj.ttf
+msg.font.size: 130
+msg.position.x: 145
+msg.position.y: 320
 msg.position.z: 500
