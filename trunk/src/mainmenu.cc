@@ -9,11 +9,18 @@ class mainmenu : public component::base {
 		component::base* credits;
 		bool credits_freshspawn;
 		
+		bool load_partida;
+		timediff loading_delay;
+		timediff lifetime;
+		
 	public:
 		// constructor and destructor
 		mainmenu() :
 		credits(0),
-		credits_freshspawn(false)
+		credits_freshspawn(false),
+		load_partida(false),
+		loading_delay(0.0f),
+		lifetime(0.0f)
 		{
 		}
 		
@@ -33,19 +40,28 @@ class mainmenu : public component::base {
 		}
 		
 		virtual void update(timediff dt) {
+			lifetime += dt;
 			
+			if ((load_partida) && (lifetime >= loading_delay)) {
+				load("partida");
+			}
 		}
 		
 		virtual void handle(parameterbase::id pid, component::base * last, object::id owns) {
+			if (load_partida) return;
 			if (pid == "menu.trigger") {
 				string opt = read<string>("menu.focus");
 				if (opt == "newgame") {
-					load("partida");
+					load_partida = true;
+					loading_delay = lifetime + 3.0f;
+					spawn("loading");
 				} else if (opt == "credits") {
 					if (!credits) {
 						credits_freshspawn = true;
 						credits = spawn("creditos")->component("spatial");
 					}
+				} else if (opt == "exitgame") {
+					exit(0);
 				}
 			} else if (pid == "key.return") {
 				if (credits_freshspawn) {
