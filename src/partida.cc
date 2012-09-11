@@ -154,6 +154,8 @@ class partida : public component::base {
 					pausemenu->destroy();
 					pausemenu = NULL;
 					paused = false;
+				} else if (opt == "exitgame") {
+					exit(0);
 				}
 			} else if (paused) {
 				return;
