@@ -6,8 +6,8 @@ renderer.texts: cashusado1 cashganho1 grandefabricado1 mediofabricado1 pequenofa
 keyboard.interested: tab return escape
 
 gameplay.cooldown: 3.0
-gameplay.animacao.y.speed: -100.0f
-gameplay.animacao.x: 260.0f
+gameplay.animacao.y.speed: -100
+gameplay.animacao.x: 160
 
 x: 112
 y: 84

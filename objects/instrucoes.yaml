@@ -1,0 +1,5 @@
+attach: renderer/renderer spatial/space2d
+
+renderer.surfaces: bg=entrada/tela_instrucoes.jpg
+
+bg.position.z: 1

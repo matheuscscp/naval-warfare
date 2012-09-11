@@ -1,10 +1,10 @@
 attach: gamestate/mainmenu keyboard/keyboard spatial/space2d renderer/renderer menu/singleselect menumanager/singleselectmanager
 
-renderer.surfaces: bg=entrada/fundo.png newgame=entrada/new_game.png exitgame=entrada/exit.png credits=entrada/credits.png selection=selecao.png
+renderer.surfaces: bg=entrada/fundo.png newgame=entrada/new_game.png exitgame=entrada/exit.png directions=entrada/directions.png credits=entrada/credits.png selection=selecao.png
 
 keyboard.interested: up down return
 
-menu.options: newgame credits exitgame
+menu.options: newgame directions credits exitgame
 menu.focus: newgame
 menu.circular: 1
 
@@ -16,13 +16,17 @@ bg.position.z: -1
 selection.dy: -45
 
 newgame.order: 0
-newgame.position.x: 400
-newgame.position.y: 350
+newgame.position.x: 392
+newgame.position.y: 340
 
-credits.order: 1
-credits.position.x: 445
-credits.position.y: 430
+directions.order: 1
+directions.position.x: 405
+directions.position.y: 410
 
-exitgame.order: 2
-exitgame.position.x: 475
-exitgame.position.y: 510
+credits.order: 2
+credits.position.x: 440
+credits.position.y: 480
+
+exitgame.order: 3
+exitgame.position.x: 470
+exitgame.position.y: 550

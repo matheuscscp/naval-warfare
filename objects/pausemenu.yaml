@@ -1,6 +1,6 @@
 attach: keyboard/keyboard spatial/space2d renderer/renderer menu/singleselect menumanager/singleselectmanager
 
-renderer.surfaces: pause=pause/fundo.png selection=selecao.png resumegame=pause/resume_game.png exitgame=pause/exit_game.png
+renderer.surfaces: pause=pause/fundo.png selection=selecao.png resumegame=pause/resume_game.png return=pause/return_to_menu.png exitgame=pause/exit_game.png
 
 keyboard.interested: up down return
 
@@ -8,7 +8,7 @@ pause.position.z: 400
 selection.position.z: 401
 selection.dy: -35
 
-menu.options: resumegame exitgame
+menu.options: resumegame return exitgame
 menu.focus: resumegame
 menu.circular: 1
 menu.keyprev: key.up
@@ -16,10 +16,15 @@ menu.keynext: key.down
 
 resumegame.order: 0
 resumegame.position.x: 345
-resumegame.position.y: 314
+resumegame.position.y: 300
 resumegame.position.z: 401
 
-exitgame.order: 1
+return.order: 1
+return.position.x: 327
+return.position.y: 395
+return.position.z: 401
+
+exitgame.order: 2
 exitgame.position.x: 390
-exitgame.position.y: 404
+exitgame.position.y: 480
 exitgame.position.z: 401
