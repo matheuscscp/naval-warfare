@@ -1,6 +1,6 @@
 attach: gamestate/partida keyboard/keyboard renderer/renderer pause/paused
 
-renderer.surfaces: status=status.png statusfundo=status_fundo.png porto1=player1.png porto2=player2.png porto1vence=pirata/wins.png porto2vence=viking/wins.png
+renderer.surfaces: bg=fundo.png status=status.png statusfundo=status_fundo.png porto1=player1.png porto2=player2.png porto1vence=pirata/wins.png porto2vence=viking/wins.png
 renderer.texts: cashusado1 cashganho1 grandefabricado1 mediofabricado1 pequenofabricado1 grandedestruido1 mediodestruido1 pequenodestruido1 cashusado2 cashganho2 grandefabricado2 mediofabricado2 pequenofabricado2 grandedestruido2 mediodestruido2 pequenodestruido2
 
 keyboard.interested: tab return escape
@@ -11,6 +11,10 @@ gameplay.animacao.x: 260.0f
 
 x: 112
 y: 84
+
+bg.position.x: -112
+bg.position.y: -84
+bg.position.z: -1
 
 statusfundo.render: 0
 statusfundo.position.x: -112
