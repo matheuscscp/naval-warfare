@@ -21,7 +21,7 @@ resumegame.position.z: 401
 
 return.order: 1
 return.position.x: 327
-return.position.y: 395
+return.position.y: 390
 return.position.z: 401
 
 exitgame.order: 2
