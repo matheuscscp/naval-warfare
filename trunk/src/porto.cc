@@ -34,8 +34,10 @@ class porto : public component::base {
 		
 		int qtde_barcos[lastsize];
 		component::base* painel;
-		gear2d::link<float> spawn_x;
-		gear2d::link<float> spawn_y;
+		gear2d::link<float> spawnrange_x;
+		gear2d::link<float> spawnrange_y;
+		gear2d::link<float> spawnrange_w;
+		gear2d::link<float> spawnrange_h;
 		
 		gear2d::link<bool> paused;
 		
@@ -136,10 +138,14 @@ class porto : public component::base {
 			write<int>("pequenodestruido", 0);
 			
 			// inicia a posicao de spawn de barcos
-			init<float>("spawn.x", sig["spawn.x"], 0);
-			init<float>("spawn.y", sig["spawn.y"], 0);
-			spawn_x = fetch<float>("spawn.x");
-			spawn_y = fetch<float>("spawn.y");
+			init<float>("spawnrange.x", sig["spawnrange.x"], 0);
+			init<float>("spawnrange.y", sig["spawnrange.y"], 0);
+			init<float>("spawnrange.w", sig["spawnrange.w"], 0);
+			init<float>("spawnrange.h", sig["spawnrange.h"], 0);
+			spawnrange_x = fetch<float>("spawnrange.x");
+			spawnrange_y = fetch<float>("spawnrange.y");
+			spawnrange_w = fetch<float>("spawnrange.w");
+			spawnrange_h = fetch<float>("spawnrange.h");
 			
 			// setta a velocidade da animacao de abertura de turno
 			init<float>("animacao.x.speed", sig["animacao.x.speed"], 0.0f);
@@ -189,8 +195,12 @@ class porto : public component::base {
 				component::base* barco = spawn(tbarco)->component("unit");
 				
 				// posicao inicial
-				barco->write<float>("x", spawn_x);
-				barco->write<float>("y", spawn_y);
+				{
+					int x, y;
+					calcSpawnXY(x, y);
+					barco->write<float>("x", x);
+					barco->write<float>("y", y);
+				}
 				
 				// cria as surfaces dos barcos de acordo com o diretorio do porto e tambem a direcao padrao
 				string path = read<string>("images.path") + tbarco;
@@ -329,6 +339,12 @@ class porto : public component::base {
 		
 		void handleAnimationMorta(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner) {
 			animation = 0;
+		}
+		
+		void calcSpawnXY(int& x, int& y) {
+			x = spawnrange_x + rand()%int(spawnrange_w);
+			y = spawnrange_y + rand()%int(spawnrange_h);
+			//while ()
 		}
 		
 	private:
