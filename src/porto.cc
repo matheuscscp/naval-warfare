@@ -1,5 +1,10 @@
 #include <iostream>
+#include <cmath>
 #include "gear2d.h"
+
+#define MIN_SPAWN_RANGE	30
+#define MAX_SPAWN_TESTS	10000
+
 using namespace gear2d;
 using namespace std;
 
@@ -19,6 +24,96 @@ namespace gear2d {
 	}
 }
 
+class r2vector {
+public:
+	float x, y;
+	
+	r2vector() : x(0), y(0) {}
+	r2vector(float x, float y) : x(x), y(y) {}
+	
+	r2vector operator+(const r2vector& target) const {
+		return r2vector(x + target.x, y + target.y);
+	}
+	
+	r2vector operator-() const {
+		return r2vector(-x, -y);
+	}
+	
+	r2vector operator-(const r2vector& target) const {
+		return r2vector(x - target.x, y - target.y);
+	}
+	
+	r2vector range(const r2vector& target) const {
+		return (target - *this);
+	}
+	
+	float size() const {
+		return sqrt(x*x + y*y);
+	}
+};
+
+class circle {
+private:
+	float radius;
+public:
+	r2vector position;
+	
+	circle() : radius(1) {}
+	
+	float getRadius() const { return radius; }
+	
+	void setRadius(float radius) {
+		if (radius > 0)
+			this->radius = radius;
+		else if (radius < 0)
+			this->radius = -radius;
+	}
+	
+	bool inside(const r2vector& target) const {
+		return (position.range(target).size() <= radius);
+	}
+};
+
+class rectangle {
+private:
+	float w, h;
+public:
+	r2vector position;
+	
+	rectangle() : w(1), h(1) {}
+	
+	float getW() const { return w; }
+	
+	void setW(float w) {
+		if (w > 0)
+			this->w = w;
+		else if (w < 0)
+			this->w = -w;
+	}
+	
+	float getH() const { return h; }
+	
+	void setH(float h) {
+		if (h > 0)
+			this->h = h;
+		else if (h < 0)
+			this->h = -h;
+	}
+	
+	bool inside(const r2vector& target) const {
+		return (((target.x >= position.x) && (target.x < position.x + w)) &&
+				((target.y >= position.y) && (target.y < position.y + h)));
+	}
+	
+	r2vector randInside() const {
+		return r2vector(position.x + rand()%int(w), position.y + rand()%int(h));
+	}
+	
+	r2vector cornerBottomLeft() const {
+		return r2vector(position.x + w, position.y + h);
+	}
+};
+
 class porto : public component::base {
 	private:
 		gear2d::link<int> player;
@@ -34,10 +129,21 @@ class porto : public component::base {
 		
 		int qtde_barcos[lastsize];
 		component::base* painel;
-		gear2d::link<float> spawnrange_x;
-		gear2d::link<float> spawnrange_y;
-		gear2d::link<float> spawnrange_w;
-		gear2d::link<float> spawnrange_h;
+		
+		struct {
+			circle c_external;	//cout kkk BRINKS
+			circle c_internal;		//cin kkk BRINKS
+			rectangle rect;
+			
+			// cuidado! se os circulos nao estiverem dentro do retangulo, loop infinito manolo!
+			r2vector randPosition() const {
+				r2vector ret;
+				do {
+					ret = rect.randInside();
+				} while ((!c_external.inside(ret)) || (c_internal.inside(ret)));
+				return ret;
+			}
+		} spawn_barco;
 		
 		gear2d::link<bool> paused;
 		
@@ -45,9 +151,11 @@ class porto : public component::base {
 		
 	public:
 		// constructor and destructor
-		porto() { 
+		porto() {
+			portos.insert(this);
 		}
-		virtual ~porto() { 
+		virtual ~porto() {
+			portos.erase(this);
 		}
 		
 		virtual gear2d::component::family family() { return "porto"; }
@@ -138,14 +246,7 @@ class porto : public component::base {
 			write<int>("pequenodestruido", 0);
 			
 			// inicia a posicao de spawn de barcos
-			init<float>("spawnrange.x", sig["spawnrange.x"], 0);
-			init<float>("spawnrange.y", sig["spawnrange.y"], 0);
-			init<float>("spawnrange.w", sig["spawnrange.w"], 0);
-			init<float>("spawnrange.h", sig["spawnrange.h"], 0);
-			spawnrange_x = fetch<float>("spawnrange.x");
-			spawnrange_y = fetch<float>("spawnrange.y");
-			spawnrange_w = fetch<float>("spawnrange.w");
-			spawnrange_h = fetch<float>("spawnrange.h");
+			initSpawnBarco(sig);
 			
 			// setta a velocidade da animacao de abertura de turno
 			init<float>("animacao.x.speed", sig["animacao.x.speed"], 0.0f);
@@ -187,6 +288,19 @@ class porto : public component::base {
 			write<float>("hp.position.y", hp_ypos + icon_h - (hp*icon_h)/hp_max);
 		}
 		
+		void initSpawnBarco(object::signature & sig) {
+			spawn_barco.c_external.position.x = eval<float>(sig["spawn.circle.x"]);
+			spawn_barco.c_external.position.y = eval<float>(sig["spawn.circle.y"]);
+			spawn_barco.c_external.setRadius(eval<float>(sig["spawn.circle.external_rad"]));
+			spawn_barco.c_internal = spawn_barco.c_external;
+			spawn_barco.c_internal.setRadius(eval<float>(sig["spawn.circle.internal_rad"]));
+			
+			spawn_barco.rect.position.x = eval<float>(sig["spawn.rect.x"]);
+			spawn_barco.rect.position.y = eval<float>(sig["spawn.rect.y"]);
+			spawn_barco.rect.setW(int(eval<float>(sig["spawn.rect.w"])));
+			spawn_barco.rect.setH(int(eval<float>(sig["spawn.rect.h"])));
+		}
+		
 		virtual void criarBarco(const string& tbarco, barcotype barco_t, bool debitar = true) {
 			if (paused) return;
 			// soh cria se eh pra debitar e tem dinheiro OU se nao eh pra debitar
@@ -196,10 +310,9 @@ class porto : public component::base {
 				
 				// posicao inicial
 				{
-					int x, y;
-					calcSpawnXY(x, y);
-					barco->write<float>("x", x);
-					barco->write<float>("y", y);
+					r2vector pos = randSpawn();
+					barco->write<float>("x", pos.x);
+					barco->write<float>("y", pos.y);
 				}
 				
 				// cria as surfaces dos barcos de acordo com o diretorio do porto e tambem a direcao padrao
@@ -341,10 +454,36 @@ class porto : public component::base {
 			animation = 0;
 		}
 		
-		void calcSpawnXY(int& x, int& y) {
-			x = spawnrange_x + rand()%int(spawnrange_w);
-			y = spawnrange_y + rand()%int(spawnrange_h);
-			//while ()
+		bool invalidSpawn(const r2vector& position) const {
+			for (set<porto*>::iterator it1 = portos.begin(); it1 != portos.end(); ++it1) {
+				for (list<component::base*>::iterator it2 = (*it1)->barcos.begin(); it2 != (*it1)->barcos.end(); ++it2) {
+					r2vector target_pos((*it2)->read<float>("x"), (*it2)->read<float>("y"));
+					if (position.range(target_pos).size() <= MIN_SPAWN_RANGE)
+						return true;
+				}
+			}
+			return false;
+		}
+		
+		r2vector randSpawn() const {
+			r2vector ret;
+			int i = 0;
+			
+			// sorteia uma posicao na regiao de spawn MAX_SPAWN_TESTS vezes se for preciso.
+			// o importante eh nao ficar perto de outro barco.
+			// caso chegue em MAX_SPAWN_TESTS, taca o barco na ponta do retangulo.
+			while (i < MAX_SPAWN_TESTS) {
+				ret = spawn_barco.randPosition();
+				if (!invalidSpawn(ret))
+					i = MAX_SPAWN_TESTS;
+				else {
+					++i;
+					if (i == MAX_SPAWN_TESTS)
+						ret = spawn_barco.rect.cornerBottomLeft();
+				}
+			}
+			
+			return ret;
 		}
 		
 	private:
@@ -353,6 +492,7 @@ class porto : public component::base {
 		static int min_cash_turn;
 		static int max_cash_turn;
 		static int cash_max_barcos[lastsize];
+		static set<porto*> portos;
 		
 	private:
 		static void initialize() {
@@ -366,6 +506,7 @@ int porto::custo_barco[lastsize];
 int porto::min_cash_turn;
 int porto::max_cash_turn;
 int porto::cash_max_barcos[lastsize];
+set<porto*> porto::portos;
 
 // the build function
 extern "C" { component::base * build() { return new porto(); } }

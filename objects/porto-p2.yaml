@@ -38,10 +38,14 @@ painel.x: 924
 painel.y: 315
 painel.z: 50
 
-spawnrange.x: 723
-spawnrange.y: 467
-spawnrange.w: 300
-spawnrange.h: 300
+spawn.circle.x: 1000
+spawn.circle.y: 700
+spawn.circle.external_rad: 70
+spawn.circle.internal_rad: 30
+spawn.rect.x: 723
+spawn.rect.y: 467
+spawn.rect.w: 150
+spawn.rect.h: 150
 
 animacao.x.speed: 100.0
 animacao.y.speed: 100.0
