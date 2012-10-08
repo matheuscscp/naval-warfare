@@ -25,7 +25,7 @@ hpback.position.x: 3
 hpback.position.y: -32
 hpback.position.z: 1
 
-cash.value: 1000
+cash.value: 1000000
 cashicon.position.x: 48
 cashicon.position.y: -32
 cash.font: ttf/fontin_sans.otf
@@ -38,10 +38,14 @@ painel.x: 0
 painel.y: 179
 painel.z: 50
 
-spawnrange.x: 150
-spawnrange.y: 150
-spawnrange.w: 150
-spawnrange.h: 150
+spawn.circle.x: 150
+spawn.circle.y: 150
+spawn.circle.external_rad: 70
+spawn.circle.internal_rad: 30
+spawn.rect.x: 150
+spawn.rect.y: 150
+spawn.rect.w: 150
+spawn.rect.h: 150
 
 animacao.x.speed: -100.0
 animacao.y.speed: -100.0
