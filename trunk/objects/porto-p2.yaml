@@ -38,8 +38,8 @@ painel.x: 924
 painel.y: 315
 painel.z: 50
 
-spawn.circle.x: 1000
-spawn.circle.y: 700
+spawn.circle.x: 873
+spawn.circle.y: 617
 spawn.circle.external_rad: 70
 spawn.circle.internal_rad: 30
 spawn.rect.x: 723
